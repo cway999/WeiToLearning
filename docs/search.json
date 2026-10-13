@@ -1,0 +1,142 @@
+[
+  {
+    "objectID": "knowledge/gradient_descent.html",
+    "href": "knowledge/gradient_descent.html",
+    "title": "Understanding Gradient Descent",
+    "section": "",
+    "text": "Gradient Descent is an optimization algorithm used to minimize a loss function."
+  },
+  {
+    "objectID": "knowledge/gradient_descent.html#the-update-rule",
+    "href": "knowledge/gradient_descent.html#the-update-rule",
+    "title": "Understanding Gradient Descent",
+    "section": "The Update Rule",
+    "text": "The Update Rule\nThe update rule is:\n\\[\n\\theta_{t+1} =\n\\theta_t -\n\\alpha \\nabla L(\\theta_t)\n\\]\nwhere:\n\n\\(\\theta\\) represents model parameters.\n\\(\\alpha\\) is the learning rate.\n\\(L\\) is the loss function.\n\n\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# Define the loss function\ndef loss(x):\n    return x ** 2\n\n# Define the gradient\ndef gradient(x):\n    return 2 * x\n\n# Gradient descent\nx = 8.0\nlearning_rate = 0.1\nhistory = [x]\n\nfor i in range(30):\n    x = x - learning_rate * gradient(x)\n    history.append(x)\n\n# Plot the optimization path\nplt.plot(history, marker=\"o\")\nplt.xlabel(\"Iteration\")\nplt.ylabel(\"Parameter x\")\nplt.title(\"Gradient Descent Convergence\")\nplt.grid(True)\nplt.show()"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Welcome to my personal Data Science website.\nI am interested in statistical modeling, machine learning, deep learning, and large language models.\nThis website documents my technical learning, implementations, and projects.\n\n\n\nData Science\nMachine Learning\nLLMs\nInformation Retrieval\nRanking and Recommendation\n\n\n\n\nGitHub: Coming soon."
+  },
+  {
+    "objectID": "about.html#areas-of-interest",
+    "href": "about.html#areas-of-interest",
+    "title": "About",
+    "section": "",
+    "text": "Data Science\nMachine Learning\nLLMs\nInformation Retrieval\nRanking and Recommendation"
+  },
+  {
+    "objectID": "about.html#links",
+    "href": "about.html#links",
+    "title": "About",
+    "section": "",
+    "text": "GitHub: Coming soon."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Home",
+    "section": "",
+    "text": "Welcome to my Data Science Handbook!\nThis website contains my notes, tutorials, Python implementations, and machine learning projects.\n\n\n\n\nLearn the fundamentals of statistics, machine learning, deep learning, and LLMs.\nExplore Knowledge Base\n\n\n\nRead technical articles, learning notes, and experiment summaries.\nRead the Blog\n\n\n\nExplore practical Data Science and Machine Learning projects.\nView Projects\n\n\n\n\n\nStatistics and Probability\nMachine Learning\nDeep Learning and PyTorch\nLarge Language Models\nSearch and Recommendation Systems\nPython and SQL"
+  },
+  {
+    "objectID": "index.html#explore",
+    "href": "index.html#explore",
+    "title": "Home",
+    "section": "",
+    "text": "Learn the fundamentals of statistics, machine learning, deep learning, and LLMs.\nExplore Knowledge Base\n\n\n\nRead technical articles, learning notes, and experiment summaries.\nRead the Blog\n\n\n\nExplore practical Data Science and Machine Learning projects.\nView Projects"
+  },
+  {
+    "objectID": "index.html#topics",
+    "href": "index.html#topics",
+    "title": "Home",
+    "section": "",
+    "text": "Statistics and Probability\nMachine Learning\nDeep Learning and PyTorch\nLarge Language Models\nSearch and Recommendation Systems\nPython and SQL"
+  },
+  {
+    "objectID": "projects/index.html",
+    "href": "projects/index.html",
+    "title": "Projects",
+    "section": "",
+    "text": "A collection of practical Data Science and Machine Learning projects.\n\n\nStatus: Planned\nTools: Python, LightGBM, scikit-learn\nTopics: - Feature engineering - Ranking algorithms - NDCG evaluation\n\n\n\nStatus: Planned\nTools: Python, PyTorch\nTopics: - Self-attention - Transformer architecture - Language modeling"
+  },
+  {
+    "objectID": "projects/index.html#project-1-learning-to-rank",
+    "href": "projects/index.html#project-1-learning-to-rank",
+    "title": "Projects",
+    "section": "",
+    "text": "Status: Planned\nTools: Python, LightGBM, scikit-learn\nTopics: - Feature engineering - Ranking algorithms - NDCG evaluation"
+  },
+  {
+    "objectID": "projects/index.html#project-2-transformer-from-scratch",
+    "href": "projects/index.html#project-2-transformer-from-scratch",
+    "title": "Projects",
+    "section": "",
+    "text": "Status: Planned\nTools: Python, PyTorch\nTopics: - Self-attention - Transformer architecture - Language modeling"
+  },
+  {
+    "objectID": "blog/index.html",
+    "href": "blog/index.html",
+    "title": "Technical Blog",
+    "section": "",
+    "text": "Articles about Data Science, Machine Learning, and my technical experiments.\n\n\n\nBuilding a Transformer from Scratch\nUnderstanding Batch Normalization\nComparing Ranking Algorithms\nLessons from Machine Learning Projects\n\nMore articles will be added soon."
+  },
+  {
+    "objectID": "blog/index.html#planned-articles",
+    "href": "blog/index.html#planned-articles",
+    "title": "Technical Blog",
+    "section": "",
+    "text": "Building a Transformer from Scratch\nUnderstanding Batch Normalization\nComparing Ranking Algorithms\nLessons from Machine Learning Projects\n\nMore articles will be added soon."
+  },
+  {
+    "objectID": "knowledge/index.html",
+    "href": "knowledge/index.html",
+    "title": "Knowledge Base",
+    "section": "",
+    "text": "A structured collection of Data Science and Machine Learning knowledge.\n\n\n\nProbability Distributions\nStatistical Inference\nHypothesis Testing\nLinear Regression\n\n\n\n\n\nLinear Models\nTree-Based Models\nFeature Engineering\nModel Evaluation\n\n\n\n\n\nNeural Networks\nBackpropagation\nPyTorch\nNormalization\n\n\n\n\n\nTokenization\nSelf-Attention\nTransformers\nFine-Tuning\nLLM Evaluation\n\n\n\n\n\nInformation Retrieval\nEmbedding Models\nLearning to Rank\nRecommendation Systems\n\n\n\n\n\nUnderstanding Gradient Descent"
+  },
+  {
+    "objectID": "knowledge/index.html#statistics-probability",
+    "href": "knowledge/index.html#statistics-probability",
+    "title": "Knowledge Base",
+    "section": "",
+    "text": "Probability Distributions\nStatistical Inference\nHypothesis Testing\nLinear Regression"
+  },
+  {
+    "objectID": "knowledge/index.html#machine-learning",
+    "href": "knowledge/index.html#machine-learning",
+    "title": "Knowledge Base",
+    "section": "",
+    "text": "Linear Models\nTree-Based Models\nFeature Engineering\nModel Evaluation"
+  },
+  {
+    "objectID": "knowledge/index.html#deep-learning",
+    "href": "knowledge/index.html#deep-learning",
+    "title": "Knowledge Base",
+    "section": "",
+    "text": "Neural Networks\nBackpropagation\nPyTorch\nNormalization"
+  },
+  {
+    "objectID": "knowledge/index.html#llm-transformers",
+    "href": "knowledge/index.html#llm-transformers",
+    "title": "Knowledge Base",
+    "section": "",
+    "text": "Tokenization\nSelf-Attention\nTransformers\nFine-Tuning\nLLM Evaluation"
+  },
+  {
+    "objectID": "knowledge/index.html#search-recommendation",
+    "href": "knowledge/index.html#search-recommendation",
+    "title": "Knowledge Base",
+    "section": "",
+    "text": "Information Retrieval\nEmbedding Models\nLearning to Rank\nRecommendation Systems"
+  },
+  {
+    "objectID": "knowledge/index.html#tutorials",
+    "href": "knowledge/index.html#tutorials",
+    "title": "Knowledge Base",
+    "section": "",
+    "text": "Understanding Gradient Descent"
+  }
+]
