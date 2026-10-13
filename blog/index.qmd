@@ -1,0 +1,18 @@
+---
+title: "Technical Blog"
+toc: false
+---
+
+# Technical Blog
+
+Articles about Data Science, Machine
+Learning, and my technical experiments.
+
+## Planned Articles
+
+- Building a Transformer from Scratch
+- Understanding Batch Normalization
+- Comparing Ranking Algorithms
+- Lessons from Machine Learning Projects
+
+More articles will be added soon.

@@ -1,0 +1,49 @@
+---
+title: "Knowledge Base"
+toc: false
+---
+
+# Knowledge Base
+
+A structured collection of Data Science
+and Machine Learning knowledge.
+
+## 1. Statistics & Probability
+
+- Probability Distributions
+- Statistical Inference
+- Hypothesis Testing
+- Linear Regression
+
+## 2. Machine Learning
+
+- Linear Models
+- Tree-Based Models
+- Feature Engineering
+- Model Evaluation
+
+## 3. Deep Learning
+
+- Neural Networks
+- Backpropagation
+- PyTorch
+- Normalization
+
+## 4. LLM & Transformers
+
+- Tokenization
+- Self-Attention
+- Transformers
+- Fine-Tuning
+- LLM Evaluation
+
+## 5. Search & Recommendation
+
+- Information Retrieval
+- Embedding Models
+- Learning to Rank
+- Recommendation Systems
+
+## Tutorials
+
+- [Understanding Gradient Descent](gradient_descent.ipynb)

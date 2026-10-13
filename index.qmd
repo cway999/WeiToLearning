@@ -1,0 +1,44 @@
+---
+title: "Home"
+toc: false
+---
+
+# Data Science Handbook
+
+Welcome to my Data Science Handbook!
+
+This website contains my notes, tutorials,
+Python implementations, and machine learning
+projects.
+
+## Explore
+
+### Knowledge Base
+
+Learn the fundamentals of statistics,
+machine learning, deep learning, and LLMs.
+
+[Explore Knowledge Base](knowledge/index.qmd)
+
+### Technical Blog
+
+Read technical articles, learning notes,
+and experiment summaries.
+
+[Read the Blog](blog/index.qmd)
+
+### Projects
+
+Explore practical Data Science and
+Machine Learning projects.
+
+[View Projects](projects/index.qmd)
+
+## Topics
+
+- Statistics and Probability
+- Machine Learning
+- Deep Learning and PyTorch
+- Large Language Models
+- Search and Recommendation Systems
+- Python and SQL

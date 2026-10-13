@@ -1,0 +1,31 @@
+---
+title: "Projects"
+toc: false
+---
+
+# Machine Learning Projects
+
+A collection of practical Data Science
+and Machine Learning projects.
+
+## Project 1: Learning to Rank
+
+**Status:** Planned
+
+**Tools:** Python, LightGBM, scikit-learn
+
+**Topics:**
+- Feature engineering
+- Ranking algorithms
+- NDCG evaluation
+
+## Project 2: Transformer from Scratch
+
+**Status:** Planned
+
+**Tools:** Python, PyTorch
+
+**Topics:**
+- Self-attention
+- Transformer architecture
+- Language modeling

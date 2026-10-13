@@ -1,0 +1,27 @@
+---
+title: "About"
+toc: false
+---
+
+# About Me
+
+Welcome to my personal Data Science website.
+
+I am interested in statistical modeling,
+machine learning, deep learning, and
+large language models.
+
+This website documents my technical
+learning, implementations, and projects.
+
+## Areas of Interest
+
+- Data Science
+- Machine Learning
+- LLMs
+- Information Retrieval
+- Ranking and Recommendation
+
+## Links
+
+GitHub: Coming soon.

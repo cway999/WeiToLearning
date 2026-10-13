@@ -1,0 +1,20 @@
+{
+  "index.qmd": {
+    "index.html": "42514d53"
+  },
+  "about.qmd": {
+    "about.html": "4331f75c"
+  },
+  "projects/index.qmd": {
+    "index.html": "2fba838a"
+  },
+  "blog/index.qmd": {
+    "index.html": "e423d783"
+  },
+  "knowledge/index.qmd": {
+    "index.html": "245459ae"
+  },
+  "knowledge/gradient_descent.ipynb": {
+    "gradient_descent.html": "feaf62bf"
+  }
+}
