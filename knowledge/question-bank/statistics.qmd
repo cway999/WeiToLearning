@@ -1,0 +1,141 @@
+---
+title: "Statistics & Probability"
+subtitle: "Topics · Questions · Reference Answers · Detailed Explanations"
+toc: false
+format:
+  html:
+    css: qb.css
+---
+
+
+Explore the **Statistics & Probability** question bank. Select a topic tab and expand an answer or explanation.
+
+::: {.panel-tabset}
+
+## Probability Distributions
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. What is the difference between a PMF and a PDF?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+A PMF gives probabilities for discrete values. A PDF describes density for a continuous random variable; probabilities come from integration.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+For a discrete variable, $P(X=x)$ is directly available from its PMF. For a continuous variable, the probability at a single point is normally zero. For an interval, $P(a\le X\le b)=\int_a^b f(x)\,dx$. A density can exceed 1, but its total integral must equal 1.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. What is the central limit theorem?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Under standard conditions, the standardized sample mean approaches a normal distribution as sample size increases.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+For independent, identically distributed observations with finite mean $\mu$ and variance $\sigma^2$, $\sqrt{n}(\bar X-\mu)/\sigma$ converges in distribution to $N(0,1)$. This helps approximate uncertainty for sample means; it does not mean the original data become normal.
+
+:::
+
+::::
+
+## Hypothesis Testing
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. What does a p-value mean?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+It is the probability, assuming the null hypothesis and the test assumptions hold, of obtaining a test statistic at least as extreme as the observed one.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+A p-value is not the probability that the null hypothesis is true. A small value indicates the observed result is unusual under the null model; it does not measure effect size or practical importance.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. What is the difference between Type I and Type II errors?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Type I error rejects a true null hypothesis. Type II error fails to reject a false null hypothesis.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+The Type I error rate is often denoted $\alpha$. Type II error probability is $\beta$, and statistical power is $1-\beta$. Sample size, effect size, variance, and the decision threshold all affect power.
+
+:::
+
+::::
+
+## A/B Testing
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. Why is randomization important in A/B testing?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Random assignment reduces systematic differences between treatment and control groups.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Randomization helps make potential outcomes comparable on average, supporting causal estimates. It does not guarantee perfect balance in a small sample, so pre-experiment checks and transparent analysis still matter.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. What is the danger of repeatedly checking p-values?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Stopping a conventional fixed-horizon test whenever a p-value becomes small can inflate the false-positive rate.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Repeated testing creates multiple chances to cross a significance threshold. Pre-register sample size and stopping rules, or use valid sequential testing methods such as alpha spending or confidence sequences.
+
+:::
+
+::::
+
+:::

@@ -1,0 +1,141 @@
+---
+title: "LLM & Transformers"
+subtitle: "Topics · Questions · Reference Answers · Detailed Explanations"
+toc: false
+format:
+  html:
+    css: qb.css
+---
+
+
+Explore the **LLM & Transformers** question bank. Select a topic tab and expand an answer or explanation.
+
+::: {.panel-tabset}
+
+## Self-Attention
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. What is self-attention?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Self-attention lets each token combine information from other tokens in the same sequence using learned relevance weights.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+The scaled dot-product form is $\mathrm{Attention}(Q,K,V)=\mathrm{softmax}(QK^T/\sqrt{d_k})V$. In causal language modeling, a mask prevents each position from attending to future tokens.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. Why divide attention scores by square root of d_k?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Scaling reduces the tendency of dot-product magnitudes to grow with key/query dimension.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+When vector components have roughly unit variance and are sufficiently independent, the dot product variance tends to grow with $d_k$. Dividing by $\sqrt{d_k}$ moderates logits and helps avoid an excessively sharp softmax early in training.
+
+:::
+
+::::
+
+## Transformers
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. What are the main components of a Transformer block?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+A typical block combines attention, a position-wise feed-forward network, residual connections, and normalization.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Decoder-only language models use causal self-attention. Other Transformer architectures may use bidirectional self-attention or encoder-decoder cross-attention. Positional information is needed because attention alone does not encode token order.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. What is the difference between training and autoregressive inference?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Training often processes many target positions in parallel under a causal mask. Autoregressive inference generates the next token one step at a time.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+During generation, a KV cache can reuse stored keys and values from earlier positions, reducing repeated work. Output tokens are still sequentially dependent.
+
+:::
+
+::::
+
+## Tokenization
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. Why are subword tokenizers commonly used?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+They offer a compromise between a small character vocabulary and a very large whole-word vocabulary.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Subword methods such as BPE represent common patterns compactly while still handling uncommon words by splitting them into pieces. Token count affects context length and inference cost.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. Is one token the same as one word?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+No. A token may represent a word, part of a word, punctuation, whitespace patterns, or other byte-level units.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+The exact segmentation depends on the tokenizer and language. Code, numbers, and multilingual text can have very different token-to-word ratios.
+
+:::
+
+::::
+
+:::

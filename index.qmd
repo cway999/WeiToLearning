@@ -1,44 +1,54 @@
 ---
-title: "Home"
+title: "All You Can Learn about AI in One Place"
 toc: false
 ---
 
-# Data Science Handbook
+Explore Data Science, Machine Learning, Deep Learning, and LLM concepts.
 
-Welcome to my Data Science Handbook!
+**Select a subject below.** Each subject contains topic tabs, questions, answers.
 
-This website contains my notes, tutorials,
-Python implementations, and machine learning
-projects.
+:::: {.qb-category-grid}
 
-## Explore
+::: {.qb-category-card}
+### [Statistics & Probability](knowledge/question-bank/statistics.qmd)
+Probability · Hypothesis Testing 
+:::
 
-### Knowledge Base
+::: {.qb-category-card}
+### [Experimental Design](knowledge/question-bank/statistics.qmd)
+A/B Testing 
+:::
 
-Learn the fundamentals of statistics,
-machine learning, deep learning, and LLMs.
+::: {.qb-category-card}
+### [Causal Inference](knowledge/question-bank/statistics.qmd)
+Matching · DID · Regressional Discontinuity · Double ML
+:::
 
-[Explore Knowledge Base](knowledge/index.qmd)
+::: {.qb-category-card}
+### [Machine Learning](knowledge/question-bank/machine-learning.qmd)
+Logistic Regression · Decision Trees · Model Evaluation
+:::
 
-### Technical Blog
+::: {.qb-category-card}
+### [Deep Learning](knowledge/question-bank/deep-learning.qmd)
+Backpropagation · BatchNorm · LayerNorm
+:::
 
-Read technical articles, learning notes,
-and experiment summaries.
+::: {.qb-category-card}
+### [LLM & Transformers](knowledge/question-bank/llm.qmd)
+Self-Attention · Transformers · Tokenization
+:::
 
-[Read the Blog](blog/index.qmd)
+::: {.qb-category-card}
+### [Search & Ranking](knowledge/question-bank/ranking.qmd)
+BM25 · Recall@K · NDCG · MRR
+:::
 
-### Projects
+::: {.qb-category-card}
+### [Python & SQL](knowledge/question-bank/programming.qmd)
+Python · NumPy · SQL
+:::
 
-Explore practical Data Science and
-Machine Learning projects.
+::::
 
-[View Projects](projects/index.qmd)
-
-## Topics
-
-- Statistics and Probability
-- Machine Learning
-- Deep Learning and PyTorch
-- Large Language Models
-- Search and Recommendation Systems
-- Python and SQL
+> **How to use:** Choose a subject, switch between its topic tabs, then expand **Reference Answer** or **Detailed Explanation** for any question.

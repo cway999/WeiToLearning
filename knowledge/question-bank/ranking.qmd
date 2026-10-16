@@ -1,0 +1,265 @@
+---
+title: "Search & Ranking"
+subtitle: "Topics · Questions · Reference Answers · Detailed Explanations"
+toc: false
+format:
+  html:
+    css: qb.css
+---
+
+
+Explore the **Search & Ranking** question bank. Select a topic tab and expand an answer or explanation.
+
+::: {.panel-tabset}
+
+## BM25
+
+**3 questions**
+
+:::: {.qb-question}
+### Q1. What is BM25?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+BM25 is a lexical ranking function based on query-term occurrences, inverse document frequency, and document-length normalization.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+BM25 scores documents without requiring neural embeddings. Term-frequency gains saturate, so repeated occurrences have diminishing returns. It is an effective baseline for the first stage of search retrieval.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. What do k1 and b control in BM25?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+$k_1$ controls term-frequency saturation; $b$ controls document-length normalization.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Larger $k_1$ allows more impact from repeated terms before saturation. Setting $b=0$ removes length normalization; $b=1$ applies full normalization relative to average document length. Tune both parameters on representative queries.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q3. When might BM25 outperform semantic retrieval?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+It can be strong for exact identifiers, rare keywords, and queries where literal term matches are important.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Dense retrieval captures semantic similarity, while BM25 preserves exact lexical matching. Hybrid retrieval can combine these strengths; performance should be measured on the target query set.
+
+:::
+
+::::
+
+## Recall@K
+
+**3 questions**
+
+:::: {.qb-question}
+### Q1. What is Recall@K?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Recall@K is the number of relevant items in the top K results divided by the number of all relevant items.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+For a query with 10 relevant documents, if 4 are returned in the top 5, then $\mathrm{Recall@5}=4/10=0.4$. If a query has no relevant items, evaluation protocols must specify how to handle it.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. Why is Recall@K important for candidate retrieval?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+A downstream ranker usually cannot recover relevant items omitted by the retrieval stage.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+A two-stage system often optimizes first-stage recall while controlling candidate count and latency. Increasing K may improve recall but increases downstream ranking cost.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q3. Recall@K vs Precision@K?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Recall@K measures coverage of all relevant items; Precision@K measures the fraction of top-K items that are relevant.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+$\mathrm{Precision@K}=|\mathrm{Relevant}\cap\mathrm{TopK}|/K$. Both measure retrieval relevance but answer different questions. With a fixed ranking, Recall@K is nondecreasing as K grows.
+
+:::
+
+::::
+
+## NDCG
+
+**3 questions**
+
+:::: {.qb-question}
+### Q1. What is NDCG@K?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+NDCG@K measures ranking quality by rewarding highly relevant results near the top and normalizing against an ideal ranking.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+$$\mathrm{DCG@K}=\sum_{i=1}^{K}\frac{2^{rel_i}-1}{\log_2(i+1)}$$
+
+$$\mathrm{NDCG@K}=\frac{\mathrm{DCG@K}}{\mathrm{IDCG@K}}$$
+
+When $\mathrm{IDCG@K}=0$, the evaluation convention must define the result.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. Why use graded relevance labels?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+They distinguish highly relevant results from partially relevant results instead of treating relevance as only 0 or 1.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+For example, ratings 0, 1, 2, and 3 can represent increasing relevance. The gain mapping (such as $2^{rel}-1$) makes ranking a highly relevant document above a partially relevant one more valuable.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q3. Can two lists have equal Recall@K but different NDCG@K?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Yes. Recall@K ignores ordering within the top K, but NDCG discounts lower positions.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+If two lists contain the same relevant documents in the top K but order them differently, Recall@K can be identical while NDCG@K differs. This is why NDCG is useful when ordering quality matters.
+
+:::
+
+::::
+
+## MRR
+
+**3 questions**
+
+:::: {.qb-question}
+### Q1. What is Mean Reciprocal Rank?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+MRR is the average reciprocal position of the first relevant result across queries.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+$$\mathrm{MRR}=\frac{1}{|Q|}\sum_{q\in Q}\frac{1}{r_q}$$
+
+Here $r_q$ is the rank of the first relevant result for query $q$, and the reciprocal rank is defined as 0 if no relevant result is found.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. When is MRR a suitable metric?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+MRR is suitable when the location of the first relevant answer is the primary goal.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+MRR does not reward additional relevant results after the first. For tasks where several results should be useful, consider NDCG, MAP, or other metrics as well.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q3. How is MRR different from MAP?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+MRR considers only the first relevant result; MAP averages precision at all relevant-result positions.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Mean Average Precision is more informative when returning multiple relevant documents matters. Its exact handling of incomplete relevance judgments should follow the evaluation protocol.
+
+:::
+
+::::
+
+:::

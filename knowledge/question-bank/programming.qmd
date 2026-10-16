@@ -1,0 +1,141 @@
+---
+title: "Python & SQL"
+subtitle: "Topics · Questions · Reference Answers · Detailed Explanations"
+toc: false
+format:
+  html:
+    css: qb.css
+---
+
+
+Explore the **Python & SQL** question bank. Select a topic tab and expand an answer or explanation.
+
+::: {.panel-tabset}
+
+## Python
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. What is the difference between a list and a tuple?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+A list is mutable. A tuple is immutable, although objects stored inside a tuple may themselves be mutable.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Use lists for collections that change and tuples for fixed groupings. Tuples can be hashable only when all their elements are hashable.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. What is a generator in Python?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+A generator produces values lazily instead of constructing every result in memory at once.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Functions with `yield` can pause and resume execution. Generators are useful for streaming large datasets and building memory-efficient pipelines, but iterators are consumed as they are read.
+
+:::
+
+::::
+
+## NumPy
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. What is broadcasting?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Broadcasting lets NumPy combine arrays of compatible shapes without explicitly replicating their data.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Shapes are compared from the last dimension moving left. Two dimensions are compatible if equal or if one is 1. For example, arrays of shapes `(100, 4)` and `(4,)` can be combined element-wise.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. Why prefer vectorized operations when possible?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Vectorization usually moves repeated numerical work into optimized array operations instead of Python-level loops.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+It can reduce interpreter overhead and improve readability. However, vectorization can create large temporary arrays, so memory usage and actual performance should still be measured.
+
+:::
+
+::::
+
+## SQL
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. What is the difference between WHERE and HAVING?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+WHERE filters rows before aggregation; HAVING filters groups after aggregation.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Example: `SELECT user_id, COUNT(*) AS n FROM events WHERE event_type = 'click' GROUP BY user_id HAVING COUNT(*) >= 3;` The WHERE condition restricts events; HAVING restricts user groups.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. What is a window function?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+A window function computes a result across related rows while generally preserving the original row granularity.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+`ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY event_time DESC)` can rank each user’s events by time. Unlike `GROUP BY`, window functions do not collapse all rows into one row per group.
+
+:::
+
+::::
+
+:::

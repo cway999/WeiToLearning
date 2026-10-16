@@ -1,0 +1,141 @@
+---
+title: "Machine Learning"
+subtitle: "Topics · Questions · Reference Answers · Detailed Explanations"
+toc: false
+format:
+  html:
+    css: qb.css
+---
+
+
+Explore the **Machine Learning** question bank. Select a topic tab and expand an answer or explanation.
+
+::: {.panel-tabset}
+
+## Logistic Regression
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. Why is logistic regression used for classification?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+It models a linear combination of features and transforms it through the sigmoid function into a probability between 0 and 1.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+For binary classification, $P(Y=1\mid x)=\sigma(w^Tx+b)$, where $\sigma(z)=1/(1+e^{-z})$. The model is often trained using negative log-likelihood, also called binary cross-entropy.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. How do L1 and L2 regularization differ?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+L1 penalizes absolute coefficient values and can produce sparse solutions. L2 penalizes squared values and usually shrinks coefficients smoothly.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Typical objectives add $\lambda\lVert w\rVert_1$ or $\lambda\lVert w\rVert_2^2$ to the loss. Regularization reduces overfitting; tune the strength using validation data.
+
+:::
+
+::::
+
+## Decision Trees
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. How does a decision tree choose a split?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+It selects a feature and threshold that most improve a criterion such as impurity or loss.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+For classification, common criteria include Gini impurity and entropy. For regression, reductions in squared error are common. Deep trees can overfit, so depth, leaf size, and pruning matter.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. Random forest vs gradient boosting: what is the main difference?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Random forests average many independently randomized trees; gradient boosting builds trees sequentially to correct the current model.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Bagging mainly reduces variance by averaging. Boosting iteratively optimizes a loss and can achieve strong predictive accuracy with careful tuning, but it can be more sensitive to learning rate and training iterations.
+
+:::
+
+::::
+
+## Model Evaluation
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. What is the difference between ROC-AUC and PR-AUC?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+ROC-AUC summarizes true-positive versus false-positive rates. PR-AUC summarizes precision versus recall.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Precision-recall curves focus on positive predictions and are often informative when positive events are rare. ROC-AUC can still be useful, but neither metric alone determines the right operating threshold.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. Why must preprocessing be fitted only on training data?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Fitting transformations on validation or test data leaks information into the model evaluation.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+For example, compute imputation values, scaling parameters, and selected features using the training fold only. A pipeline helps apply the same learned transformations to validation and test observations without leakage.
+
+:::
+
+::::
+
+:::

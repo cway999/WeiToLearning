@@ -1,0 +1,57 @@
+---
+title: "Your New Subject"
+toc: false
+format:
+  html:
+    css: qb.css
+---
+
+::: {.panel-tabset}
+
+## Your First Topic
+
+:::: {.qb-question}
+### Q1. Write your question here.
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Write the short answer here.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Write your detailed derivation, formulas, and code examples here.
+
+For example, $y = wx + b$.
+
+```python
+print("Hello from Quarto")
+```
+
+:::
+::::
+
+## Your Second Topic
+
+:::: {.qb-question}
+### Q1. Another question.
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+A brief answer.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+A more complete explanation.
+
+:::
+::::
+
+:::

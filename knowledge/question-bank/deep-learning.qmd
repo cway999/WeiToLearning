@@ -1,0 +1,141 @@
+---
+title: "Deep Learning"
+subtitle: "Topics · Questions · Reference Answers · Detailed Explanations"
+toc: false
+format:
+  html:
+    css: qb.css
+---
+
+
+Explore the **Deep Learning** question bank. Select a topic tab and expand an answer or explanation.
+
+::: {.panel-tabset}
+
+## Backpropagation
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. What does backpropagation compute?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+It efficiently computes derivatives of a loss with respect to model parameters by applying the chain rule backward through a computation graph.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+If $L$ depends on $z$ and $z$ depends on $w$, then $\partial L/\partial w=(\partial L/\partial z)(\partial z/\partial w)$. Reverse-mode automatic differentiation is especially efficient when many parameters contribute to one scalar loss.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. What are vanishing and exploding gradients?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Gradients may shrink toward zero or grow very large as they pass through many layers or timesteps.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+Repeated multiplication by derivatives can make updates ineffective or unstable. Common mitigations include suitable initialization, residual connections, normalization, gated architectures, and gradient clipping.
+
+:::
+
+::::
+
+## BatchNorm
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. What does Batch Normalization do?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+It normalizes activations using batch statistics during training and then applies learnable scale and shift parameters.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+For each normalized feature, $\hat x=(x-\mu_B)/\sqrt{\sigma_B^2+\epsilon}$ and $y=\gamma\hat x+\beta$. During evaluation, implementations typically use running estimates rather than statistics from the current batch.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. Why can BatchNorm behave poorly with very small batches?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Small batches can produce noisy estimates of the mean and variance used for normalization.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+This noise may make training unstable or create a mismatch between training and inference. LayerNorm or GroupNorm may be suitable alternatives, depending on model structure.
+
+:::
+
+::::
+
+## LayerNorm
+
+**2 questions**
+
+:::: {.qb-question}
+### Q1. How does LayerNorm differ from BatchNorm?
+
+**Difficulty:** Basic
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+LayerNorm normalizes selected feature dimensions within each sample rather than using statistics across a batch.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+LayerNorm generally behaves consistently across different batch sizes and is commonly used in Transformer blocks. Exact normalized dimensions depend on the framework configuration and tensor layout.
+
+:::
+
+::::
+
+:::: {.qb-question}
+### Q2. What is Pre-LN versus Post-LN in a Transformer?
+
+**Difficulty:** Intermediate
+
+::: {.callout-note appearance="minimal" icon="false" collapse="true" title="参考答案 · Reference Answer"}
+
+Pre-LN places normalization before a sublayer; Post-LN places it after the residual addition.
+
+:::
+
+::: {.callout-tip appearance="minimal" icon="false" collapse="true" title="详细解析 · Detailed Explanation"}
+
+A Pre-LN block is often written $x+F(\mathrm{LN}(x))$. A Post-LN block is $\mathrm{LN}(x+F(x))$. Their gradient behavior and training characteristics differ, especially for deep networks.
+
+:::
+
+::::
+
+:::

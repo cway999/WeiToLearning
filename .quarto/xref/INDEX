@@ -16,5 +16,29 @@
   },
   "knowledge/gradient_descent.ipynb": {
     "gradient_descent.html": "feaf62bf"
+  },
+  "knowledge/question-bank/deep-learning.qmd": {
+    "deep-learning.html": "160fb95c"
+  },
+  "knowledge/question-bank/ranking.qmd": {
+    "ranking.html": "e5a359bc"
+  },
+  "knowledge/question-bank/machine-learning.qmd": {
+    "machine-learning.html": "1aa375c4"
+  },
+  "knowledge/question-bank/index.qmd": {
+    "index.html": "97c73b16"
+  },
+  "knowledge/question-bank/programming.qmd": {
+    "programming.html": "5cff8f25"
+  },
+  "knowledge/question-bank/llm.qmd": {
+    "llm.html": "e3a529c0"
+  },
+  "knowledge/question-bank/statistics.qmd": {
+    "statistics.html": "8ac4f1f2"
+  },
+  "更新说明.md": {
+    "更新说明.html": "62801128"
   }
 }

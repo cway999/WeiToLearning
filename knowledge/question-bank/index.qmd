@@ -1,0 +1,58 @@
+---
+title: "Question Bank"
+subtitle: "Browse Data Science concepts by topic"
+toc: false
+format:
+  html:
+    css: qb.css
+---
+
+# Data Science Question Bank
+
+Choose a subject. Each subject contains topic tabs, questions, and two independent expandable sections per question.
+
+:::: {.qb-category-grid}
+
+::: {.qb-category-card}
+### [Statistics & Probability](statistics.qmd)
+Probability · Hypothesis Testing 
+:::
+
+::: {.qb-category-card}
+### [Experimental Design](statistics.qmd)
+A/B Testing 
+:::
+
+::: {.qb-category-card}
+### [Causal Inference](statistics.qmd)
+Matching · DID · Regressional Discontinuity · Double ML
+:::
+
+::: {.qb-category-card}
+### [Machine Learning](machine-learning.qmd)
+Logistic Regression · Decision Trees · Evaluation
+:::
+
+::: {.qb-category-card}
+### [Deep Learning](deep-learning.qmd)
+Backpropagation · BatchNorm · LayerNorm
+:::
+
+::: {.qb-category-card}
+### [LLM & Transformers](llm.qmd)
+Self-Attention · Transformers · Tokenization
+:::
+
+::: {.qb-category-card}
+### [Search & Ranking](ranking.qmd)
+BM25 · Recall@K · NDCG · MRR
+:::
+
+::: {.qb-category-card}
+### [Python & SQL](programming.qmd)
+Python · NumPy · SQL
+:::
+
+::::
+
+> **How to use:** Select a subject, select a topic tab, and click **Reference Answer** or **Detailed Explanation** under any question.

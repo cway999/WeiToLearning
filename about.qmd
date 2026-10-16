@@ -1,15 +1,14 @@
 ---
-title: "About"
+title: "About Wei"
 toc: false
 ---
 
-# About Me
 
-Welcome to my personal Data Science website.
+Welcome to my learning website for Data Science, Machine Learning, and AI.
 
-I am interested in statistical modeling,
-machine learning, deep learning, and
-large language models.
+I hold a PhD in Quantitative Economics. I was a post-doctoral researcher and am currently a quantitative modeler working on quantitative modeling using financial data and machine learning.
+
+My goal is to make this website as comprehensive as possible so that people can learn everything about AI here.
 
 This website documents my technical
 learning, implementations, and projects.
@@ -19,9 +18,14 @@ learning, implementations, and projects.
 - Data Science
 - Machine Learning
 - LLMs
-- Information Retrieval
 - Ranking and Recommendation
+- AI
 
 ## Links
 
 GitHub: Coming soon.
+
+## Contact
+If you have any questions or any suggestions, feel free to email me:
+
+XXXXX@gmail.com

@@ -4,11 +4,17 @@ project:
 
 website:
   title: "Wei to Learning"
+  search: true
   navbar:
     left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
+      - text: Home
+        href: index.qmd
+      - text: Technical Blog
+        href: blog/index.qmd
+      - text: Projects
+        href: projects/index.qmd
+      - text: About
+        href: about.qmd
 
 format:
   html:
@@ -17,6 +23,3 @@ format:
       - brand
     css: styles.css
     toc: true
-
-
-
