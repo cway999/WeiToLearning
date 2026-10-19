@@ -10,13 +10,8 @@ Explore Data Science, Machine Learning, Deep Learning, and LLM concepts.
 :::: {.qb-category-grid}
 
 ::: {.qb-category-card}
-### [Statistics & Probability](knowledge/question-bank/statistics.qmd)
-Probability · Hypothesis Testing 
-:::
-
-::: {.qb-category-card}
-### [Experimental Design](knowledge/question-bank/statistics.qmd)
-A/B Testing 
+### [Statistics & Probability](knowledge/question-bank/probability_statistics_4tabs_comprehensive.qmd)
+Probability · Hypothesis Testing · Experimental A/B Test
 :::
 
 ::: {.qb-category-card}
@@ -25,8 +20,22 @@ Matching · DID · Regressional Discontinuity · Double ML
 :::
 
 ::: {.qb-category-card}
+### [Time Series](knowledge/question-bank/statistics.qmd)
+:::
+
+::: {.qb-category-card}
+### [Marketing Mix Modeling](knowledge/question-bank/statistics.qmd)
+:::
+
+
+::: {.qb-category-card}
 ### [Machine Learning](knowledge/question-bank/machine-learning.qmd)
 Logistic Regression · Decision Trees · Model Evaluation
+:::
+
+::: {.qb-category-card}
+### [Search & Ranking](knowledge/question-bank/ranking.qmd)
+BM25 · Recall@K · NDCG · MRR
 :::
 
 ::: {.qb-category-card}
@@ -39,15 +48,8 @@ Backpropagation · BatchNorm · LayerNorm
 Self-Attention · Transformers · Tokenization
 :::
 
-::: {.qb-category-card}
-### [Search & Ranking](knowledge/question-bank/ranking.qmd)
-BM25 · Recall@K · NDCG · MRR
-:::
 
-::: {.qb-category-card}
-### [Python & SQL](knowledge/question-bank/programming.qmd)
-Python · NumPy · SQL
-:::
+
 
 ::::
 

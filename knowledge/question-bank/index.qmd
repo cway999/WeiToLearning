@@ -14,18 +14,18 @@ Choose a subject. Each subject contains topic tabs, questions, and two independe
 :::: {.qb-category-grid}
 
 ::: {.qb-category-card}
-### [Statistics & Probability](statistics.qmd)
-Probability · Hypothesis Testing 
+### [Statistics & Probability](probability_statistics_4tabs_comprehensive.qmd)
+Probability · Hypothesis Testing  · Experimental A/B TestingDesign
 :::
 
-::: {.qb-category-card}
-### [Experimental Design](statistics.qmd)
-A/B Testing 
-:::
 
 ::: {.qb-category-card}
 ### [Causal Inference](statistics.qmd)
 Matching · DID · Regressional Discontinuity · Double ML
+:::
+
+::: {.qb-category-card}
+### [Marketing Mix Modeling](statistics.qmd)
 :::
 
 ::: {.qb-category-card}

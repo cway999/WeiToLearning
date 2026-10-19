@@ -1,0 +1,3716 @@
+---
+title: "Probability & Statistics Questions"
+subtitle: "Four-topic guide: concepts, inference, experiments, and interview cases"
+toc: false
+number-sections: false
+format:
+  html:
+    code-copy: true
+    code-fold: show
+---
+
+**Notation:** $A$ = control, $B$ = treatment; $n$ = number of independent units unless noted otherwise; $\alpha$ = Type I error level; $\beta$ = Type II error probability for a specified alternative.
+
+
+:::: {.panel-tabset}
+
+## Probability & Distributions
+
+**32 questions **
+
+
+### Q1. What is a random variable? What is the difference between discrete and continuous variables?
+
+**Difficulty:** Easy 
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A random variable assigns a numerical value to a random outcome. A discrete variable takes countable values; a continuous variable can take values on a continuum.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+The number of customers who buy a product is **discrete**: 0, 1, 2, and so on. The time a customer spends on a page is typically **continuous**.
+
+- For discrete $X$, a probability mass function gives $P(X=x)$.
+- For continuous $X$, a probability density function (PDF) describes density. A probability is an **area** under the PDF, not its height at one point.
+
+In an interview, first identify what the variable represents. It helps you choose a model and a test.
+
+:::
+
+### Q2. What are mean, variance, and standard deviation?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The mean measures the center of a distribution. Variance measures average squared spread, and standard deviation is the square root of variance.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a random variable $X$:
+
+$$
+\mu=E[X],\qquad \operatorname{Var}(X)=E[(X-\mu)^2],\qquad \sigma=\sqrt{\operatorname{Var}(X)}.
+$$
+
+Think of two apps with the same average daily spend of $\$20$. If users of App B vary from $\$0$ to $\$200$ while App A users stay close to $\$20$, App B has greater variance.
+
+**Why it matters:** More outcome variance generally makes the treatment effect harder to estimate precisely.
+
+:::
+
+### Q3. What is a Bernoulli distribution?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A Bernoulli variable has two outcomes, usually 1 (success) and 0 (failure), with success probability $p$.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A user's **converted / did not convert** outcome is Bernoulli if you observe one binary conversion indicator per user.
+
+$$
+P(X=1)=p,\qquad E[X]=p,\qquad \operatorname{Var}(X)=p(1-p).
+$$
+
+For $p=0.2$, the variance is $0.2\times0.8=0.16$. The sample mean of conversion indicators is the observed conversion rate. This connects conversion analysis to inference about means.
+
+:::
+
+### Q4. How do Bernoulli, binomial, and geometric distributions differ?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Bernoulli models one binary trial; binomial models successes in a fixed number of independent trials; geometric models waiting time until the first success.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+- **Bernoulli:** Did one visitor sign up?
+- **Binomial:** How many of 100 independent visitors signed up?
+- **Geometric:** How many independent attempts until the first signup?
+
+If $X\sim\operatorname{Binomial}(n,p)$, then $E[X]=np$ and $\operatorname{Var}(X)=np(1-p)$.
+
+For a geometric variable counting trials up to and including first success, $E[X]=1/p$. These models assume independent trials with the same success probability; repeat visits by the same user can violate that assumption.
+
+:::
+
+### Q5. What is the difference between population and sample?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A population is the full group of interest. A sample is the subset used to estimate properties of that population.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If you want to know the average spending of **all active customers**, those customers are the target population. A random set of 5,000 users is your sample.
+
+Two questions matter: **Who do you want to generalize to?** And **How were observations sampled?** More sample data does not fix a poorly selected sample.
+
+:::
+
+### Q6. What is the difference between standard deviation (SD) and standard error (SE)?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+SD measures spread among observations. SE measures the uncertainty of a statistic, such as a sample mean.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For independent observations with sample SD $s$:
+
+$$
+SE(\bar X)\approx\frac{s}{\sqrt n}.
+$$
+
+Imagine users' spending has SD $\$40$. If you sample 100 independent users, the SE of average spending is about $\$4$. With 400 users, it is about $\$2$.
+
+**Memory aid:** SD describes *users*. SE describes how much the *estimated average* would vary across repeated samples.
+
+:::
+
+### Q7. Why does sample variance divide by $n-1$ instead of $n$?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The $n-1$ correction makes sample variance unbiased for the population variance under independent, identically distributed sampling.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$
+s^2=\frac{\sum_{i=1}^n(x_i-\bar x)^2}{n-1}.
+$$
+
+The sample mean is estimated from the same data. Once the first $n-1$ deviations are known, the last deviation must make the total equal zero. We have only $n-1$ independent deviations.
+
+This is **Bessel’s correction**; it does not automatically fix biased sampling or correlated observations.
+
+:::
+
+### Q8. What is the difference between mutually exclusive and independent events?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Events are mutually exclusive if they cannot occur together. Events are independent if learning one does not change the probability of the other.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+**Mutually exclusive:** A customer cannot both make *exactly one* purchase and *exactly two* purchases in the same period, so their intersection has probability zero.
+
+**Independent:** For independent events, $P(A\cap B)=P(A)P(B)$; the events can occur together. If two events have positive probabilities, they cannot be both independent and mutually exclusive.
+
+**Interview trap:** 'No overlap' does not imply independence.
+
+:::
+
+### Q9. What are a PMF, PDF, and CDF?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A PMF assigns probabilities to discrete values. A PDF describes density for continuous variables. A CDF gives $P(X\le x)$ for either type.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a count of signups, the probability mass function (PMF) may say $P(X=3)=0.2$.
+
+For a continuous response time, the probability density function (PDF) must be **integrated over an interval** to get a probability; the density at exactly 2 seconds is not the probability of exactly 2 seconds.
+
+The cumulative distribution function (CDF), $F(x)=P(X\le x)$, tells you the share of outcomes at or below $x$. Percentiles can be read from the CDF.
+
+:::
+
+### Q10. What is the difference between a mean, median, and percentile?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The mean averages all values; the median is the 50th percentile; the $p$th percentile is a threshold at or below which approximately $p$% of observations fall.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Take session durations $[1,2,2,3,92]$ minutes. The mean is 20 minutes, but the median is 2 minutes. A single long session pulls up the mean.
+
+For latency, teams often monitor the 95th or 99th percentile because users experiencing slow responses matter even when average latency is low. When a distribution is skewed, report the mean and selected percentiles together.
+
+:::
+
+### Q11. When would you use a Poisson distribution?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use a Poisson distribution to model counts of approximately independent events in a fixed time or space interval, at a stable rate.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For example, suppose a help desk receives an average of 4 tickets per hour and arrivals behave like a Poisson process. Then $X\sim\operatorname{Poisson}(4)$ and
+
+$$P(X=k)=\frac{e^{-4}4^k}{k!},\quad E[X]=\operatorname{Var}(X)=4.$$
+
+**Check the assumptions:** If tickets arrive in bursts, the observed variance may be larger than the mean (overdispersion). A negative-binomial model or a time-varying rate can work better.
+
+:::
+
+### Q12. What is the difference between correlation and covariance?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Covariance measures whether two variables move together; correlation is standardized covariance and lies between -1 and 1.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$\operatorname{Corr}(X,Y)=\frac{\operatorname{Cov}(X,Y)}{\sigma_X\sigma_Y}.$$
+
+If higher ad spending usually comes with higher sales, covariance may be positive. Correlation makes the strength easier to compare across units (dollars versus thousands of dollars). Neither proves that ad spending *caused* sales: seasonality or demand could affect both.
+
+:::
+
+
+**Medium questions**
+
+### Q13. What is conditional probability, and why does Bayes’ theorem matter?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Conditional probability describes a probability after learning an event occurred. Bayes’ theorem reverses the conditioning using prior probabilities.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$
+P(A\mid B)=\frac{P(A\cap B)}{P(B)},\qquad
+P(A\mid B)=\frac{P(B\mid A)P(A)}{P(B)}.
+$$
+
+Suppose only 1% of transactions are fraudulent. A detector flags 90% of frauds and 5% of legitimate transactions. Then:
+
+$$
+P(\text{fraud}\mid\text{flag})=\frac{0.90(0.01)}{0.90(0.01)+0.05(0.99)}\approx 15.4\%.
+$$
+
+**Takeaway:** A high-sensitivity detector may still have low precision when the event is rare.
+
+:::
+
+### Q14. What is the Central Limit Theorem (CLT)?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Under suitable conditions, the standardized mean of many independent observations approaches a normal distribution as sample size increases—even if individual observations are not normal.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For independent, identically distributed observations with finite variance:
+
+$$
+\frac{\bar X-\mu}{\sigma/\sqrt n}\xrightarrow{d}N(0,1).
+$$
+
+For example, individual purchase values may be highly skewed, but the **sample mean** can become approximately normal with sufficiently many independent users.
+
+The CLT does **not** mean every data set with 30 rows is normal. Strong skew, extreme outliers, heavy tails, and correlated observations may require many more observations or a different method.
+
+:::
+
+### Q15. How does increasing sample size affect estimation uncertainty?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+For an independent sample mean with stable variance, SE decreases like $1/\sqrt n$. Four times as many observations roughly halves SE.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$SE(\bar X)=\sigma/\sqrt n.$$
+
+To make your confidence interval **half as wide**, you usually need about **four times** as many independent observations, not twice as many.
+
+In product experiments, the relevant sample size is often the number of randomized users or clusters—not the total number of clicks.
+
+:::
+
+### Q16. What factors make a confidence interval wider?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Higher variability, fewer independent observations, or a higher confidence level make a confidence interval wider.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A common large-sample mean interval is:
+
+$$
+\bar x\pm z_{1-\alpha/2}\frac{s}{\sqrt n}.
+$$
+
+The three main levers are visible in the formula:
+
+1. Larger $s$ gives more uncertainty.
+2. Smaller $n$ gives more uncertainty.
+3. More confidence (for example, 99% instead of 95%) requires a larger critical value.
+
+The formula needs an appropriate sampling and distributional approximation.
+
+:::
+
+### Q17. How do you estimate the standard error of a conversion rate?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+With independent Bernoulli observations, use $SE(\hat p)\approx\sqrt{\hat p(1-\hat p)/n}$.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a rate of 20% from 1,000 independent users:
+
+$$
+SE(\hat p)\approx\sqrt{0.2(0.8)/1000}=0.01265.
+$$
+
+That is about **1.27 percentage points**, not 1.27% relative change.
+
+A quick 95% Wald interval is approximately $20\%\pm2.48$ percentage points. When sample size is small or the rate is near 0 or 1, a **Wilson** interval is usually more reliable.
+
+:::
+
+### Q18. What is the law of total probability?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+If groups form a complete, non-overlapping partition, overall probability is a weighted average of group-specific probabilities.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$P(A)=\sum_j P(A\mid G_j)P(G_j).$$
+
+If 70% of users are mobile with 12% conversion and 30% are desktop with 20% conversion, then overall conversion is $0.7(0.12)+0.3(0.20)=0.144$, or 14.4%.
+
+This formula is especially useful for understanding weighted product metrics and Simpson's paradox.
+
+:::
+
+### Q19. What is the difference between the Law of Large Numbers and the Central Limit Theorem?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The Law of Large Numbers says the sample mean approaches the population mean. The CLT describes the approximate shape and scale of its sampling distribution.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+The **Law of Large Numbers** explains why averages stabilize as independent observations accumulate.
+
+The **Central Limit Theorem** explains why $\bar X$ is often approximately normal around $\mu$, with standard error $\sigma/\sqrt n$. The LLN is about *convergence*; the CLT is about *uncertainty and distributions*.
+
+Both need assumptions. Correlated user events and extremely heavy-tailed outcomes can undermine textbook approximations.
+
+:::
+
+### Q20. What is expected value, and why is it linear?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Expected value is a probability-weighted average outcome. For any random variables with finite expectations, $E[aX+bY]=aE[X]+bE[Y]$, even without independence.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If a promotion yields $\$10$ with probability 0.3 and $\$0$ otherwise, expected revenue per targeted user is $\$3$.
+
+Linearity lets you calculate expected total revenue across users by adding user-level expected revenue, even when user outcomes are correlated. Independence is needed for some **variance** formulas, not for linearity of expectation.
+
+:::
+
+### Q21. What is the variance of a sum, and when does independence matter?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+For two variables, variance of the sum equals the sum of variances plus twice their covariance.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$\operatorname{Var}(X+Y)=\operatorname{Var}(X)+\operatorname{Var}(Y)+2\operatorname{Cov}(X,Y).$$
+
+If two daily revenue streams move up and down together, adding their individual variances **underestimates** total risk because covariance is positive.
+
+When events within the same user are correlated, dropping covariance also underestimates uncertainty. This is one reason experimental analyses often require user-level or cluster-robust standard errors.
+
+:::
+
+### Q22. What does the normal distribution assume, and how is a z-score used?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The normal distribution is symmetric and described by a mean and variance. A z-score measures how many standard deviations a value is from its mean.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$Z=\frac{X-\mu}{\sigma}.$$
+
+For a normal metric with mean 100 and standard deviation 15, a value of 130 has $z=2$. But daily spending data often have long right tails and are **not** normal.
+
+Do not assume raw data are normal just because sample means may be approximately normal under the CLT.
+
+:::
+
+### Q23. When is an exponential distribution appropriate?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+An exponential distribution models waiting time until the next event in a constant-rate Poisson process.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If events arrive independently at rate $\lambda$, waiting time $T$ has
+
+$$P(T>t)=e^{-\lambda t},\qquad E[T]=1/\lambda.$$
+
+Its memoryless property is $P(T>s+t\mid T>s)=P(T>t)$.
+
+This is a starting model for waiting times, but it is often unrealistic for customer lifetimes, where churn risk changes as customers age. Survival models can better capture changing hazard rates.
+
+:::
+
+### Q24. How do simple random sampling, stratified sampling, and cluster sampling differ?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Simple random sampling selects individuals; stratified sampling samples within defined subgroups; cluster sampling selects groups of units.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Use **stratified sampling** to ensure enough users from small but important segments, such as a device type representing only 5% of traffic. You may need weights to recover population estimates.
+
+Use **cluster sampling** when it is cheaper or more appropriate to sample whole stores, schools, or markets. Units inside one cluster tend to be correlated, so precision depends on the number and sizes of clusters, not just the total number of observations.
+
+:::
+
+### Q25. What are selection bias and survivorship bias?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Selection bias occurs when included observations systematically differ from the target population. Survivorship bias is selection caused by looking only at cases that remain observable.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose you ask current subscribers whether a new feature improved retention. You miss users who already churned, so the sample can overstate satisfaction.
+
+**Fix:** Define the target population first. Include eligible users regardless of later behavior when possible, and evaluate whether missing data depend on the outcome. A larger biased sample does not remove bias.
+
+:::
+
+### Q26. What do MCAR, MAR, and MNAR mean for missing data?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+MCAR means missingness is unrelated to observed or unobserved values; MAR means missingness is explainable by observed variables; MNAR means it still depends on unobserved information.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+- **MCAR:** A random storage failure loses 1% of records.
+- **MAR:** Income is missing more often among younger users, but age is recorded and explains missingness under the model.
+- **MNAR:** High-income users are less willing to disclose income even after accounting for recorded variables.
+
+Dropping missing rows is not automatically safe. Investigate how missingness arose; use suitable weighting, imputation, sensitivity analysis, or targeted data collection.
+
+:::
+
+
+**Hard questions**
+
+### Q27. When is the binomial model inappropriate for conversion data?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It can fail when trials are dependent or conversion probabilities vary in ways the binomial model does not account for.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If the same user visits 20 times, their pageviews are correlated. Counting each pageview as an independent Bernoulli trial may make the standard error too small.
+
+Other concerns include varying probabilities across user segments and network interactions between users.
+
+**Practical solution:** If assignment is by user, analyze independent user-level conversion indicators or use an inference method that accounts for user clusters. Always align the variance estimator with the randomization design.
+
+:::
+
+### Q28. What changes when observations are correlated within users or sessions?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Independent-observation formulas often underestimate uncertainty. Use user-level aggregation, cluster-robust SEs, or cluster-level resampling.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose 1,000 users each produce 10 pageviews. You do **not** necessarily have 10,000 independent pieces of information: behavior from the same user is related.
+
+If treatment is assigned by user, keep that structure in analysis. For a ratio such as clicks/pageviews, valid approaches include user-cluster bootstrap or a delta-method variance based on user-level click and view totals.
+
+**Interview insight:** Ask for the **randomization unit** before calculating p-values.
+
+:::
+
+### Q29. How does the law of total variance work?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Total variance equals expected within-group variance plus the variance of group means.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$\operatorname{Var}(Y)=E[\operatorname{Var}(Y\mid G)]+\operatorname{Var}(E[Y\mid G]).$$
+
+Imagine spending differs within each customer segment and also across segments. The first term captures individual variation **within** segments. The second captures variation **between** segment averages.
+
+This helps explain why controlling for meaningful pre-treatment segments can reduce residual variance in an experiment.
+
+:::
+
+### Q30. How can a rare event produce misleading model precision or accuracy?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+If positives are very rare, even a highly accurate classifier can generate many false positives. Always account for base rates.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Assume fraud prevalence is 0.1%. A model catches 95% of fraud and has 99% specificity. In 100,000 transactions, expect about 95 true positives and 999 false positives.
+
+Precision is only $95/(95+999)\approx8.7\%$. Overall accuracy may look impressive while precision is low.
+
+Use the confusion matrix, precision/recall, calibration, expected cost, and intervention capacity rather than accuracy alone.
+
+:::
+
+### Q31. What is Monte Carlo simulation, and when would you use it?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Monte Carlo simulation approximates an expectation or risk by repeatedly sampling from a model.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose you want to estimate how often a marketplace runs out of drivers given uncertainty in request arrivals and driver availability. Draw many plausible scenarios, calculate unmet demand for each, and summarize the results.
+
+A Monte Carlo model is only as reliable as its assumptions about input distributions and dependence. It is a tool for exploring uncertainty, not proof that the model is correct.
+
+:::
+
+### Q32. How would you simulate the sampling distribution of a mean in Python?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Draw many independent samples, compute the mean of each, then inspect the histogram and empirical standard deviation of those means.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+The original observations can be skewed. The distribution of **sample means** may become closer to normal as sample size grows.
+
+```python
+import numpy as np
+rng = np.random.default_rng(42)
+means = [rng.exponential(scale=3, size=100).mean() for _ in range(2000)]
+print('Empirical SE:', np.std(means, ddof=1))
+print('Theoretical SE:', 3 / np.sqrt(100))
+```
+
+The SE should be close to 0.3. Keep the samples independent; resampling correlated records as independent can produce misleadingly small uncertainty.
+
+:::
+
+
+## Hypothesis Testing
+
+**56 questions · ordered Easy → Medium → Hard.**
+
+**Easy questions**
+
+### Q1. What does a 95% confidence interval mean?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Under repeated use of a valid method, about 95% of the constructed intervals would contain the fixed true population parameter.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+The 95% refers to **coverage of the method**, not a 95% probability that the fixed unknown parameter moves around after seeing this one interval.
+
+Imagine taking 100 random samples, constructing a 95% interval from each, and drawing the intervals. About 95 of them would cover the true value in the long run.
+
+In an A/B test, an interval for treatment-minus-control expresses the estimate **and its uncertainty**.
+
+:::
+
+### Q2. How do you interpret a confidence interval for a treatment effect?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It gives a range of effect sizes compatible with the data under the chosen model and procedure.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If the conversion lift is **+1.5 percentage points** and its 95% interval is **[+0.2, +2.8] points**, the estimate favors treatment, while the plausible magnitude remains uncertain.
+
+If the interval is **[-0.4, +3.4] points**, it also allows a small negative effect. A non-significant result does not prove there is no impact.
+
+:::
+
+### Q3. What are the null and alternative hypotheses?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The null hypothesis ($H_0$) is the reference claim tested against the data. The alternative ($H_1$) describes departures of interest.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a two-sided conversion comparison:
+
+$$H_0:p_A=p_B,\qquad H_1:p_A\ne p_B.$$
+
+A one-sided alternative might be $H_1:p_B>p_A$. Decide the direction **before seeing outcomes**.
+
+Not rejecting $H_0$ does **not** mean you have proved it true. It means your data did not give enough evidence for rejection under the procedure.
+
+:::
+
+### Q4. What is a p-value?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A p-value is the probability, assuming the null model is true, of obtaining a test statistic at least as extreme as the observed statistic.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose $p=0.02$. If the null model were true and its assumptions held, results this extreme or more extreme would occur about **2% of the time**.
+
+It does **not** mean there is a 2% probability the null hypothesis is true, or a 98% probability treatment works. The p-value conditions on the null; it is not a posterior probability.
+
+:::
+
+### Q5. What are Type I and Type II errors?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Type I error: reject a true null (false positive). Type II error: fail to reject a false null (false negative).
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+| Reality | Reject $H_0$ | Fail to reject $H_0$ |
+|---|---|---|
+| $H_0$ true | **Type I error** | Correct non-rejection |
+| $H_0$ false | Correct rejection | **Type II error** |
+
+In a product test, a Type I error can mean launching a feature with no true improvement. A Type II error can mean missing a real improvement. Their costs depend on the business decision.
+
+:::
+
+### Q6. What are significance level, Type II error rate, and power?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+$\alpha$ is the probability of rejecting a true null under the test design. $\beta$ is the chance of missing a specified real effect. Power is $1-\beta$.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$
+\alpha=P(\text{reject }H_0\mid H_0\text{ true}),\qquad
+1-\beta=P(\text{reject }H_0\mid\text{specified alternative}).
+$$
+
+A test with **80% power** for a +2-point conversion increase would reject $H_0$ in about 80% of repeated experiments when that specified increase is the truth.
+
+Power is **effect-size dependent**; a study does not have one fixed power for every possible true effect.
+
+:::
+
+### Q7. When should you use a one-sample t-test?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use it to test whether the mean of one independent sample differs from a specified value, with appropriate assumptions.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$t=\frac{\bar x-\mu_0}{s/\sqrt n}.$$
+
+Example: Is average delivery time different from 30 minutes? Estimate the mean delivery time, compute its SE, then evaluate the t statistic.
+
+For a small independent sample drawn from a normal population, this statistic follows a $t_{n-1}$ distribution under the null. With strongly skewed data, assess robustness or alternatives.
+
+:::
+
+### Q8. What is the difference between a paired t-test and an independent two-sample t-test?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A paired t-test analyzes differences within matched pairs; an independent t-test compares means from unrelated groups.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If the **same users** give satisfaction scores before and after an update, define $D_i=\text{after}_i-\text{before}_i$. Then test whether $E[D]=0$:
+
+$$t=\frac{\bar D}{s_D/\sqrt n}.$$
+
+If control and treatment contain different independently assigned users, analyze the difference between group means instead.
+
+Matching can remove user-to-user variability. Ignoring pairing can lose power; inventing pairing can invalidate inference.
+
+:::
+
+### Q9. What is the difference between parametric and nonparametric methods?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Parametric methods make more specific model assumptions. Nonparametric methods typically require fewer assumptions about a distribution’s functional form.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A t-test models the sampling behavior of a mean under particular assumptions; a Mann–Whitney test uses relative ranks.
+
+**Important:** Nonparametric does not mean 'assumption-free,' and its p-value is not *always* larger than a parametric test's p-value. The two tests may target different features of a distribution.
+
+:::
+
+### Q10. What is bootstrapping?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Bootstrapping approximates a statistic’s sampling variability by repeatedly resampling the observed data with replacement.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose you have independent user-level revenues. Draw many new samples of the **same size**, with replacement, from those users. Recalculate mean revenue for each draw.
+
+The distribution of bootstrap means gives an estimated SE and can help construct a confidence interval.
+
+For an A/B test, bootstrap **within each arm** and recompute the treatment effect. If users have repeated events, resample *users*, not individual events. Bootstrap validity still depends on sampling and data structure.
+
+**Python example — bootstrap a difference in mean revenue per user:**
+
+```python
+import numpy as np
+
+control = np.array([0, 0, 20, 30, 100])
+treatment = np.array([0, 10, 30, 45, 120])
+rng = np.random.default_rng(42)
+
+lifts = []
+for _ in range(5000):
+    a = rng.choice(control, size=len(control), replace=True)
+    b = rng.choice(treatment, size=len(treatment), replace=True)
+    lifts.append(b.mean() - a.mean())
+
+print("Estimated lift:", treatment.mean() - control.mean())
+print("Bootstrap interval:", np.quantile(lifts, [0.025, 0.975]))
+```
+
+This tiny example illustrates the method; five users per arm cannot support a reliable product decision.
+
+:::
+
+### Q11. Why is testing 20 independent metrics at $\alpha=0.05$ risky?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Even if every null is true, there is an elevated chance that at least one metric is falsely significant.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If tests are independent:
+
+$$P(\text{at least one false rejection})=1-(1-0.05)^{20}\approx64.2\%.$$
+
+With correlated metrics the exact probability changes, but the underlying problem remains: testing many hypotheses creates more opportunities to find apparently significant results by chance.
+
+Pre-register a small number of primary hypotheses and treat additional segment/metric analyses as exploratory unless adjusted.
+
+:::
+
+### Q12. What is the difference between a point estimate and an interval estimate?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A point estimate gives one number; an interval estimate gives a range of plausible parameter values under a stated procedure.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If conversion is 12% in a sample, 12% is a **point estimate**. A 95% confidence interval might be [11.2%, 12.8%]. The interval reports sampling uncertainty.
+
+A confidence interval is not a prediction that 95% of individual users convert at rates in that range. It refers to uncertainty about the **population parameter**.
+
+:::
+
+### Q13. What is sampling bias versus sampling variability?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Sampling variability is random fluctuation across samples; sampling bias is systematic departure from the target due to the way data were collected.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If you repeatedly draw random sets of users, their sample conversion rates vary. That is **sampling variability**, which gets smaller with more independent observations.
+
+If you survey only users who replied to an email, you may systematically overestimate engagement. That is **bias**. Increasing the number of email respondents does not necessarily fix it.
+
+:::
+
+### Q14. What is an effect size, and why report it in addition to a p-value?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+An effect size measures the magnitude of a change; a p-value measures incompatibility with the null under a specified test.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A conversion increase from 10% to 10.2% is **+0.2 percentage points** or **+2% relative**. Both are effect-size descriptions; they answer different questions.
+
+A tiny effect may be highly statistically significant with millions of users yet not justify implementation cost. Report the effect, confidence interval, and business relevance together.
+
+:::
+
+### Q15. What does it mean to fail to reject the null hypothesis?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It means the test did not provide sufficient evidence against the null at the chosen threshold. It does not prove the null is true.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine an experiment with a confidence interval for treatment lift of [-4%, +6%]. Because the range is wide, the experiment is consistent with both a useful increase and a harmful decrease.
+
+The right conclusion is **inconclusive**, not “the feature has no effect.” A sufficiently narrow interval may support a meaningful null or equivalence claim, but that requires a suitable design.
+
+:::
+
+
+**Medium questions**
+
+### Q16. How do you construct an approximate 95% confidence interval for a mean?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use the sample mean plus/minus a critical value times its SE. For small samples with unknown variance, a t critical value is common.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$
+\bar x\pm t_{n-1,0.975}\frac{s}{\sqrt n}.
+$$
+
+For $n=100$, sample mean $50$, and SD $10$, the SE is $1$. A normal approximation gives about **[48.04, 51.96]**.
+
+You need independence or a suitable variance estimator and a reasonable sampling-distribution approximation. Raw data need not be exactly normal in a large, well-behaved sample.
+
+:::
+
+### Q17. If two group-level 95% confidence intervals overlap, can their difference still be significant?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Yes. The proper test uses the SE of the **difference**, not a visual overlap rule for separate intervals.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For independent groups:
+
+$$
+SE(\bar X_B-\bar X_A)\approx\sqrt{\frac{s_A^2}{n_A}+\frac{s_B^2}{n_B}}.
+$$
+
+Separate 95% intervals are each roughly $\pm1.96SE$; the CI for the difference uses a **combined SE**. Therefore, some overlap between separate intervals is entirely compatible with a statistically significant difference.
+
+For paired data, covariance also matters. Best practice: **compute the confidence interval for the difference directly**.
+
+:::
+
+### Q18. What is the relationship between a two-sided p-value and a 95% confidence interval?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+For matching, correctly constructed two-sided tests and intervals, $p<0.05$ exactly when the corresponding 95% interval excludes the null value.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If the null is $H_0:\Delta=0$, check whether the **CI for $\Delta$** contains 0. If it excludes 0, the matching two-sided test rejects at 5%.
+
+This equivalence requires matched assumptions, estimators, and procedures. It may not hold when you compare an unrelated test and interval, use one-sided testing, or apply different multiple-testing adjustments.
+
+:::
+
+### Q19. What happens to Type I error and power when you lower $\alpha$?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Lowering $\alpha$ makes rejection harder: false-positive risk falls, but power usually decreases if sample size stays fixed.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Moving the threshold from 0.05 to 0.01 requires stronger evidence to reject $H_0$.
+
+At a fixed sample size and true effect, fewer null outcomes are falsely rejected—but fewer real effects are detected too.
+
+If the business needs **both** a lower false-positive rate and the original power, the study usually needs **more observations**.
+
+:::
+
+### Q20. When should you use a one-sided test rather than a two-sided test?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use a pre-specified one-sided test only when effects in the opposite direction do not count as evidence for the decision; otherwise use a two-sided test.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A two-sided test considers improvement **and** harm. A one-sided test concentrates the rejection region on one direction and thus can have more power for that direction.
+
+For a symmetric continuous test statistic, the one-sided p-value can be half the two-sided p-value **only when the observed effect is in the pre-specified direction**. You must not choose the direction after seeing the result.
+
+:::
+
+### Q21. How do you explain a test statistic to a non-statistician?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It measures how large the observed difference is relative to the noise expected in that difference.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A common form is:
+
+$$\text{test statistic}=\frac{\text{estimate}-\text{null value}}{SE(\text{estimate})}.$$
+
+A 2-point difference with an SE of 1 point has a statistic near 2. The same 2-point difference with an SE of 5 points has a statistic near 0.4.
+
+**Intuition:** Signal divided by noise. The reference distribution of the statistic determines the p-value.
+
+:::
+
+### Q22. What is Welch’s two-sample t-test, and why is it often the default?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Welch’s test compares independent means without assuming equal population variances.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Its statistic is:
+
+$$t=\frac{\bar X_A-\bar X_B}{\sqrt{s_A^2/n_A+s_B^2/n_B}}.$$
+
+The degrees of freedom use a Welch–Satterthwaite approximation rather than $n_A+n_B-2$.
+
+**Why choose it:** Control and treatment may have different variances and sample sizes. Welch's test is usually a robust default for comparing independent continuous outcomes. The classical pooled t-test adds an equal-variance assumption.
+
+:::
+
+### Q23. How do you compare two conversion rates?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+For independent binary outcomes with adequate counts, use a two-proportion z-test or an equivalent regression-based test.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose $x_A$ of $n_A$ control users convert and $x_B$ of $n_B$ treated users convert. Define $\hat p_A=x_A/n_A$, $\hat p_B=x_B/n_B$ and the **pooled null rate**:
+
+$$\hat p=\frac{x_A+x_B}{n_A+n_B}.$$
+
+Under $H_0:p_A=p_B$, the usual score-type statistic is:
+
+$$z=\frac{\hat p_B-\hat p_A}{\sqrt{\hat p(1-\hat p)(1/n_A+1/n_B)}}.$$
+
+Use a different variance formula for the **confidence interval for the difference**. For small expected cell counts, consider exact or other appropriate methods.
+
+:::
+
+### Q24. When would you use a chi-square test or Fisher’s exact test?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use chi-square tests for categorical count tables when large-sample approximations are adequate. Fisher’s exact test is useful for small 2×2 tables under its sampling assumptions.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+An A/B test can produce a 2×2 table: treatment/control by converted/not converted.
+
+The chi-square statistic compares observed cell counts with counts expected under independence:
+
+$$\chi^2=\sum\frac{(O-E)^2}{E}.$$
+
+If expected counts are very small, the chi-square approximation can be poor. Fisher's exact test conditions on table margins. Always check the sampling design and independence of units.
+
+:::
+
+### Q25. What is the Kolmogorov–Smirnov (KS) test?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A two-sample KS test compares full distributions through the maximum distance between empirical cumulative distribution functions.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$D=\sup_x|\widehat F_A(x)-\widehat F_B(x)|.$$
+
+Unlike a t-test, which focuses on means, KS can detect changes in distribution shape or location.
+
+Example: An algorithm leaves **average session duration** unchanged but alters the fraction of very short and very long sessions. KS might detect a difference.
+
+Standard distribution-free p-values assume appropriate independence and, for classical exact results, continuous distributions; tied/discrete data require care.
+
+:::
+
+### Q26. What does a Shapiro–Wilk normality test tell you?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It tests the null hypothesis that a sample came from a normal distribution.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A small p-value is evidence of non-normality. A large p-value means there is not enough evidence to reject normality—it is **not proof** that the distribution is normal.
+
+Do not use a rigid rule such as 'under 30 samples means nonparametric' or 'over 30 means z-test.' Choose methods based on the estimand, design, dependence, skew, sample size, and robustness.
+
+:::
+
+### Q27. How is a permutation test different from a bootstrap?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A permutation test builds a null distribution by rearranging labels in a way justified by the null/design. A bootstrap approximates estimation uncertainty by resampling observations.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a randomized A/B test:
+
+1. Compute the observed mean difference $d_{obs}$.
+2. Under a sharp null of no treatment effect, reassign treatment labels according to the **original randomization mechanism**.
+3. Recompute $d$ many times.
+4. Calculate the fraction as or more extreme than $d_{obs}$ (with an appropriate Monte Carlo correction).
+
+The key distinction: **Permutation simulates the null; bootstrap simulates repeated sampling around the data.**
+
+:::
+
+### Q28. When is the Mann–Whitney U test appropriate?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It compares the relative positions of two independent samples using ranks. It can detect stochastic differences without requiring normally distributed outcomes.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Combine observations from both groups, rank them, and compare rank sums. The statistic is related to the probability that one randomly chosen observation from group B exceeds one from group A (with half weight for ties).
+
+**Crucial nuance:** It is not simply a test of medians in general. A median-shift interpretation needs extra assumptions about distribution shapes.
+
+If the business cares specifically about **mean revenue**, a rank test may answer a different question.
+
+:::
+
+### Q29. How do the sign test and Wilcoxon signed-rank test differ?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The sign test uses only the direction of paired differences. The signed-rank test also uses the ranks of their absolute sizes and needs stronger symmetry-related assumptions for common interpretations.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Take each person's after-minus-before difference.
+
+- **Sign test:** Count positive versus negative nonzero differences; under a zero-median null with appropriate assumptions, positive and negative signs should be equally likely.
+- **Signed-rank:** Rank absolute differences and attach their signs; it can be more powerful under a symmetric shift model.
+
+These are paired-data methods. They are not substitutes for tests on independent treatment and control groups.
+
+:::
+
+### Q30. How does the Bonferroni correction work?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+To control family-wise error at level $\alpha$ over $m$ hypotheses, reject an individual hypothesis only if $p\le\alpha/m$.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For 20 tests and a family-wise threshold of 0.05:
+
+$$\alpha_{each}=0.05/20=0.0025.$$
+
+Bonferroni works without an independence assumption, but it can be conservative—especially when the number of hypotheses is large.
+
+It controls the chance of **at least one false rejection** across the chosen family.
+
+:::
+
+### Q31. What is the difference between family-wise error rate and false discovery rate (FDR)?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Family-wise error rate controls the probability of any false rejection. FDR controls the expected fraction of false rejections among all rejections (under the procedure’s assumptions).
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If you are testing a handful of important launch claims, controlling the family-wise error rate may be appropriate.
+
+If you screen hundreds of candidate features, FDR control can be more useful because it tolerates some false leads while limiting their average proportion among discoveries.
+
+The **Benjamini–Hochberg** procedure is a common FDR method under its applicable dependence assumptions.
+
+:::
+
+### Q32. How should you interpret a non-significant A/B test?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It means the test did not provide sufficient evidence to reject the null at the chosen threshold. It does not prove an effect is absent.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Look at the estimated lift and confidence interval:
+
+- CI narrow around zero → large effects may be ruled out.
+- CI wide around zero → the experiment may be inconclusive or underpowered.
+
+Check sample size, logging, SRM, data quality, and outcome delay. If the goal is to show two variants are sufficiently similar, consider **equivalence testing** with pre-specified practical bounds.
+
+:::
+
+### Q33. How do you construct a confidence interval for the difference between two independent conversion rates?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Estimate the difference and its standard error, then use an appropriate normal-approximation or score-based interval.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Let $\hat p_T$ and $\hat p_C$ be conversion proportions from **independent users**. For a large-sample Wald interval:
+
+$$\hat\Delta=\hat p_T-\hat p_C,\quad SE(\hat\Delta)=\sqrt{\frac{\hat p_T(1-\hat p_T)}{n_T}+\frac{\hat p_C(1-\hat p_C)}{n_C}}.$$
+
+An approximate 95% CI is $\hat\Delta\pm1.96SE$. This Wald interval performs poorly for small samples and probabilities near 0 or 1; score-based methods or other appropriate intervals may be better.
+
+:::
+
+### Q34. Why do confidence intervals for individual group means not directly test the difference?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The uncertainty of a difference depends on the variance of the difference, not simply whether separate group intervals overlap.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$\operatorname{Var}(\hat\mu_T-\hat\mu_C)=\operatorname{Var}(\hat\mu_T)+\operatorname{Var}(\hat\mu_C)-2\operatorname{Cov}(\hat\mu_T,\hat\mu_C).$$
+
+For independent groups the covariance term is zero. With paired observations it can be positive, which can make the difference much more precise than either mean alone.
+
+**Rule:** Compute a confidence interval for the **treatment effect itself**.
+
+:::
+
+### Q35. What is a prediction interval, and how is it different from a confidence interval?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A confidence interval describes uncertainty about a parameter, such as a mean. A prediction interval describes uncertainty about a new individual outcome.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose estimated mean monthly spending is $\$50$ with a tight confidence interval, but individual spending ranges widely. A confidence interval for the **mean** can be narrow while a prediction interval for the **next customer** is much wider.
+
+Prediction intervals include both uncertainty in the estimated mean and variation among individual outcomes.
+
+:::
+
+### Q36. When would you use ANOVA instead of multiple t-tests?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+ANOVA can test whether group means are all equal when comparing three or more groups, without running many unadjusted pairwise t-tests.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose you compare four onboarding designs. An ANOVA asks whether there is evidence that **at least one group mean differs**.
+
+A significant result does not tell you which designs differ. Follow up with planned comparisons or multiple-testing-adjusted post-hoc tests. Check independence and model assumptions; Welch ANOVA can help when group variances differ.
+
+:::
+
+### Q37. What is the difference between a confidence interval and a credible interval?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A frequentist confidence interval has a stated long-run coverage property. A Bayesian credible interval has a stated posterior probability for the parameter, given a model and prior.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A 95% **frequentist** CI comes from a method that covers the fixed true parameter in 95% of repeated applications, under its assumptions.
+
+A 95% **Bayesian** credible interval contains 95% of the posterior distribution for that parameter. This probability statement depends on the likelihood and prior. Neither approach makes its assumptions disappear.
+
+:::
+
+### Q38. What is a false discovery rate, and when is Benjamini–Hochberg useful?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+False discovery rate (FDR) is the expected fraction of false positives among rejected hypotheses, under a specified convention. The Benjamini–Hochberg procedure controls FDR under suitable dependence assumptions.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If you test 100 possible product metrics, several may look significant by luck. Bonferroni controls the probability of **any** false rejection (FWER), often conservatively.
+
+Benjamini–Hochberg sorts the p-values and compares the $i$th smallest to $(i/m)q$ to select discoveries at a target FDR $q$. It is useful for **exploratory screening** across many hypotheses. For a product launch decision, still pre-specify the primary metric and guardrails.
+
+:::
+
+### Q39. What is a confidence interval for a relative lift, and why can it be harder than for an absolute difference?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Relative lift divides the change by a baseline, so uncertainty in the denominator matters.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Relative lift is $\hat L=(\hat p_T-\hat p_C)/\hat p_C$. Unlike an absolute difference, it becomes unstable if baseline conversion is close to zero.
+
+For moderate rates and large samples, a delta-method interval may work. A well-designed user-level bootstrap or a transformed method can also estimate uncertainty. Always report **percentage-point** change alongside relative lift so stakeholders can understand the scale.
+
+:::
+
+### Q40. Why is a small p-value not proof of causation?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A small p-value indicates data would be unusual under a stated statistical null; it does not establish that the treatment or predictor caused the change.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine users who watch more videos spend more money. This association can have $p<0.001$ because engaged customers do both.
+
+To claim a causal effect, ask whether treatment assignment was randomized or whether the observational design controls relevant confounding and selection. Statistical significance cannot repair a biased comparison.
+
+:::
+
+
+**Hard questions**
+
+### Q41. What is the difference between statistical significance and practical significance?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Statistical significance concerns evidence against a null hypothesis. Practical significance concerns whether the estimated effect is useful enough to justify action.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A very large experiment might detect a **+0.01 percentage-point** lift with $p<0.05$. But if engineering cost exceeds the benefit, do not launch solely because of the p-value.
+
+Define a **minimum practically meaningful effect** before testing. Compare the effect estimate and confidence interval with this threshold as well as with zero.
+
+**Example:** A 95% CI of [+0.01, +0.03] points may exclude zero while staying below a +0.1-point business requirement.
+
+:::
+
+### Q42. If $\alpha=0.05$, power is 0.80, and $P(H_0\text{ true})=0.70$, what is $P(H_0\text{ true}\mid\text{reject})$?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Using the supplied prior probabilities and a specified alternative, Bayes’ theorem gives about 12.7%.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Start with the probability of a positive result:
+
+$$P(R)=0.05(0.70)+0.80(0.30)=0.275.$$
+
+The probability that a rejection is a false positive is:
+
+$$P(H_0\text{ true}\mid R)=\frac{0.05(0.70)}{0.275}\approx0.1273.$$
+
+**Interpretation:** Of all positive tests under these *assumed prior probabilities and test properties*, about 12.7% arise when the null is true.
+
+This is not the same as a p-value. It requires a prior probability and an explicitly specified alternative.
+
+:::
+
+### Q43. How do you test a regression coefficient against a value other than zero?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Form a t statistic using the estimated coefficient, the specified null value, and the coefficient’s appropriate standard error.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+To test $H_0:\beta=1$ rather than the default zero:
+
+$$t=\frac{\hat\beta-1}{SE(\hat\beta)}.$$
+
+The SE must match your estimation design—for example, use cluster-robust SEs if residuals are correlated within users.
+
+This is a **linear hypothesis test**. In Python, you can often use a statistical modeling package's constraint or `t_test` functionality.
+
+:::
+
+### Q44. What assumptions should you check before selecting a statistical test?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Check the estimand, independence, assignment mechanism, data type, sample size, and whether the test’s reference distribution is appropriate.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A useful decision sequence:
+
+1. **Question:** Difference in means, proportions, medians, distributions, or regression coefficients?
+2. **Design:** Independent users, matched pairs, repeated measurements, or clustered assignments?
+3. **Distribution:** Continuous, binary, count, severely skewed, or heavy-tailed?
+4. **Inference:** Is asymptotic approximation adequate? Is an exact, permutation, bootstrap, or robust method more appropriate?
+
+The most serious error is often pretending correlated observations are independent—not choosing t instead of z.
+
+:::
+
+### Q45. How would you estimate uncertainty for highly skewed revenue per user?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use the user as the independent unit and consider robust or user-level bootstrap inference for the mean or treatment difference, while preserving the business estimand.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Revenue often has many zeros and a few very large values. A naive normal approximation may perform poorly in modest samples.
+
+A practical approach is to resample independent **users** within each experiment group; for each bootstrap sample compute average revenue per user and their difference.
+
+Do not automatically log-transform revenue if the decision needs the **arithmetic mean**: a test on log revenue answers a different question and cannot be interpreted as an unadjusted difference in dollars.
+
+:::
+
+### Q46. Can a bootstrap confidence interval and a permutation p-value give different conclusions?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Yes. They can use different nulls, statistics, approximations, and assumptions; understand what each procedure estimates or tests.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A permutation test under a **sharp null** evaluates whether the observed statistic is unusual under reassignment. A bootstrap CI describes uncertainty around a specified estimand, such as a mean difference.
+
+Disagreement can arise from skewness, small samples, heteroskedasticity, studentization choices, or different bootstrap interval constructions. Check the analysis definition instead of simply choosing whichever p-value is smaller.
+
+:::
+
+### Q47. What do you do when the primary metric improves but a guardrail gets worse?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Quantify both effects, check decision thresholds and uncertainty, then decide based on the business trade-off and launch policy.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a ranking change increases revenue per user by 1.2% but also raises p95 latency by 80 ms.
+
+Ask: Is latency above a pre-specified maximum? Is the revenue change meaningful and reliable? Does slower speed hurt particular devices or countries?
+
+If a safety or reliability guardrail crosses a hard threshold, do not launch just because revenue improved. For softer trade-offs, quantify net benefit and monitor a controlled rollout.
+
+:::
+
+### Q48. How should you communicate a p-value just above 0.05 to stakeholders?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Report the estimated effect, uncertainty, study design, and business implications; do not relabel the result as significant after seeing the p-value.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For example: 'Estimated conversion lift is +0.8 percentage points; the 95% CI ranges from -0.1 to +1.7 points. We cannot confidently rule out a small decline or a useful improvement.'
+
+Discuss power, data quality, costs, and whether another planned experiment is worthwhile. A result with $p=0.051$ is not fundamentally different in evidence from $p=0.049$, but it does not meet a pre-specified 0.05 decision rule.
+
+:::
+
+### Q49. How are equivalence and non-inferiority tests different from a standard difference test?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Equivalence asks whether an effect lies inside a pre-defined negligible range. Non-inferiority asks whether a new option is not worse than an existing option by more than a chosen margin.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a faster checkout must not reduce purchase conversion by more than **0.5 percentage points**.
+
+For non-inferiority, define $\Delta=p_T-p_C$ and margin $m=0.005$. A one-sided analysis seeks evidence that $\Delta>-m$; for example, the lower suitable confidence bound exceeds -0.005.
+
+A non-significant ordinary two-sided test does **not** establish non-inferiority or equivalence. These require predefined margins, appropriate uncertainty, and often a dedicated sample-size calculation.
+
+:::
+
+### Q50. How does the bootstrap percentile interval differ from a normal-approximation interval?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A percentile bootstrap interval uses quantiles of resampled estimates; a normal interval uses a standard error and an approximately normal estimator distribution.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If you repeatedly resample users **with replacement**, compute the metric for each resample, and take the 2.5th and 97.5th percentiles, you obtain a percentile bootstrap interval.
+
+It is simple but can be inaccurate for biased or highly asymmetric estimators and small samples. Studentized or BCa bootstrap intervals may improve coverage in some settings. Bootstrap at the **independent sampling unit**, such as the user, not at correlated pageviews.
+
+:::
+
+### Q51. How would you compare a skewed metric with many zeros, such as revenue per user?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Define the business estimand first, then estimate the mean difference with an inference method suited to skew, heavy tails, and the experimental unit.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Revenue per user may contain many zeros and a few very large purchases. The **mean** can still be the right target because it corresponds to total economic impact.
+
+Options include randomization-aware user-level permutation tests, robust regression with valid uncertainty, or a user-level bootstrap. Transforming revenue with $\log(1+Y)$ changes the estimand; it does not automatically answer the original revenue question. Report sensitivity to extreme users and potential data errors.
+
+:::
+
+### Q52. What assumptions make a permutation test valid?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Under the null and design, treatment labels must be exchangeable according to the permutations you use.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+In a completely randomized experiment, reassign labels **as the randomization procedure allowed**, then recompute the statistic. The fraction of shuffled statistics at least as extreme as observed estimates a randomization-based p-value.
+
+If assignment was blocked by country or randomized by market, do not shuffle individual user labels across those boundaries. That would describe a different experiment and may produce the wrong null distribution.
+
+:::
+
+### Q53. When do you prefer a paired analysis or repeated-measures model over an independent test?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use paired or repeated-measures methods when observations from the same entity are correlated and appropriately matched.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose you measure each customer's spending before and after a change. Compute within-customer differences, then analyze their mean **if the design supports that contrast**. Pairing often removes stable customer differences.
+
+However, a simple before-after comparison is not necessarily causal: seasonality and other time changes can confound it. A concurrent control group or a stronger design may be needed.
+
+:::
+
+### Q54. What is the difference between statistical power and the probability that a significant result is true?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Power is the chance of rejection given a specified true alternative; the probability an effect is real after rejection also depends on its prior prevalence or a full statistical model.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose $\alpha=0.05$, power $=0.80$, and only 10% of tested product ideas truly have the target effect. Across many hypothetical tests:
+
+- True positives: $0.10\times0.80=0.08$.
+- False positives: $0.90\times0.05=0.045$.
+- Share of rejections that are true positives: $0.08/(0.08+0.045)=64\%$.
+
+This illustrates a *base-rate effect*, not a universal probability assigned by a frequentist p-value. The result depends on assumptions about prior truth rates and power.
+
+:::
+
+### Q55. What is the difference between Bonferroni correction and sequential monitoring?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Bonferroni addresses multiple hypotheses or looks conservatively; sequential methods specify how evidence may be inspected across time without invalidating the desired error control.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+You may test 20 metrics once, or test one metric every day. Both can inflate false positives if each comparison is treated as an independent chance to stop with $p<0.05$.
+
+Sequential approaches include pre-specified group-sequential boundaries, alpha-spending designs, always-valid confidence sequences, and other valid frameworks. They are not equivalent to looking at an ordinary p-value each day and stopping when it crosses 0.05.
+
+:::
+
+### Q56. How do you assess whether an estimator is unbiased, consistent, and efficient?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Unbiased means its expectation equals the parameter; consistent means it converges to the parameter as data grow; efficient means low variance within a stated comparison class.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A slightly biased estimator can still have lower mean squared error than an unbiased estimator if its variance is much smaller.
+
+$$\operatorname{MSE}(\hat\theta)=\operatorname{Var}(\hat\theta)+\operatorname{Bias}(\hat\theta)^2.$$
+
+**Interview takeaway:** Do not optimize only for low variance. First verify that the estimator targets the correct population quantity and that its assumptions make sense.
+
+:::
+
+
+## Experimental A/B Test Design
+
+**62 questions · ordered Easy → Medium → Hard.**
+
+**Easy questions**
+
+### Q1. What is the difference between an objective, a primary metric, and a guardrail metric?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The objective is the business outcome. The primary metric is the main measure of success. Guardrails identify unacceptable negative effects.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine changing the search ranking algorithm:
+
+- **Objective:** Help shoppers find relevant products and buy more.
+- **Primary:** Purchases per eligible user or revenue per user.
+- **Diagnostic:** Search CTR, add-to-cart rate, and search abandonment.
+- **Guardrails:** Latency, returns, crashes, and user complaints.
+
+Decide what would make the launch worthwhile *before* you run the test.
+
+:::
+
+### Q2. What are conversion rate, CTR, and click-through probability?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Conversion rate measures conversion per eligible unit. Event CTR often measures clicks per impression. Click-through probability measures the fraction of users or opportunities with at least one click.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Definitions are product-specific, so always state numerator, denominator, and unit.
+
+Example: 100 users see 500 impressions; 20 users click at least once and total clicks are 50.
+
+- **User click-through probability:** $20/100=20\%$.
+- **Clicks per impression:** $50/500=10\%$.
+
+These are not interchangeable. One user with many clicks can raise event CTR without changing the fraction of people who click.
+
+:::
+
+### Q3. What is a funnel metric?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A funnel metric measures passage through one stage of a user journey into the next.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a shopping app: product view → add to cart → checkout → purchase.
+
+You might measure:
+
+$$P(\text{purchase}\mid\text{checkout started})
+=\frac{\text{purchasers}}{\text{users who started checkout}}.
+$$
+
+**Caution:** Conditioning on a stage affected by treatment can create selection bias if you use it as the sole causal success metric. Prefer also tracking an end-to-end outcome for the originally assigned population.
+
+:::
+
+### Q4. Walk me through an A/B test from start to finish.
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+State the decision and hypothesis, choose metrics and units, plan power and duration, randomize, validate instrumentation, analyze, then decide whether to launch.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A clear interview structure:
+
+1. **Goal:** What business decision are we trying to make?
+2. **Hypothesis:** What effect do we predict?
+3. **Metrics:** One primary success metric; diagnostic and guardrail metrics.
+4. **Design:** Target users, randomization unit, $\alpha$, power, MDE, sample size, run length.
+5. **Execution:** Roll out safely and monitor health.
+6. **Validation:** Check assignment, logging, SRM, invariant and guardrail metrics.
+7. **Analysis/decision:** Effect size, confidence interval, trade-offs, and rollout plan.
+
+Explain each step in the context of the specific product.
+
+:::
+
+### Q5. What is the randomization unit, and why does it matter?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It is the entity assigned to control or treatment, such as a user, cookie, session, store, or market.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a redesigned homepage, **user-level** assignment usually provides a consistent experience across visits. Cookies are less stable across devices and can be deleted. Randomizing pageviews can show one user conflicting variants.
+
+The randomization unit determines exposure consistency and how inference should account for dependence. It may differ from the metric unit, but analysis must respect assignment.
+
+:::
+
+### Q6. What is minimum detectable effect (MDE)?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+MDE is the smallest specified true effect for which an experiment is designed to have a target probability of detection, given its testing assumptions.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose baseline conversion is 20% and the team wants to detect a move to 22%.
+
+- **Absolute effect:** $22\%-20\%=2$ percentage points.
+- **Relative lift:** $(22\%-20\%)/20\%=10\%$.
+
+Do not confuse these units. Pick an MDE that matters commercially; powering a study for a microscopic improvement can cost far more than the improvement is worth.
+
+:::
+
+### Q7. What inputs are needed for a sample-size calculation?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+You need the primary metric and its baseline variability, target MDE, significance level, desired power, test sidedness, allocation, and unit/dependence structure.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A simple online conversion experiment might use $p_0=0.20$, target increase $+0.02$ in probability (i.e., 2 percentage points), $\alpha=0.05$, power 80%, and a 50/50 user split.
+
+For revenue per user, you need an estimate of user-level variance; for clustered randomization, include within-cluster dependence. Historical metrics, a pilot, or an A/A run can inform uncertainty estimates.
+
+:::
+
+### Q8. What sanity checks do you run before interpreting A/B results?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Check sample allocation, user assignment stability, data completeness, pre-treatment balance, exposure logging, and whether invariants behave as expected.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Before looking at lift:
+
+1. Compare observed traffic splits with the planned ratio (SRM).
+2. Check whether any users appear in both groups.
+3. Check missing events, data delays, bots, and eligibility rules.
+4. Compare pre-treatment user characteristics where appropriate.
+5. Review critical guardrails, such as crashes and latency.
+
+Bad measurement can create a convincing p-value for a nonexistent effect.
+
+:::
+
+### Q9. What is the intuition behind regression adjustment in an A/B test?
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It uses pre-treatment variables to explain natural outcome variation, so the treatment effect can be estimated more precisely.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose past-month spending strongly predicts current-month spending. Including pre-experiment spending can separate stable user differences from random treatment noise.
+
+A simple regression may be:
+
+$$Y_i=\alpha+\tau T_i+\gamma X_i+\varepsilon_i,$$
+
+where $T_i$ is randomized treatment and $X_i$ is measured **before assignment**. Under suitable conditions, $\tau$ estimates an adjusted treatment effect. Avoid adjusting for post-treatment outcomes or mediators by default.
+
+:::
+
+### Q10. What are the treatment, control, randomization unit, and outcome in an A/B test?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Treatment receives the new experience; control receives the baseline. The randomization unit is assigned a variant, and the outcome measures its impact.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a redesigned purchase button, **treatment** sees the new button and **control** sees the old one. If the unit is a **user**, every event from that user should be linked to one assigned group.
+
+An **outcome** might be purchases per eligible user. Choosing the correct unit matters because a user can generate many pageviews, and those pageviews are usually correlated.
+
+:::
+
+### Q11. What is an estimand, and why define it before collecting data?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+An estimand is the precise population quantity you want to learn, such as the average difference in seven-day revenue per assigned user.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+“Did the feature help?” is ambiguous. Compare these estimands:
+
+- Mean revenue **per assigned user** during seven days.
+- Purchase conversion **among users who opened the page**.
+- Average spend **among purchasers only**.
+
+The latter two condition on behavior that treatment may itself change. Define population, outcome, time window, and treatment contrast before seeing results.
+
+:::
+
+### Q12. How do you choose between click-through rate and click-through probability?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Choose based on whether you want to measure click events per exposure or the fraction of users who click at least once.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose one user sees 10 impressions and clicks 5 times, while another sees 10 and clicks 0 times.
+
+- **Event CTR:** 5 clicks / 20 impressions = 25%.
+- **User-level click-through probability:** 1 clicking user / 2 exposed users = 50%.
+
+Neither is universally correct. First identify the business question and denominator. If assignment is by user, use a variance method that accounts for users, even when the point estimate is an event-level ratio.
+
+:::
+
+### Q13. What is a guardrail metric versus an invariant or sanity-check metric?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A guardrail protects against harmful changes; an invariant checks that experiment setup and measurement behave as expected.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A new recommendation model might aim to improve watch time. A **guardrail** could be content complaints or app latency: treatment may truly affect them, so a change matters.
+
+An **invariant** such as pre-experiment signup date or assigned traffic proportion should not be caused by the treatment. A large shift may indicate broken randomization, logging, or selection.
+
+:::
+
+
+**Medium questions**
+
+### Q14. What is the HEART framework for product metrics?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+HEART stands for Happiness, Engagement, Adoption, Retention, and Task Success.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a ride-hailing app:
+
+- **Happiness:** Survey satisfaction.
+- **Engagement:** Rides or sessions per active user.
+- **Adoption:** Fraction of new users who complete a first ride.
+- **Retention:** Fraction returning in a later period.
+- **Task Success:** Pickup time, completed ride rate, or failure rate.
+
+HEART is a **framework for generating candidate metrics**. You still need a primary decision metric and a clear target population.
+
+:::
+
+### Q15. How do you define retention and churn correctly?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Retention is the fraction of an initial cohort that remains active according to a specified rule; churn is the fraction that becomes inactive according to a specified definition.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For day-7 retention, one common definition is:
+
+$$R_7=\frac{\text{users from the signup cohort active on day 7}}{\text{users in the signup cohort}}.$$
+
+Other companies use **rolling retention**, such as activity on or after day 7. They give different numbers.
+
+Always define: cohort entry, active event, observation window, eligible users, and whether reactivation counts.
+
+:::
+
+### Q16. Why is revenue per user sometimes better than purchase conversion rate?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Revenue per user captures purchase frequency and basket value as well as whether a user bought anything; conversion captures only binary purchasing.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Two treatments can have the same 20% purchase conversion rate but different average order values.
+
+If the business objective is revenue, revenue per randomized user is closer to the goal. However, revenue can have high variance and outliers, which makes inference harder.
+
+Use conversion as a diagnostic or a primary metric only when it reflects the actual decision objective. A lower-variance metric is **not automatically** the better business metric.
+
+:::
+
+### Q17. How do you choose the experiment population?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Choose eligible units based on the feature and the population to which you want to generalize; define the selection rules before randomization.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If a feature only changes iOS search, all users worldwide are not the relevant eligible population. Select users who could encounter the feature and can be reliably assigned.
+
+Targeting only highly engaged users may make the test faster, but the result may not generalize to new or casual users. Document **who was eligible**, **who was exposed**, and **who was included in the analysis**.
+
+:::
+
+### Q18. Why does a 50/50 split usually maximize power for a fixed total sample?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+With independent arms, equal per-unit variances and equal costs, a balanced split minimizes the variance of the difference in sample means.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For total sample $N=n_A+n_B$ and common variance $\sigma^2$:
+
+$$\operatorname{Var}(\bar Y_B-\bar Y_A)=\sigma^2\left(\frac1{n_A}+\frac1{n_B}\right).$$
+
+This expression is smallest at $n_A=n_B=N/2$.
+
+**Example:** For 150 users, 75/75 yields more precision than 50/100 when the assumptions hold. Unequal traffic can still be justified for safety, cost, or arm-specific variance; adjust power calculations accordingly.
+
+:::
+
+### Q19. What is the difference between a randomization unit and an analysis unit?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The randomization unit receives the assignment. The analysis unit determines how outcomes are summarized and how uncertainty must be estimated.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+You might randomize **users** but measure **clicks per pageview**. Pageviews from the same user are correlated, so standard errors based on independent pageviews are usually too optimistic.
+
+Solutions include aggregating to user level or using user-clustered inference for the ratio metric. Do not change units arbitrarily after seeing the results.
+
+:::
+
+### Q20. What are the benefits and limits of an A/A test?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+An A/A test sends two randomly assigned groups the same experience. It helps assess assignment, logging, and the rate of false positive findings.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If both groups receive the same treatment, the true treatment effect should be zero. The distribution of p-values across many valid A/A repetitions should be approximately uniform under the null.
+
+A single nonsignificant A/A test does **not** prove the platform is correct. Look for SRM, event logging differences, accidental exclusions, user bucketing instability, and systematic metric shifts.
+
+:::
+
+### Q21. How does sample size depend on effect size and variance?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+For a balanced two-sample comparison of means with independent, equal-variance observations, required sample size per group scales with $\sigma^2/\delta^2$.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A normal-approximation planning formula is:
+
+$$
+n\approx\frac{2(z_{1-\alpha/2}+z_{1-\beta})^2\sigma^2}{\delta^2}.
+$$
+
+At 5% two-sided alpha and 80% power, $2(1.96+0.84)^2\approx15.7$.
+
+- Double SD → roughly **4×** as many users.
+- Halve the target detectable effect → roughly **4×** as many users.
+
+This is a **planning approximation** for a particular design, not a universal formula for every metric.
+
+**Python example — approximate independent users per group:**
+
+```python
+from scipy.stats import norm
+import math
+
+alpha = 0.05
+power = 0.80
+sd = 10.0
+mde = 2.0
+z_alpha = norm.ppf(1 - alpha / 2)
+z_power = norm.ppf(power)
+n_per_arm = 2 * (z_alpha + z_power)**2 * sd**2 / mde**2
+print(math.ceil(n_per_arm))  # Approximate users per arm
+```
+
+Use a design-specific power calculator for real experiments, especially conversion rates, ratio metrics, or clusters.
+
+:::
+
+### Q22. How do you estimate how long an A/B experiment must run?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Estimate required unique randomized units, divide by expected eligible new units per day, then ensure adequate business-cycle coverage and monitoring.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If the power calculation says **8,000 users per arm** and you can assign **1,000 new eligible users each day total**, a 50/50 test needs roughly $16,000/1,000=16$ days, before operational buffers.
+
+Daily pageviews are not the same as newly randomized users. Repeat users do not count as new independent units. Also consider weekday patterns, holidays, delayed conversions, and ramp schedules.
+
+:::
+
+### Q23. When should you stop a fixed-horizon A/B test?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use a pre-specified sample size or observation window, a stable data window, and safety rules; do not stop just because p first falls below 0.05.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A good plan includes:
+
+- Target number of randomized units and intended run duration.
+- Enough calendar coverage for major cycles.
+- Time for outcome maturation (e.g., 7-day retention).
+- Rules for data-quality incidents and serious guardrail harm.
+
+There is **no universal** rule that 100–200 users or two weeks is always enough. A test can be too small after a month or sufficiently powered sooner, depending on its design.
+
+:::
+
+### Q24. What is an invariant metric, and how is it different from a guardrail?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+An invariant should not be affected by the assigned feature. A guardrail can change but must remain within acceptable limits.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For an experiment changing search result order:
+
+- **Invariant:** Assignment bucket proportions, or a measurement upstream of exposure that cannot causally respond to the change.
+- **Guardrail:** Page latency or error rate, which *could* be harmed by the change.
+
+An invariant changing unexpectedly suggests instrumentation, randomization, or selection problems. A guardrail changing substantially can represent a **real harmful treatment effect**.
+
+:::
+
+### Q25. What are novelty, primacy, and change-aversion effects?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+They are time-dependent user reactions: short-lived enthusiasm, disproportionate early influence, or resistance to an unfamiliar change.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a redesigned interface, users may click more initially because it looks new (**novelty**), or click less because familiar controls moved (**change aversion**).
+
+Compare effect estimates over exposure time and user cohorts. Consider a long enough window to observe stabilization. A test only on new users may answer a different question than a test on all existing users, so do not use that shortcut automatically.
+
+:::
+
+### Q26. How can Simpson’s paradox appear in experiment analysis?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+An overall trend can reverse relative to within-segment trends when the composition of segments differs across groups.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose treatment improves conversion on both mobile and desktop. If treatment receives many more difficult mobile sessions while control receives mostly easy desktop sessions, the overall rate may still be lower for treatment.
+
+Check **why** weights differ: randomization failure, conditioning on post-treatment behavior, or random variation. Use pre-specified segment comparisons or appropriate standardization. Do not assume every paradox proves the experiment is broken.
+
+:::
+
+### Q27. What is CUPED and how does it reduce variance?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+CUPED adjusts the outcome using a correlated pre-experiment covariate, reducing sampling variance without changing the randomized comparison under appropriate conditions.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Define $Y$ as the experiment outcome and $X$ as a pre-treatment user metric. Set:
+
+$$Y^*=Y-\theta(X-E[X]),\qquad
+\theta=\frac{\operatorname{Cov}(Y,X)}{\operatorname{Var}(X)}.
+$$
+
+When $X$ predicts $Y$, the adjusted outcome has less noise. In the idealized linear setting with correlation $\rho$:
+
+$$\operatorname{Var}(Y^*)=\operatorname{Var}(Y)(1-\rho^2).$$
+
+If $\rho=0.6$, variance decreases about **36%**. Use only pre-treatment or otherwise valid covariates, and account for estimation of the adjustment when necessary.
+
+:::
+
+### Q28. What is the delta method, and where would a Data Scientist use it?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The delta method approximates the variance of a smooth function of estimated quantities using derivatives.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For an event-level CTR estimated as $R=\bar C/\bar V$, where each user has click count $C_i$ and view count $V_i$, the numerator and denominator are correlated.
+
+The delta method linearizes the ratio near expected values:
+
+$$\operatorname{Var}(g(\hat\theta))\approx \nabla g(\theta)^\top\operatorname{Var}(\hat\theta)\nabla g(\theta).$$
+
+It lets you estimate uncertainty for ratio metrics without assuming every pageview is independent. A user-level bootstrap is another approach.
+
+:::
+
+### Q29. What is cluster-robust standard error, and when is it needed?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It allows errors to be correlated within clusters while requiring suitable independence across clusters for standard inference.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If users have repeated sessions, outcomes within a user may share unobserved factors. Ordinary i.i.d. SEs can become artificially small.
+
+Cluster SEs by **user** when repeated user observations are correlated, or by **market** when the experiment is randomized at market level. With very few clusters, standard cluster-robust asymptotics can be unreliable; consider small-cluster methods or randomization-based inference.
+
+:::
+
+### Q30. What is the difference between fixed effects and random effects in panel regression?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Fixed effects allow unit-specific intercepts to correlate with regressors. Standard random-effects models require stronger assumptions about that relationship.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine monthly spending observed for many users. Some users have persistent characteristics: income, preferences, or shopping habits.
+
+A **user fixed-effects** model removes stable user-specific levels and identifies coefficients from **within-user variation**.
+
+A **random-effects** model can use within- and between-user variation, but its consistency generally requires the unit effect to be uncorrelated with included regressors (or an appropriate correlated-random-effects specification).
+
+Neither model alone automatically solves time-varying confounding.
+
+:::
+
+### Q31. What is the difference between absolute lift, relative lift, and percentage points?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Absolute lift subtracts rates; relative lift divides the difference by the baseline; percentage points express the absolute change between percentages.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If conversion rises from 10% to 11%, the change is **+1 percentage point**, which is **+10% relative**.
+
+$$\text{relative lift}=\frac{0.11-0.10}{0.10}=10\%.$$
+
+Never say “10 percentage points” for this result. That would mean conversion rose from 10% to 20%.
+
+:::
+
+### Q32. What is stratified or blocked randomization, and when does it help?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It assigns treatment within predefined groups, such as country or device, to improve balance or precision.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose desktop users convert at 20% and mobile users at 8%. With small experiments, accidental imbalance in device mix can obscure the effect.
+
+Randomizing **within each device stratum** keeps treatment and control balanced on that known predictor. Analysis should respect the design, often by including stratum indicators or stratum-specific estimates. Do not create strata using a variable affected by treatment.
+
+:::
+
+### Q33. What is triggered analysis, and how does it differ from conditioning on a post-treatment event?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Triggered analysis focuses on units eligible for or exposed to a feature, but conditioning on a treatment-affected event can create selection bias.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If only users entering a checkout flow **before randomization** can receive the treatment, a predefined triggered population may improve sensitivity.
+
+But comparing only users who **clicked the redesigned button** is problematic: treatment may itself change who clicks. The selected treatment and control groups may no longer be comparable.
+
+Define triggers that are observable equivalently in both arms and validate exposure instrumentation.
+
+:::
+
+### Q34. How do you plan a staged rollout or ramp-up?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Start with limited exposure, monitor safety and data quality, then increase traffic only when predefined checks are satisfied.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A product may ramp from 1% to 5% to 20% to 50% of eligible users. Early stages catch crashes, severe latency problems, and logging issues before full exposure.
+
+A ramp is not a license to repeatedly declare a winner from unadjusted p-values. Preserve consistent assignment, document changes, and use a valid inferential plan for the final evaluation.
+
+:::
+
+### Q35. What is an experiment holdout, and when would you keep one after launch?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A holdout is a group that continues receiving the baseline so you can estimate longer-term effects after most users receive the new feature.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A small randomized long-term holdout can reveal whether a short-term engagement increase turns into better retention, more spending, or worse user experience.
+
+Monitor fairness, product risk, and exposure. Holdouts are especially helpful when effects adapt over weeks or months; they may be inappropriate if withholding treatment is harmful or unacceptable.
+
+:::
+
+### Q36. How do you estimate sample size for a binary conversion metric?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use baseline conversion, target absolute difference, alpha, power, allocation ratio, and the independent randomization unit.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For equal-sized independent groups, an illustrative normal-approximation is
+
+$$n\approx\frac{2(z_{1-\alpha/2}+z_{1-\beta})^2p(1-p)}{\delta^2}$$
+
+**per group**, where $p$ approximates baseline conversion, and $\delta$ is the *absolute* change. If baseline is 10% and target is +1 percentage point, use $\delta=0.01$, not 0.10.
+
+This is a planning approximation. Use a more precise two-proportion calculation and adjust for clustering, attrition, allocation, or sequential design.
+
+:::
+
+### Q37. When does a ratio metric need the delta method or user-level bootstrap?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+When the denominator varies by user and may be correlated with the numerator, naive binomial variance formulas can be wrong.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose global CTR is total clicks divided by total impressions. Some users view 100 items, others only 1, and impressions within users are correlated.
+
+Treat each user as a pair $(C_i,I_i)$. The ratio estimator is $\sum C_i/\sum I_i$. A delta-method variance uses both click and impression variation **and their covariance**. Alternatively bootstrap **users**, not individual impressions.
+
+:::
+
+### Q38. Why can a metric improve solely because its denominator changed?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+For a ratio, a smaller denominator can increase the reported value even if the numerator did not improve.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If clicks remain 1,000 but page impressions decrease from 10,000 to 8,000, CTR rises from 10% to 12.5% **without any additional clicks**.
+
+Ask whether impressions fell due to better targeting, broken logging, reduced inventory, or worse engagement. Always inspect both numerator and denominator plus an independent business outcome.
+
+:::
+
+### Q39. How do you analyze heterogeneous treatment effects without p-hacking?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Predefine a small set of important segments, estimate treatment-by-segment interactions, and correct or clearly label exploratory multiple comparisons.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose new users improve while returning users get worse. Fit an interaction model or estimate within predefined cohorts, with confidence intervals and sample sizes.
+
+Don't claim heterogeneity because one subgroup has $p<0.05$ and another has $p>0.05$. **Test the difference between the subgroup effects**. Exploratory discoveries should be confirmed in new data or a follow-up experiment.
+
+:::
+
+### Q40. What is the difference between intention-to-treat and treatment-on-the-treated?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+ITT compares users by assignment, whether or not they used the feature. Treatment-on-the-treated targets the impact on those who received it and usually requires extra assumptions.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If only 60% of users assigned to treatment actually open the new page, ITT estimates the effect of **offering/assigning** the experience across all randomized users.
+
+Comparing actual users of the feature to non-users may be biased because usage is a choice. Instrumental-variable or compliance-aware methods can estimate other effects when their assumptions hold.
+
+:::
+
+
+**Hard questions**
+
+### Q41. How would you measure the health of a two-sided marketplace like Uber?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Monitor demand, supply, matching efficiency, marketplace quality, unit economics, retention, and reliability rather than a single count.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For riders: request-to-completion conversion, ETA accuracy, wait time, cancellation, retention, and price.
+
+For drivers: active supply hours, utilization, earnings per online hour, and retention.
+
+For the marketplace: completed trips, fulfillment rate, geographic availability, contribution margin, incident rates, and platform latency.
+
+A change that boosts rides but causes driver attrition may be harmful long term. Segment by geography and time because a marketplace is capacity constrained.
+
+:::
+
+### Q42. What metrics would you choose to evaluate a new search-ranking algorithm?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use a user-level business metric as primary, with funnel and ranking diagnostics plus guardrails for experience quality.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For an e-commerce search system:
+
+1. **Offline screening:** NDCG@K, Recall@K, latency, fairness/safety checks where appropriate.
+2. **Online primary:** Purchase conversion per randomized search user or revenue per eligible user.
+3. **Diagnostics:** Search-to-click rate, add-to-cart rate, zero-result searches.
+4. **Guardrails:** Latency, return rate, complaint rate, and long-term retention.
+
+A higher offline NDCG does not guarantee online business improvement. Online experiments test the real effect on users.
+
+:::
+
+### Q43. What is sample ratio mismatch (SRM), and how do you check it?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+SRM occurs when observed assignment counts differ unexpectedly from planned traffic proportions. A chi-square goodness-of-fit check is common.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If assignment is meant to be 50/50 and you see 60,000 control versus 40,000 treatment users, that is suspicious for this scale.
+
+For observed counts $O_i$ and expected counts $E_i$:
+
+$$\chi^2=\sum_i\frac{(O_i-E_i)^2}{E_i}.$$
+
+Before reading product outcomes, check whether user eligibility, bucketing, exposure tracking, and dropped records explain the imbalance. **Do not simply delete inconvenient users** until the cause is known.
+
+:::
+
+### Q44. How would you design an experiment if users interfere with one another?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Randomize larger independent clusters or use a design that accounts for interference, such as geographic or marketplace-level experiments.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+In ride-hailing, treatment may increase rider requests and affect driver availability for control users. This breaks the standard **no-interference** assumption (one unit's treatment can affect another unit's outcome).
+
+Options: randomize by market, network cluster, or use switchback randomization across market-time blocks with suitable washout and cluster/time-based analysis.
+
+Cluster designs often need **more effective sample size** because units within a cluster are related.
+
+:::
+
+### Q45. What is intention-to-treat (ITT), and why should you care?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+ITT compares outcomes by original random assignment, regardless of whether each assigned unit actually used the feature.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose 10,000 users are assigned treatment, but only 6,000 open the page with the new feature. Comparing only those 6,000 to all control users breaks the randomized comparison: exposure depends on behavior.
+
+**ITT** keeps all appropriately eligible randomized users in their original arms, preserving randomization. You can separately estimate effects among compliers with suitable methods, but that requires additional assumptions.
+
+:::
+
+### Q46. Why does repeatedly checking $p<0.05$ and stopping early inflate false positives?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Each unplanned opportunity to stop when a result looks significant increases the chance of eventually seeing a false alarm.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Under the null, the p-value varies as more data arrive. If you peek every day and stop at the first $p<0.05$, the overall probability of false rejection can exceed 5%.
+
+**Valid alternatives:** Plan a fixed horizon in advance, or use properly designed sequential testing—such as group-sequential boundaries, alpha spending, or always-valid inference.
+
+A severe safety problem can still justify stopping early for harm; this is different from claiming an unadjusted significant benefit.
+
+:::
+
+### Q47. What can you do if the required sample size is too large?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Prioritize better measurement, variance reduction, targeted populations, longer duration, or a larger business-relevant MDE without compromising validity.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Options include:
+
+1. Use pre-experiment covariates (e.g., CUPED) to reduce noise.
+2. Improve event logging and eliminate metric noise.
+3. Narrow eligibility **before** testing if the decision truly concerns that group.
+4. Increase exposure carefully after guardrail checks.
+5. Reassess the practical threshold and budget.
+
+Do **not** change alpha or the MDE after seeing data just to manufacture significance.
+
+:::
+
+### Q48. What should you do if assigned users receive both variants?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Investigate the cause and scope of exposure contamination, preserve assignment records, and assess whether the estimand is still identifiable.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Users may switch devices, clear cookies, or have inconsistent bucketing. Do **not** simply delete all crossed-over users, because removal can be related to outcome or treatment.
+
+Check original assignment, actual exposures, and whether the outcome can still be analyzed by intention-to-treat. If contamination is major, the cleanest decision may be to repair the system and rerun.
+
+:::
+
+### Q49. Why might an A/B lift disappear after launching to everyone?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The experiment effect may not generalize because of network effects, population changes, novelty, saturation, seasonality, or a bad experiment setup.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Work through four groups of explanations:
+
+1. **Technical:** Tracking, exposure bugs, or SRM.
+2. **Population:** Early adopters differ from later users.
+3. **Time:** Novelty or seasonal demand changed.
+4. **System equilibrium:** Supply constraints or interactions change at full rollout.
+
+Use cohort plots, guardrail time series, holdouts when appropriate, and an incremental ramp with pre-specified monitoring.
+
+:::
+
+### Q50. How should you respond if an important metric drops sharply on day one?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Investigate serious harm immediately using a pre-specified safety policy, while avoiding opportunistic early claims of benefit.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A **20% crash-rate increase** may warrant immediate pause or rollback. A **5% movement** in a noisy metric may be expected but still requires context.
+
+Use severity, confidence, data-quality checks, and business risk—not a universal drop threshold. Monitoring guardrails for safety is different from repeatedly peeking at the primary metric and stopping the first time it becomes significant.
+
+:::
+
+### Q51. What is the no-interference assumption (SUTVA), and when can it fail?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A standard causal experiment assumes each unit’s outcome depends on its own assigned treatment, not other units’ assignments; treatment also needs a well-defined version.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A new driver incentive may change driver supply, waiting times, and competition experienced by *control* riders. The treatment spills over between units.
+
+This means a user-randomized A/B test may estimate an effect that differs from the full-market launch effect. Consider geographic cluster randomization, network designs, or marketplace switchback tests where suitable.
+
+:::
+
+### Q52. When is a switchback experiment useful?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It alternates treatment and control across time blocks within a market or other shared system, often to manage interference and limited independent markets.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a food-delivery algorithm affecting all orders in a city, you might assign treatment to some pre-randomized city-hour blocks and control to others.
+
+Challenges include **carryover** (treatment changes future supply), **time-of-day trends**, insufficient washout, and correlated block outcomes. Include time/block effects or use randomization-based analysis that respects the block design.
+
+A switchback is not simply 'randomize each pageview repeatedly.'
+
+:::
+
+### Q53. How does cohort analysis help evaluate longer-term treatment effects?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It follows groups of users defined before or at exposure over time, showing whether estimated effects persist, strengthen, or fade.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a recommendation change raises first-week clicks but harms four-week retention. Group users by assignment week and track a consistent retention definition at week 1, 2, 4, and beyond.
+
+Keep a stable randomized holdout if possible. Cohort plots alone can be confounded by calendar effects and selective survival; a properly maintained control remains important for causal interpretation.
+
+:::
+
+### Q54. What is the difference between user-level, cluster-level, and switchback randomization?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+User-level randomization assigns individuals; cluster-level assigns connected groups; switchback randomization alternates treatment by time and operating unit.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a social network, one user's experience may affect friends, violating independence of user-level treatment effects. Assigning connected communities can reduce spillovers.
+
+For marketplace matching, all users in one city interact through the same supply pool; a **city-time switchback** may better measure platform-wide effects. Account for time effects, washout, serial correlation, and the smaller effective number of clusters.
+
+:::
+
+### Q55. What is difference-in-differences (DiD), and when can it substitute for an A/B test?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+DiD compares changes over time in treated and comparison groups, relying on a credible parallel-trends assumption in the absence of treatment.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$\widehat{DiD}=(\bar Y_{T,post}-\bar Y_{T,pre})-(\bar Y_{C,post}-\bar Y_{C,pre}).$$
+
+Suppose conversion rises 5 points in the launched city and 3 points in a comparable control city. DiD estimates a 2-point effect **if parallel trends and other assumptions are credible**.
+
+Inspect pre-trends, concurrent interventions, anticipation, and group composition. DiD does not automatically eliminate confounding.
+
+:::
+
+### Q56. What is instrumental variables (IV) estimation, and what makes a valid instrument?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+IV uses an exogenous source of variation that changes treatment uptake but affects the outcome only through that treatment, under further assumptions.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Random assignment to receive a promotional offer may change whether customers actually use the feature. Assignment can sometimes be an **instrument** for usage.
+
+The instrument must affect uptake (**relevance**) and have no forbidden direct effect on outcomes (**exclusion**) while meeting independence assumptions. Interpreting a local average treatment effect can also require monotonicity. Check whether the business question needs ITT instead, which is often simpler and more robust.
+
+:::
+
+### Q57. When would you use regression adjustment rather than CUPED?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Both can reduce variance using pre-treatment predictors. CUPED often uses an adjusted metric; regression adjustment can incorporate multiple covariates and treatment interactions.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If last month's user engagement strongly predicts this month's engagement, using it can reduce noise in an A/B test.
+
+A simple CUPED form is $Y^*=Y-\theta(X-E[X])$ where $X$ is measured **before assignment**. Regression adjustment includes $X$ in an outcome model and must use inference appropriate to the randomized design.
+
+Do **not** adjust for variables caused by treatment, such as post-launch clicks, without a causal justification.
+
+:::
+
+### Q58. How would you estimate and interpret a 95th-percentile latency treatment effect?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Compare the 95th percentiles under the two variants, then use an inference method suitable for quantile effects and clustered observations.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Latency is typically skewed, and executives may care more about the slowest 5% of requests than the average.
+
+Define the unit carefully: per **request** or per **user** latency distribution? If users generate many requests, a request-level bootstrap may be invalid. Use cluster-level bootstrap, appropriate quantile methods, or a randomized design with user-level summaries; report uncertainty and compare with tail-latency guardrails.
+
+:::
+
+### Q59. How do novelty effects, learning curves, and carryover affect experiment length?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Treatment effects can change with exposure time. The observation window must match the decision horizon, not just the day on which a p-value becomes small.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A redesigned app may initially increase clicks because it is new, then fall as users adapt. A productivity tool may start slow and improve after users learn it.
+
+Plot effects by exposure cohort or time since first treatment, using caution with repeated testing. Switchback tests may need **washout** periods if yesterday's treatment influences today's users. Calendar-week coverage alone cannot guarantee the desired long-term effect.
+
+:::
+
+### Q60. How do you handle simultaneous experiments that may interact?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use independent assignment only when interactions are acceptable; otherwise coordinate, isolate conflicting experiments, or design a factorial experiment.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose two teams change the recommendation interface and the recommendation algorithm at the same time. Each treatment may amplify or suppress the effect of the other.
+
+A $2\times2$ factorial design estimates main effects and an interaction, subject to sufficient sample size. Alternatively exclude users from overlapping incompatible tests. Document treatment exposure and feature dependencies.
+
+:::
+
+### Q61. What should be the unit of analysis when users produce many events?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Inference must reflect the assignment and dependence structure. Often aggregate to user level or use cluster-aware methods.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine 1,000 users generate 100,000 video impressions. Those 100,000 events are **not** 100,000 independent assignments.
+
+Use user-level outcome summaries for user-level estimands. For a global impressions ratio, retain numerator and denominator by user and apply a user-cluster delta method, bootstrap, or suitable cluster-robust approach. The wrong unit can create artificially small standard errors.
+
+:::
+
+### Q62. When is online experimentation not sufficient, and what complementary evidence should you use?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use observational methods, user research, offline tests, simulations, or longer-term holdouts when randomization, safety, network effects, or time horizons prevent a clean A/B test.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A large pricing policy change may create legal, ethical, or supply-side constraints. A six-month retention outcome cannot be fully known after a seven-day test.
+
+Alternatives include qualitative interviews, careful quasi-experiments, phased launches, synthetic controls, and simulation. State the assumptions and limitations of each; observational associations are not automatically causal.
+
+:::
+
+
+## Interview Case Studies and Traps
+
+**29 questions · ordered Easy → Medium → Hard.**
+
+**Easy questions**
+
+### Q1. Design an A/B test to compare two email campaigns.
+
+**Difficulty:** Easy
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Randomize eligible recipients, choose a business-relevant primary metric, keep assignment stable, plan power, and compare treatment effects with guardrails.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Start by clarifying: Is success **open**, **click**, **purchase**, or **incremental profit**? Open tracking can be unreliable, so purchases per randomized recipient may better reflect revenue.
+
+Randomize **recipients** 50/50, use a pre-set horizon, and measure clicks/purchases and unsubscribes. Consider repeated campaigns to the same user and avoid sending both versions to one person.
+
+The launch decision combines effect size, CI, deliverability, cost, and negative feedback.
+
+:::
+
+### Q2. A conversion rate rises from 10% to 11%. Is that a 1% or a 10% improvement?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It is a 1-percentage-point absolute increase and a 10% relative improvement.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Calculate absolute lift: $11\%-10\%=1$ percentage point. Relative lift: $(0.11-0.10)/0.10=10\%$.
+
+**Interview habit:** State both. Explain which one the business uses for revenue forecasting and whether the lift is measured per user, visit, or purchase attempt.
+
+:::
+
+### Q3. Your A/B test has p = 0.06 with an alpha of 0.05. How do you explain the result?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The result does not meet the prespecified 5% significance threshold. Report the observed effect, confidence interval, and whether the test had enough precision.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Do not say “94% confident it works,” and do not silently switch the threshold to 0.10 after seeing data.
+
+If the CI spans both meaningful harm and meaningful benefit, the result is **inconclusive**. If it rules out the smallest benefit worth launching, that is an actionable negative finding. Discuss costs and a properly planned follow-up, not only p-value.
+
+:::
+
+### Q4. You have 150 users: should you split treatment/control 50/100, 75/75, or 100/50?
+
+**Difficulty:** Easy **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+With equal per-user variance and cost in both arms, 75/75 gives the smallest variance and highest power for a fixed total of 150 users.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For independent groups with common variance $\sigma^2$:
+
+$$\operatorname{Var}(\bar Y_T-\bar Y_C)=\sigma^2\left(\frac1{n_T}+\frac1{n_C}\right).$$
+
+The sum $1/n_T+1/n_C$ is minimized by equal allocation at a fixed total. Unequal allocation can still make sense if costs or variances differ or a safety constraint limits exposure.
+
+:::
+
+
+**Medium questions**
+
+### Q5. A new checkout button has a higher CTR but unchanged purchases. Would you launch?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Not on CTR alone. Check whether the primary business outcome improved, whether the test has sufficient power, and whether there are negative downstream effects.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+CTR is a **diagnostic** metric. The button may attract curiosity clicks without helping conversion.
+
+Check checkout completion, purchases per eligible user, payment errors, refund rate, and latency. If revenue or purchase conversion has a tight CI around zero, the extra clicks may be unimportant. If the CI is wide, the experiment may be inconclusive.
+
+:::
+
+### Q6. How would you test a new recommendation model on a streaming service?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Randomize users to old and new recommenders, choose an engagement or long-term value metric, monitor safety and quality, and keep assignment stable.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Clarify the product goal: more meaningful viewing, better discovery, retention, or ad revenue?
+
+Possible metrics: hours watched per eligible user, completed sessions, content diversity, churn/retention, and negative feedback. Guardrails include latency, crashes, and recommendation policy compliance.
+
+A model may raise short-term clicks via sensational content yet reduce user satisfaction. Long-term holdouts and cohort analysis can reveal that trade-off.
+
+:::
+
+### Q7. How would you evaluate a driver sign-up funnel for a rideshare company?
+
+**Difficulty:** Medium
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Identify each funnel stage, quantify drop-offs, test a targeted intervention, and measure actual activation rather than only completed forms.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Example funnel: start application → submit documents → approval → first ride → retained driver.
+
+If many approved drivers never complete a first ride, focus on activation barriers such as onboarding complexity, vehicle access, or map familiarity. The primary metric might be **first completed ride per eligible applicant**.
+
+Guardrails: quality, safety, fraud, cost per activated driver, and retention. Measure outcomes after sufficient delay.
+
+:::
+
+### Q8. Is $1-p$ the confidence level of an individual result?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+No. The confidence level belongs to a confidence-interval procedure; it is not generally $1-$ the observed p-value.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A p-value of 0.02 does **not** mean '98% confidence that treatment works.' It describes a tail probability of data under a null model.
+
+A 95% confidence interval is produced by a procedure with a long-run coverage target of 95%. The two concepts connect for **matched tests and intervals**, but they are not interchangeable numerical probabilities.
+
+:::
+
+### Q9. Does a larger p-value show that two variants are equivalent?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+No. Non-significance may arise from weak power. To demonstrate equivalence, specify a practical equivalence margin and use a suitable equivalence test.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose you will treat changes within $\pm0.5$ percentage points as equivalent.
+
+An ordinary test with $p=0.70$ may simply be imprecise. An equivalence procedure (such as TOST) tests whether the data are sufficiently precise to rule out effects outside the acceptable band.
+
+**No detected difference** is not the same as **evidence of negligible difference**.
+
+:::
+
+### Q10. A/B test: 1,100 conversions out of 10,000 treatment users, versus 1,000 out of 10,000 control users. What do you conclude?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Treatment improved conversion from 10% to 11%, or +1 percentage point (+10% relative). The approximate two-sided p-value is about 0.02.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+The estimated absolute difference is $\hat\Delta=0.11-0.10=0.01$.
+
+With independent users, the approximate unpooled SE is:
+
+$$SE\approx\sqrt{\frac{0.11(0.89)}{10000}+\frac{0.10(0.90)}{10000}}\approx0.00434.$$
+
+The z-score is about $2.31$, giving a two-sided p-value around **0.02**. A rough 95% CI for the difference is **[0.15, 1.85] percentage points**.
+
+Before launching, verify randomization, guardrails, instrumentation, experiment duration, and whether the effect is worth the cost.
+
+:::
+
+### Q11. Your treatment has 51% of traffic and control 49%, but assignment was set to 50/50. Is this an SRM?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Not necessarily. Test whether the observed difference is larger than would reasonably occur by chance, given the total assigned sample.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With only 100 users, 51/49 is entirely ordinary. With a million users, 510,000/490,000 is a major deviation from a 50/50 assignment.
+
+Use a binomial or chi-square sample-ratio check against the planned split, then investigate missing exposure logs, device eligibility, duplicate IDs, or assignment defects. SRM suspicion comes **before** interpreting treatment outcomes.
+
+:::
+
+### Q12. A new search model improves offline NDCG but decreases online purchases. What would you investigate?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Check that offline and online objectives align, validate experiment exposure and sample balance, and inspect user behavior and business guardrails.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Offline NDCG measures the ranking of labeled relevance, not necessarily purchases. The labels may be biased toward old policies, or the model may surface entertaining but low-intent content.
+
+Inspect query segments, relevance judgments, position bias, latency, inventory, click-to-purchase conversion, and cancellations. Confirm the online experiment was valid. Do not launch solely because offline ranking metrics improved.
+
+:::
+
+### Q13. How would you evaluate a feature that shows notifications from multiple linked accounts in one app?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Define user benefit, randomize by the person rather than by their individual accounts, and monitor useful interactions plus spam, opt-outs, and retention.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+**Goal:** Make it easier for users to see important notifications across their accounts.
+
+**Primary metric:** Number or fraction of linked-account notifications read per eligible person, or a predeclared person-level engagement measure.
+
+**Guardrails:** Opt-out rate, notification dismissals, app latency, mistaken-account actions, and privacy complaints.
+
+If one person owns three accounts, splitting accounts across variants contaminates the experience. Assign that **person** consistently; discuss how account linkage is identified.
+
+:::
+
+### Q14. How would you A/B test whether a different electric-vehicle option layout increases EV bookings in a rideshare app?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Randomize eligible riders consistently; measure completed EV bookings and EV share, while guarding against cancellations, ETA, and total marketplace impact.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Restrict the eligible population to locations and sessions in which EV rides can actually be offered.
+
+Primary metrics may be **completed EV trips per eligible rider** and **EV share of completed trips**. Inspect total rides and cancellations so you can distinguish an increase in EV bookings from merely shifting display share.
+
+Because supply and demand interact, consider driver availability, regional heterogeneity, and potential spillovers into other ride types. For strong market-wide effects, market-level or switchback designs may be appropriate.
+
+:::
+
+### Q15. A new feature raises CTR by 15%, but average session duration and purchases are unchanged. Should you ship?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Not from CTR alone. First check the business objective, denominator changes, result precision, guardrails, and implementation cost.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+The feature could make a button more clickable without making the experience more useful.
+
+Ask whether downstream conversion, revenue per eligible user, retention, user complaints, and performance changed. Determine whether the CTR increase is absolute or relative. If the feature is cheap and improves a meaningful user goal, it may still be worth shipping; make that decision explicit rather than treating CTR as universally sufficient.
+
+:::
+
+### Q16. How would you measure the impact of an AI assistant inside a consumer app?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Choose an outcome tied to successful user tasks, experiment at the correct user level, and include quality, safety, latency, and cost guardrails.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Start with the user job: answering support questions, helping users shop, or completing a workflow.
+
+A primary metric could be **successful tasks per eligible user**, not merely messages sent to the assistant. Secondary metrics: return usage or resolution time. Guardrails: incorrect answers, unsafe outputs, user complaints, latency, and inference cost.
+
+Offline evaluation can screen quality, but randomized online measurement is needed to learn user impact where feasible.
+
+:::
+
+### Q17. A dashboard reports revenue up 8% after a release. How would you determine whether the release caused it?
+
+**Difficulty:** Medium **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Check data quality and concurrent events, then use an appropriate counterfactual design rather than assuming before-after change is causal.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+First confirm the metric definition, currency, refunds, traffic composition, seasonality, promotions, and logging changes.
+
+If there was a randomized holdout, compare treatment and control over the same time frame. Otherwise consider a plausible difference-in-differences or synthetic-control design and explicitly test assumptions. A before-after comparison alone cannot isolate the release's causal effect.
+
+:::
+
+
+**Hard questions**
+
+### Q18. How would you run an experiment for a referral incentive with network effects?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Clarify how referrals create spillovers, choose a unit/design that handles interactions, and track incremental value of invited and inviting users.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A cash incentive affects both referrers and referees. Randomizing each user independently can cause contamination when friends span treatment and control.
+
+Options include cluster randomization by social network or geographic market, depending on interference structure. Metrics can include valid referrals, new-user activation, incremental 90-day margin, incentive cost, and fraud.
+
+A surge in invitations alone is not success if referred users have low long-term value.
+
+:::
+
+### Q19. An experiment shows a 25% lift, but full rollout shows no improvement. Diagnose it.
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Check instrumentation and randomization first, then population, seasonality, novelty, interactions, and equilibrium effects.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A useful debugging order:
+
+1. Was the 25% **relative** or **absolute** lift? How wide was its CI?
+2. Did SRM, exposure, logging, or data definitions change?
+3. Are rollout users comparable with experiment users?
+4. Was the original effect a temporary novelty spike?
+5. Did capacity constraints or marketplace behavior change at full scale?
+
+If feasible, maintain a randomized holdout during rollout to measure whether the causal benefit persists.
+
+:::
+
+### Q20. How do you decide whether to launch a statistically significant product change?
+
+**Difficulty:** Hard
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Launch only if estimated gains, uncertainty, guardrails, costs, risk, and generalizability support the decision.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A strong final recommendation has five parts:
+
+1. **Primary impact:** Estimate and confidence interval, not only p-value.
+2. **Practical threshold:** Is the gain big enough to matter?
+3. **Guardrails:** Any harm to latency, reliability, fairness, customer trust, or retention?
+4. **External validity:** Would effect persist across cohorts, devices, locations, and full rollout?
+5. **Operational plan:** Ramp gradually, monitor, and set rollback thresholds.
+
+If the evidence is insufficient, propose a targeted follow-up experiment rather than claiming proof of no effect.
+
+:::
+
+### Q21. Can you use the same data to select promising segments and confirm significance?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Not without addressing selection. Searching many segments and then reporting the best unadjusted p-value inflates false discoveries.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose you split by device, age, country, activity level, and dozens of combinations. One segment is likely to look impressive by chance.
+
+Distinguish exploratory patterns from confirmatory evidence. Apply multiplicity-aware inference, use holdout data, or run a pre-specified follow-up test. Prefer a **treatment × segment interaction test** to comparing one significant segment against another nonsignificant one.
+
+:::
+
+### Q22. Why can a statistically significant metric have a biased causal estimate?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Significance measures uncertainty under a model; it does not protect against systematic bias from assignment, conditioning, measurement, or interference.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A treatment may change how likely a user is to be logged or enter the analysis population. The estimated effect can be very precise—and still biased.
+
+Examples: conditioning on users who clicked after assignment, treatment-dependent logging, duplicate assignments, and cross-user spillovers.
+
+Validate experiment design and data generation **before** treating a low p-value as causal evidence.
+
+:::
+
+### Q23. Simpson’s paradox: every user segment prefers A, but aggregate conversion favors B. What could explain it?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Different segment mixes or weights can reverse the aggregate result even when all within-segment results point the other way.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose A converts 90% of desktop users and 60% of mobile users; B converts 85% and 55% respectively, so A is better **within both groups**.
+
+But if most A traffic comes from mobile and most B traffic from desktop, the aggregate conversion rate can favor B.
+
+Before choosing a variant, inspect how segments were formed, whether assignment really randomized them, and which **target population weights** the business wants to represent. Predefined stratified estimates avoid misleading changes in composition.
+
+:::
+
+### Q24. A treatment has more exposure events but fewer assigned users. Is its higher global CTR trustworthy?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Not until assignment, event logging, and correlation are checked. A global CTR can change through traffic mix and denominator changes, independently of user benefit.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Check assigned users (not only viewed events), unique exposure, impression logs, event duplication, and sample ratio mismatch. Treatment might create more impressions per user, changing how the ratio weights heavy users.
+
+Analyze user-level numerators and denominators; use appropriate cluster-aware uncertainty. For a launch decision, compare a user-centered business outcome and guardrails as well.
+
+:::
+
+### Q25. An experiment finds +3% purchases among exposed users but zero effect in all assigned users. How would you interpret it?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The exposed-user analysis may be selected after treatment. ITT is often the safer causal estimate of assignment, and dilution can explain a smaller ITT effect.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If only 20% of assigned users ever encounter the changed page, an actual impact on that subset may be diluted in the all-assigned average.
+
+But people who were exposed may differ systematically from those who were not, especially if treatment influences exposure. Check eligibility, pre-treatment triggers, instrumentation, compliance, and the estimand. Do not claim a +3% causal effect based only on a post-treatment-selected subgroup.
+
+:::
+
+### Q26. A pricing A/B test increases short-term revenue but reduces long-term retention. How do you decide?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Weigh incremental profit against customer lifetime value, fairness, business constraints, and uncertainty; do not optimize a single short-term metric.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Define the target population and short- and long-term estimands: revenue per user, margins, renewal, retention, complaints, and lifetime value.
+
+A higher price can raise immediate revenue but drive away valuable customers. Use a sufficiently long follow-up or a randomized holdout, plus causal modeling if needed. Consider legal and ethical limits of personalized pricing before experimentation. Make the launch decision on **net business impact**, not only first-week revenue.
+
+:::
+
+### Q27. How would you evaluate a referral bonus changed from cash to stock?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Randomize at a level that accounts for network effects, compare quality-adjusted referrals and cost, and track downstream retention and compliance constraints.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A higher referral count is not enough: measure activated referred users, their retention and value, incentive cost, and misuse.
+
+Referrers and invitees affect each other, so randomizing linked participants into different arms may create spillovers. Consider network-cluster assignment or a design that explicitly models interference. Also verify financial, securities, tax, and operational requirements before making incentives available.
+
+:::
+
+### Q28. A stakeholder wants to stop a two-week experiment after day 4 because p = 0.01. What do you say?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Under a fixed-horizon plan, do not declare an early winner from an ordinary p-value. Continue to the prespecified stopping rule unless an approved sequential design or safety trigger allows stopping.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Repeatedly looking at the same ordinary p-value and stopping only when it is small raises the chance of false positives.
+
+Explain that daily safety checks are still appropriate; serious harm can justify stopping early. If fast decisions are important, design future experiments with valid sequential monitoring, predeclared decision boundaries, and operational guardrails.
+
+:::
+
+### Q29. An experiment produces a statistically significant result, but the effect appears only after excluding outliers. What do you do?
+
+**Difficulty:** Hard **· Added for interview prep**
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Audit data errors and define an objective outlier policy. Report the primary prespecified result and sensitivity analyses, not only the version that becomes significant.
+
+:::
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A large order may be valid revenue or a logging mistake. Deleting real high spenders changes the business estimand; dropping them only when the p-value improves is p-hacking.
+
+Check source logs, specify robust alternatives when justified, report both full-data and sensitivity estimates, and explain uncertainty. For skewed spending, consider user-level bootstrapping or robust methods without silently changing the target mean.
+
+:::
+
+
+::::
