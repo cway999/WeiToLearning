@@ -1,0 +1,2318 @@
+---
+title: "Machine Learning Interview Questions"
+subtitle: "Data Scientist & Machine Learning Engineer Preparation"
+toc: false
+page-layout: full
+format:
+  html:
+    code-copy: true
+    code-fold: show
+    smooth-scroll: true
+---
+
+
+::: {.callout-important collapse="true" title="Important notes for common mistakes"}
+- **KNN imputation is not always the best method.** Choose the imputation method by validation and leakage risk.
+- **Linear regression does not always require normally distributed errors** for unbiased OLS coefficients.
+- **Logistic regression with a sigmoid does not produce probabilities outside 0–1 when trained with MSE.** Cross-entropy is preferred for other reasons.
+- **Ridge is not always more accurate than lasso**, and **XGBoost is not always better than random forest or LightGBM**.
+- **Tree missing-value support depends on implementation** and model configuration.
+- **AUC, SHAP importance, and marketing attribution are not causal effects.**
+:::
+
+::::: {.panel-tabset}
+
+## Data & Feature Engineering
+
+**24 questions** · Easy → Medium → Hard
+
+
+### Easy (10)
+
+
+#### Q01. What is the difference between supervised, unsupervised, and semi-supervised learning?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Supervised learning uses labeled examples; unsupervised learning looks for structure without labels; semi-supervised learning combines labeled and unlabeled examples.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine an e-commerce site. Predicting whether a purchase will occur uses labeled data: each visit has a purchase outcome. Grouping similar shoppers without predefined outcomes is unsupervised clustering. If only 1,000 of 100,000 product images are labeled, semi-supervised learning can use unlabeled images alongside the labeled ones. Always state which labels are available and what business decision the model supports.
+
+::::
+
+
+#### Q02. What are a feature, a target, a parameter, and a hyperparameter?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A feature is an input, the target is the outcome to predict, parameters are learned from data, and hyperparameters are chosen outside the fitting process.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a churn model, tenure and recent logins are features; churn within 30 days is the target. In logistic regression, coefficients are learned parameters. The regularization strength is a hyperparameter. In a random forest, individual tree splits are learned from data while maximum depth and the number of trees are hyperparameters. Tune hyperparameters using validation data, not the final test set.
+
+::::
+
+
+#### Q03. What are the first steps in cleaning a new dataset?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Confirm the data definition and keys, inspect types and missingness, check duplicates and invalid values, and test time and label consistency before modeling.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For transaction data, confirm whether each row is one purchase, one item, or one event. Check timestamps, currency, impossible negative amounts, unique IDs, and inconsistent labels such as "M" versus "Male." A duplicate can be a real repeated transaction or a logging bug; do not delete all duplicates blindly. Build a validation report and keep transformations repeatable in a pipeline.
+
+::::
+
+
+#### Q04. How do standardization and min–max scaling differ?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Standardization centers a variable and scales by its standard deviation; min–max scaling maps the training range to a specified interval.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Standardization is $z=(x-\mu_{train})/s_{train}$. Min–max scaling to $[0,1]$ is $(x-x_{min,train})/(x_{max,train}-x_{min,train})$. For salary measured in dollars and tenure measured in years, scaling prevents the larger numerical units from dominating Euclidean distance. Use statistics from **training data only**, then apply them unchanged to validation and test data. Tree splits usually need much less scaling.
+
+::::
+
+
+#### Q05. How should you handle missing numerical and categorical values?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+First find out why data are missing. Then compare simple imputation, missing indicators, suitable model-native handling, and dropping the variable or row.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A missing income field might be a data-pipeline bug, or the user might have chosen not to disclose it. For a roughly symmetric variable, training-set mean imputation can be a baseline; for skewed spending, the median may be more robust. Categorical missingness can get an explicit "Unknown" category. KNN imputation is not always better—it can be expensive and sensitive to scaling. Fit the imputer only on the training fold to avoid leakage.
+
+::::
+
+
+#### Q06. How do one-hot encoding and ordinal encoding differ?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+One-hot encoding creates a separate indicator for each category. Ordinal encoding assigns ordered numbers and is appropriate when the order is meaningful or the model can treat codes as categories.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For color = red, blue, or green, coding them 1, 2, 3 may incorrectly imply distances between colors. One-hot encoding avoids this for linear models. For satisfaction = low, medium, high, an ordered representation may make sense. Different models handle codes differently: a tree can still make misleading numeric splits if category codes carry no order. Plan for unseen categories at inference time.
+
+::::
+
+
+#### Q07. What is a data outlier, and should you remove it?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+An outlier is unusual relative to a chosen reference distribution. Remove it only when it is invalid or irrelevant to the target population.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A USD 100,000 purchase could be a data-entry error—or a legitimate enterprise order. Investigate sources before deletion. Typical flags include large z-scores or points outside $[Q_1-1.5IQR, Q_3+1.5IQR]$; these are heuristics, not proof of bad data. Consider log transforms, robust losses, winsorization, separate segments, or an outlier indicator. Evaluate whether the choice improves performance on realistic future data.
+
+::::
+
+
+#### Q08. What is class imbalance, and why can accuracy be misleading?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Class imbalance means one label is much rarer than another. A model can appear accurate while missing almost all rare cases.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If fraud occurs in 0.5% of transactions, a model predicting "not fraud" for everyone gets 99.5% accuracy but detects no fraud. Instead inspect precision, recall, PR-AUC, calibration and the cost of false positives and false negatives. Compare with a no-skill baseline. Use metrics that match the actual action, such as how many fraud investigations the operations team can perform per day.
+
+::::
+
+
+#### Q09. What is the difference between training, validation, and test sets?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Train fits model parameters, validation selects features and hyperparameters, and the test set estimates performance on unseen data after choices are finalized.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If you compare 50 models on the test set and pick the best, you have effectively tuned to that test set. Instead fit models on training data, choose settings on validation folds, and evaluate once on a protected test set. A 70/15/15 split is a possible starting point, not a universal requirement. Split by user, time, or other meaningful units when rows are dependent.
+
+::::
+
+
+#### Q10. What is overfitting, and how does it differ from underfitting?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Overfitting is learning training-specific noise; underfitting is failing to learn important structure in either training or new data.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A deep decision tree might memorize individual customers and score 99% on training data but only 70% on a holdout. That is overfitting. A straight-line model applied to a strongly curved relationship may perform poorly on both sets; that is underfitting. To reduce overfitting, tune complexity, regularize, improve data quality, and use reliable validation. For underfitting, add informative features or use a more expressive model.
+
+::::
+
+
+### Medium (9)
+
+
+#### Q11. How do you diagnose and prevent target leakage?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Target leakage occurs when training features contain information unavailable at prediction time, or when validation inadvertently uses future or held-out information.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose you predict mortgage default at loan origination and include a collections flag created after delinquency. The model will look excellent offline but fail in production. Another leak occurs if the scaler or target encoder is fitted on all data before cross-validation. Define an "as-of" timestamp for every prediction and feature. Audit joins, aggregations, labels, preprocessing and user-level duplicates. Rebuild the pipeline using only information available at prediction time.
+
+::::
+
+
+#### Q12. When should you use random, stratified, group, or time-based splits?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Choose the split to reproduce deployment: random for approximately independent data, stratified for label balance, group for repeated entities, and temporal for future prediction.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If ten transactions belong to the same customer, spreading those rows across train and test can make the test unrealistically easy. A group split holds entire customers out. For next-month sales prediction, train on earlier months and test on later months. Stratification helps rare labels appear in each fold, but it cannot repair leakage or temporal dependence. The best split mirrors the population and timing you will predict in production.
+
+::::
+
+
+#### Q13. How do you handle missing data in a time series?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use a method consistent with the data-generating process and the information available at prediction time; assess the effect of gaps on downstream predictions.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Forward filling a stock price uses earlier information and may be reasonable for some sparse observations, but it can hide market closures or stale feeds. Backward filling uses a future observation and can leak information into forecasts. Interpolation between two measurements also relies on the later measurement. Record gap length, use missingness indicators, and compare forecasts on periods with realistic missingness.
+
+::::
+
+
+#### Q14. What is target encoding and why does it require care?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Target encoding replaces a category with a statistic of the target for that category; naive implementation leaks label information and overfits rare categories.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For ZIP code, you could encode each ZIP with the average purchase rate. A ZIP with only one training customer who purchased would get a misleading 100% rate. Use smoothing toward the global rate and **out-of-fold encoding** when generating training features. On validation or test data, apply mappings learned from training only. Unknown categories should fall back to a safe prior. Never encode a row with its own label.
+
+::::
+
+
+#### Q15. How do you choose between frequency, one-hot, hashing, and target encoding for high-cardinality categories?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Choose based on category count, model type, memory, interpretability, unseen-category behavior, and leakage risk.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Product IDs may have millions of values. One-hot encoding can become huge. Frequency encoding is compact, but frequency need not correlate with outcome. Hashing uses fixed memory but allows collisions. Target encoding can be predictive but needs careful cross-fitting. Learned embeddings can work well with abundant training data. Compare methods using a realistic held-out split, including categories not seen during training.
+
+::::
+
+
+#### Q16. What are feature selection, feature extraction, and dimensionality reduction?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Feature selection retains a subset of original variables; feature extraction creates new representations; dimensionality reduction makes a smaller representation.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Keeping income and debt ratio but dropping redundant fields is feature selection. PCA forms linear combinations of existing numerical features, so each principal component is a new variable. Embeddings are another form of learned representation. If explanations must refer to original features, feature selection may be preferable. If prediction quality or compression is the priority, extracted features may be useful. Fit all transformations within training folds.
+
+::::
+
+
+#### Q17. How does Principal Component Analysis (PCA) work?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+PCA finds orthogonal directions of maximum variance and projects the data onto a selected number of those directions.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine height and arm span, which are strongly correlated. PCA often finds a first direction that represents overall body size. Center the training data; scale features when units would otherwise dominate. Compute eigenvectors of the covariance matrix or use SVD. Order components by explained variance. PCA maximizes variance, not predictive power: a low-variance component may still be important for the target. Apply the same fitted transformation to future rows.
+
+::::
+
+
+#### Q18. How do you treat duplicate observations differently in training and evaluation?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Identify the meaning of duplicates first. Remove accidental duplicates and leakage, but preserve legitimate repeated events when they match the prediction unit.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Two identical transactions with different transaction IDs may both be real; two copies caused by an ingestion retry are not. Near-duplicate images or repeated user records can leak across folds and inflate offline accuracy. Group or deduplicate at the right unit before splitting. Repeated observations from the same customer may require group-aware evaluation or appropriately clustered uncertainty rather than simple deletion.
+
+::::
+
+
+#### Q19. How would you build a reusable preprocessing pipeline?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Put imputation, encoding, scaling, feature selection, and model fitting into one versioned pipeline fitted only on training data.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With scikit-learn, a `ColumnTransformer` can apply median imputation and scaling to numeric columns while encoding categorical columns; a `Pipeline` then fits the model. Each cross-validation fold fits its own preprocessing state. Save the trained transformation with the model so production uses identical rules. Test handling of null values, new categories, wrong data types, and changed column order.
+
+::::
+
+
+### Hard (5)
+
+
+#### Q20. How do you detect dataset shift before retraining a model?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Compare training and serving populations using feature-level checks, missingness, prediction distributions, and, when labels arrive, outcome-based performance.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A rise in missing ZIP codes could be a pipeline issue rather than customer behavior. PSI, histogram comparisons, and distance tests can flag changes, but a statistically significant feature shift does not automatically imply worse predictions. Segment by geography and product, check freshness and join coverage, and inspect label delay. Prioritize shifts in features the model relies on. Validate a retrained candidate against an appropriate recent holdout before release.
+
+::::
+
+
+#### Q21. What do MCAR, MAR, and MNAR mean, and why do they matter?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+MCAR means missingness is unrelated to observed or unobserved data; MAR permits dependence on observed variables; MNAR still depends on unobserved values after conditioning.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If a sensor fails at random, measurements may be MCAR. If younger customers are less likely to report income and age is recorded, MAR may be plausible conditional on age. If high-income users disproportionately conceal income even within age groups, missingness could be MNAR. Imputation cannot generally recover MNAR effects without additional assumptions or data. Consider missingness indicators, sensitivity analysis, and product-specific data collection.
+
+::::
+
+
+#### Q22. Why can training and test data be identically distributed while performance still fails for a subgroup?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Aggregate evaluation can hide weak subgroup performance, especially when majority groups dominate the metric.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If 95% of users are in region A, a model could score well overall while making poor predictions in region B. Measure segment-specific error, recall, calibration, sample count, and uncertainty. Ask whether the subgroup differs in labels, feature quality, or cost of errors. Use representative evaluation and report both aggregate and subgroup results; do not assume a high overall AUC guarantees acceptable behavior everywhere.
+
+::::
+
+
+#### Q23. How can data collected from a model’s own decisions bias future training?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+The model influences which outcomes are observed, creating selection bias and feedback loops.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If a fraud system blocks suspicious transactions, you often never observe whether those blocked transactions would have become fraud. Training only on completed transactions can bias the next model. Similarly, recommenders observe clicks mainly for items they displayed. Possible approaches include randomized exploration with safeguards, delayed outcome tracking, propensity weighting under suitable assumptions, and explicit evaluation of selection mechanisms.
+
+::::
+
+
+#### Q24. How can you use scikit-learn Pipeline to prevent preprocessing leakage?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Put imputation and scaling in the same fitted pipeline as the estimator, and evaluate the entire pipeline inside cross-validation.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A leakage-safe pipeline fits the median and scaling factors separately inside each training fold, instead of learning them from the full dataset before splitting.
+
+```python
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_score
+
+pipeline = Pipeline([
+    ("impute", SimpleImputer(strategy="median")),
+    ("scale", StandardScaler()),
+    ("model", LogisticRegression(max_iter=1000))
+])
+# X is numeric; y is a binary label.
+scores = cross_val_score(pipeline, X, y, cv=5, scoring="roc_auc")
+```
+
+For repeated users or timestamps, replace ordinary folds with a **group-aware or time-aware splitter**. Encoding the target should also be performed out-of-fold to prevent leakage.
+
+::::
+
+
+## Linear Models & Optimization
+
+**21 questions** · Easy → Medium → Hard
+
+
+### Easy (6)
+
+
+#### Q01. What is linear regression and what does ordinary least squares minimize?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Linear regression predicts a continuous target from a linear combination of features. Ordinary least squares minimizes the sum of squared prediction errors.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+The model is $\hat y=\beta_0+\sum_j\beta_j x_j$. With house prices, size might have a positive coefficient and age a negative one. Ordinary least squares chooses coefficients to minimize $\sum_i(y_i-\hat y_i)^2$. The coefficients describe fitted associations after accounting for the other included variables; they are not automatically causal effects.
+
+::::
+
+
+#### Q02. What assumptions matter for interpreting linear-regression coefficients?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Important conditions include correct mean specification, exogeneity for unbiased coefficients, sufficient feature variation, and an appropriate dependence model for uncertainty.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+The key causal/inference condition is $E[\varepsilon\mid X]=0$: unobserved influences should not be systematically related to included predictors. Exact collinearity prevents unique coefficients. Homoscedasticity and independent errors support familiar textbook standard errors, but heteroscedasticity can often be handled with robust standard errors. Normal errors are not needed for ordinary least-squares point estimation. Always distinguish inference assumptions from predictive usefulness.
+
+::::
+
+
+#### Q03. What is logistic regression and why is it a classification model?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Logistic regression maps a linear score through the sigmoid function to estimate the probability of a binary outcome.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a user with features $x$, the predicted probability is $p=1/(1+e^{-z})$ with $z=\beta_0+\beta^Tx$. Predictions are in the range zero to one. A threshold, such as 0.5, converts a probability into a class label; that threshold is a decision rule, not a required property of the model. The logistic model assumes log-odds are linear in the selected features.
+
+::::
+
+
+#### Q04. How do you interpret logistic-regression coefficients and odds ratios?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A one-unit increase in a feature adds its coefficient to log-odds; it multiplies the odds by the exponential of that coefficient, holding other features fixed.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If a coefficient is $\log(2)$, a one-unit increase doubles the odds. That does **not** necessarily double the probability: a probability of 0.20 has odds 0.25, which become 0.50, corresponding to probability 0.333. This distinction matters in interviews. Report the baseline probability when discussing business impact and remember that association is not automatically causal.
+
+::::
+
+
+#### Q05. What is gradient descent?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Gradient descent repeatedly updates parameters in the direction opposite the gradient of the loss to reduce that loss.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+In one dimension, suppose the loss is $L(w)=w^2$. Its gradient is $2w$. Starting from $w=4$ with learning rate $0.1$, the next value is $4-0.1(8)=3.2$. Repeating moves toward zero. In many dimensions, the gradient gives one slope per parameter. The learning rate controls step size; too large may diverge, while too small trains slowly.
+
+::::
+
+
+#### Q06. What is regularization and why do we use it?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Regularization penalizes overly complex parameter values to improve generalization and often stabilize estimates.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A regression with 300 features and only 100 customers may fit random noise. Regularization adds a penalty to training loss, discouraging extreme coefficients. It deliberately introduces some bias in exchange for lower variance on new data. The penalty strength is a hyperparameter chosen with validation. Its effect depends on feature scale, so scaling predictors is usually important for L1/L2-regularized linear models.
+
+::::
+
+
+### Medium (9)
+
+
+#### Q07. Compare L1, L2, and elastic-net regularization.
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+L1 uses absolute coefficient magnitudes and can produce sparse solutions; L2 penalizes squared magnitudes and usually shrinks without setting many coefficients exactly to zero; elastic net combines both.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With two correlated features—house size and room count—L2 often spreads weight between them, while L1 may keep one and remove the other. Elastic net can retain groups while allowing some sparsity. Common linear-regression objectives are $RSS+\lambda\sum_j|\beta_j|$ for L1 and $RSS+\lambda\sum_j\beta_j^2$ for L2. Typically do not penalize the intercept. There is no rule that ridge always predicts better than lasso.
+
+::::
+
+
+#### Q08. What is multicollinearity and how can you address it?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Multicollinearity means predictors contain overlapping information, making individual coefficient estimates unstable even when prediction may remain good.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If house age = current year − year built, including all three with a fixed observation year can create exact linear dependence. With highly correlated predictors, standard errors may grow and coefficients may change sign across samples. Inspect correlations, condition numbers, and VIF. Remove redundant variables if interpretation matters, combine features, or use ridge regression. It is not automatically a reason to reject a model with good held-out prediction.
+
+::::
+
+
+#### Q09. What does the Gauss–Markov theorem say?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Under the Gauss–Markov conditions, ordinary least squares is the best linear unbiased estimator (BLUE) among linear unbiased estimators.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+"Best" means minimum variance in that restricted class, not best out-of-sample prediction among all possible models. Core conditions involve linearity in parameters, full rank, zero conditional mean errors, and spherical error covariance for the classical result. Normality of errors is not required for BLUE. If errors are heteroscedastic, OLS may remain unbiased under exogeneity, but usual standard errors can fail and weighted least squares might be more efficient.
+
+::::
+
+
+#### Q10. What is heteroscedasticity and what changes when it occurs?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Heteroscedasticity means the error variance depends on feature values. It can invalidate conventional OLS standard errors without necessarily biasing OLS coefficients.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+House-price prediction errors may be much larger for expensive homes than for small homes. A plot of residuals against fitted prices may show a fan shape. For inference, use heteroscedasticity-robust standard errors or a justified variance model. For prediction, consider target transformations, weighted regression, or a different loss. Robust standard errors change uncertainty estimates, not the fitted OLS predictions.
+
+::::
+
+
+#### Q11. How do you interpret coefficients in log-level, level-log, and log-log models?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Log-level coefficients give approximate percentage changes in the target per unit input; level-log gives changes in target per percentage input change; log-log gives elasticities.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For $\log(Y)=a+bX$, increasing $X$ by 1 changes $Y$ by approximately $100b$ percent; the exact percentage is $100(e^b-1)$. For $Y=a+b\log(X)$, increasing $X$ by 1% changes $Y$ by approximately $0.01b$ units. For $\log(Y)=a+b\log(X)$, a 1% change in $X$ corresponds to approximately a $b$% change in $Y$, holding other predictors fixed. Be precise about the scale.
+
+::::
+
+
+#### Q12. Why is cross-entropy generally preferred for logistic regression over squared error?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Binary cross-entropy matches the Bernoulli likelihood and gives an effective convex objective for standard unregularized linear logistic regression.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For true label 1, predicting 0.01 should receive a large penalty because the model confidently missed the positive class; log loss gives approximately $-\log(0.01)=4.61$. Squared error can be used on probabilities, and a sigmoid still keeps outputs between 0 and 1; therefore the claim that MSE necessarily creates probabilities outside $[0,1]$ is incorrect. Cross-entropy is preferred for its probabilistic interpretation and useful optimization behavior.
+
+::::
+
+
+#### Q13. What are batch, stochastic, and mini-batch gradient descent?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Batch gradient descent uses all training rows per update; stochastic uses one; mini-batch uses a small subset and is common in neural-network training.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If you have one million examples, a full gradient update may be costly. Mini-batches of 256 examples give more frequent, noisy updates and work efficiently on accelerators. Tiny batches produce noisy gradient estimates, while huge batches use more memory and may affect optimization behavior. Training typically shuffles mini-batches between epochs for approximately IID data. Report learning rate and batch size together when discussing model tuning.
+
+::::
+
+
+#### Q14. What is the difference between a parameter and a hyperparameter during optimization?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Parameters are learned by minimizing the training objective; hyperparameters control the training procedure or model class.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A logistic regression coefficient is optimized by a solver, while the regularization strength controls the objective. For gradient-boosted trees, leaf values and split points are learned, whereas depth and learning rate are configured. Hyperparameter tuning consumes validation information. This is why repeatedly optimizing on a nominal test set contaminates that test estimate. The distinction also matters for model versioning: save the learned parameters and training configuration.
+
+::::
+
+
+#### Q15. When do you use linear regression instead of a tree-based model?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Prefer a linear model when relationships are approximately additive and linear, interpretability or stable extrapolation matters, or data are limited; compare it with trees using held-out performance.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For predicting the sensitivity of revenue to interest rate, a coefficient with confidence intervals may be more useful than a complex tree. Trees readily capture interactions and nonlinear thresholds but typically extrapolate poorly outside their observed ranges. Linear models can extrapolate, but the extrapolation might be wrong if the assumed form fails. Feature engineering—splines or interactions—often makes a linear baseline surprisingly competitive.
+
+::::
+
+
+### Hard (6)
+
+
+#### Q16. What happens in linear regression when there are more features than samples?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+If the design matrix cannot have full column rank, unregularized OLS coefficients are not uniquely identified; regularization or dimension reduction may produce a stable solution.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With 100 observations and 500 coefficients, many parameter vectors can fit the same training outcomes. A numerical solver may return one solution but it is not uniquely determined by the least-squares objective. Ridge makes the penalized problem strictly convex in common settings. Lasso can select features, but stability requires care when predictors are highly correlated. Evaluate with properly nested validation and consider the effective sample size, not just the row count.
+
+::::
+
+
+#### Q17. How can you diagnose whether a model is overfitting because of variance or misspecification?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use learning curves, residual patterns, feature audits, and performance across independent cohorts; do not infer a single cause from a train–test gap alone.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If training error is very low but validation error stays high, reduce model complexity or investigate leakage, distribution shift, and noisy labels. If both errors are high, a simple model may lack important nonlinear features or sufficient information. Residuals that systematically vary with age suggest a missing interaction or nonlinear term. Increasing data may help variance but cannot fix predictors that are unavailable or targets that are defined incorrectly.
+
+::::
+
+
+#### Q18. How does a support vector machine choose a separating boundary?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A linear SVM chooses a boundary with a wide margin while penalizing margin violations; kernel SVMs represent nonlinear boundaries through similarity functions.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With positive and negative examples, the hinge loss $\max(0,1-yf(x))$ penalizes samples that violate the margin. The parameter $C$ trades off a wider margin against penalties for violations. Standardizing features matters because distances and regularization depend on scale. An RBF kernel can separate curved shapes but may be slow for very large datasets. The raw SVM score is not automatically a calibrated probability.
+
+::::
+
+
+#### Q19. What is the difference between softmax classification and one-vs-rest logistic regression?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Softmax learns class probabilities jointly; one-vs-rest trains one binary classifier per class and compares their scores.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For three product categories, softmax converts logits into nonnegative probabilities that sum to one. One-vs-rest predicts whether an item belongs to A versus not-A, B versus not-B, and C versus not-C. Its independently predicted probabilities may not sum to one without adjustment. Softmax is a natural default for mutually exclusive classes; one-vs-rest can be useful when binary learners are convenient. Multilabel problems may need independent sigmoid outputs instead.
+
+::::
+
+
+#### Q20. Why does feature scaling interact with regularization?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Penalties act on coefficients rather than on the physical contribution of each raw feature, so different feature units can create uneven penalization.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Consider annual income in dollars and age in years. The coefficient for income may be numerically tiny because income values are huge. An L2 penalty on coefficient magnitudes would treat age and income differently for reasons unrelated to importance. Standardizing training features before fitting makes the regularization more comparable. The intercept and final interpretation must be handled carefully when transforming coefficients back to original units.
+
+::::
+
+
+#### Q21. How do you verify a hand-written gradient or optimization update?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Compare analytic derivatives with finite-difference estimates at several test points, including edge cases.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a loss $L(w)$, compute $g_{numeric}=[L(w+\epsilon)-L(w-\epsilon)]/(2\epsilon)$ with a small but not extremely small $\epsilon$. Compare to your analytic gradient. For multidimensional models, check selected coordinates. Large discrepancies can indicate a sign error, broadcasting bug, incorrect averaging, or missing regularization term. This is a useful implementation interview technique for logistic regression, linear regression, or neural networks.
+
+::::
+
+
+## Trees & Classical ML
+
+**26 questions** · Easy → Medium → Hard
+
+
+### Easy (6)
+
+
+#### Q01. How does a decision tree make predictions?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A decision tree recursively partitions feature space using split rules and predicts from values in each terminal leaf.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A fraud tree might first ask "Amount > USD 1,000?", then "Is this a new account?" For classification, a leaf can output the fraction of positive training labels. For regression, it may output the mean target among leaf samples. A split is chosen to reduce a criterion such as Gini impurity, log loss, or squared error. Tree predictions easily express interactions, but deep trees can be unstable and overfit.
+
+::::
+
+
+#### Q02. What is Gini impurity, and how is it used to choose a split?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Gini impurity measures label mixing in a classification node. A tree chooses splits that reduce the weighted impurity of the child nodes.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a binary node containing 50% positive and 50% negative labels, Gini is $1-(0.5^2+0.5^2)=0.5$. A pure node has Gini zero. Suppose splitting customers by past purchase separates high- and low-purchase groups; compare the weighted child Gini with the parent Gini. The larger the reduction, the better that split under this criterion. A large impurity decrease is not automatically a large business impact.
+
+::::
+
+
+#### Q03. What is a random forest?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A random forest is an ensemble of decision trees trained on varied bootstrap samples and feature subsets, with predictions averaged or voted together.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+One deep tree can change dramatically when its training data change. By fitting many partly decorrelated trees, a forest can reduce prediction variance. A classification forest often averages per-tree class probabilities; a regression forest averages numerical predictions. Random feature selection helps decorrelate trees. Forests tend to be strong tabular baselines, but can be expensive at inference time and do not extrapolate naturally beyond observed target values.
+
+::::
+
+
+#### Q04. How does k-nearest neighbors (KNN) work?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+KNN predicts using labels or values from the K closest training observations according to a chosen distance measure.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With K=3, if a new customer’s nearest training neighbors contain two churners and one non-churner, majority-vote KNN predicts churn. KNN regression uses a mean or weighted mean of neighboring targets. Its performance depends on meaningful distance and feature scaling. Small K can overfit noise; large K may oversmooth distinctions. Training is simple, but inference can be expensive because many distances must be computed.
+
+::::
+
+
+#### Q05. What is K-means clustering?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+K-means groups observations into K clusters by repeatedly assigning points to the nearest centroid and updating centroids to cluster means.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine customers described by yearly spending and number of purchases. Choose K=3; assign each customer to the nearest of three centers, recompute each center as the mean of assigned customers, and repeat. K-means minimizes within-cluster squared distances and works best for roughly compact, similarly scaled clusters. It is unsupervised: cluster IDs are not ground-truth customer types. Initialization matters, so K-means++ and multiple starts are useful.
+
+::::
+
+
+#### Q06. How is KNN different from K-means?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+KNN uses labeled examples to predict an outcome; K-means organizes unlabeled observations into clusters.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+KNN can predict whether a customer will churn from labels of similar customers. K-means can segment customers without any churn label. Both often use distance, but their meanings of K differ: KNN uses K neighbors at prediction time; K-means uses K clusters during training. Neither automatically knows which features are meaningful, so scaling and careful feature selection are important.
+
+::::
+
+
+### Medium (12)
+
+
+#### Q07. How do bagging and boosting differ?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Bagging combines models trained on resampled data, often in parallel, to reduce variance. Boosting adds learners sequentially to improve the current ensemble under a loss function.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Random forest is a bagging-style method: many different trees make predictions that are averaged. Gradient boosting starts with an initial prediction and repeatedly trains small trees that improve the ensemble. For squared error, new trees approximately fit residuals; for other losses they fit negative gradients or related quantities. Boosting can achieve high accuracy but needs careful control of tree complexity, learning rate, and number of iterations.
+
+::::
+
+
+#### Q08. How is gradient boosting different from a random forest?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Random forest averages largely independent randomized trees; gradient boosting builds an additive sequence of trees to reduce a training objective.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If the first boosting model underpredicts expensive houses, the next tree can learn corrections for those cases. In a forest, each tree is trained largely independently and their predictions are combined. Forests often tolerate a wide range of hyperparameters; boosting can be more sensitive to learning rate and iteration count. Performance depends on data, tuning, and constraints—neither method always wins.
+
+::::
+
+
+#### Q09. What problem does XGBoost solve, and what are its main controls?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+XGBoost implements regularized gradient-boosted trees with optimized split finding and training features such as missing-value handling and subsampling.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For binary classification, the objective combines a differentiable loss such as log loss with regularization on tree complexity and leaf weights. Key settings include `max_depth`, `eta` (learning rate), `n_estimators` or boosting rounds, `subsample`, `colsample_bytree`, `min_child_weight`, and L1/L2 penalties. Lower learning rates often require more trees. Use early stopping on a held-out validation set and verify that the missing-value representation matches training and serving.
+
+::::
+
+
+#### Q10. What distinguishes LightGBM from traditional level-wise tree boosting?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+LightGBM is a fast gradient-boosted-tree implementation that commonly grows trees leaf-wise rather than level-wise and uses histogram-based split finding.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Level-wise growth expands all nodes at a depth. Leaf-wise growth targets the leaf with the largest expected improvement, which can learn complex structure efficiently but may overfit small data. Control complexity with `num_leaves`, `max_depth`, and `min_data_in_leaf`. LightGBM also supports categorical processing and techniques such as gradient-based one-side sampling in supported configurations. Neither LightGBM nor XGBoost is universally faster or more accurate.
+
+::::
+
+
+#### Q11. What do learning rate and number of boosting rounds do?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+The learning rate shrinks each new tree’s contribution; the number of rounds controls how many corrections are added.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A large learning rate can move quickly but overshoot and overfit. A smaller learning rate with more trees may generalize better, but training and prediction can take longer. Tune the two together. Track validation loss versus iteration and use early stopping to select a round that does not keep fitting noise. Also tune leaf complexity and subsampling; only lowering learning rate will not guarantee a good model.
+
+::::
+
+
+#### Q12. How do tree models handle missing values?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Some implementations learn where missing values should go at each split; others require explicit imputation or provide model-specific missing-value support.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+XGBoost and LightGBM can learn default directions for missing values in many settings, but you should verify library and model configuration. A native missing branch can exploit informative missingness. In production, a new null caused by a pipeline failure may have a different meaning from nulls seen in training. Track missing rates and run tests on unexpected missing values. Do not assume all random forests handle NaNs without preprocessing.
+
+::::
+
+
+#### Q13. What is out-of-bag (OOB) evaluation for random forests?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+OOB evaluation predicts each training row using only trees whose bootstrap samples did not include that row.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Each bootstrap tree typically leaves out roughly 36.8% of unique training rows in expectation. For a given row, average predictions from the trees that did not train on it; compare with its label. OOB provides a convenient internal estimate, but it does not replace a truly independent test set, especially if there is time leakage, user-level dependence, or a shifted deployment population.
+
+::::
+
+
+#### Q14. What is naive Bayes and why is it called naive?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Naive Bayes predicts class probabilities using Bayes’ rule and assumes features are conditionally independent given the class.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For spam detection, the model may combine the frequency of words such as "offer" and "free" conditioned on spam or not-spam. The conditional independence assumption is often false—words appear together—but the classifier can still work well. Multinomial naive Bayes is useful with counts; Gaussian naive Bayes models continuous features within each class. Additive smoothing prevents zero-count words from forcing zero posterior probability.
+
+::::
+
+
+#### Q15. What are the benefits and limitations of support vector machines (SVMs)?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+SVMs can create strong decision boundaries using margins and kernels, but kernel variants can scale poorly with many examples and need careful feature scaling.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A linear SVM may work well for a high-dimensional sparse text representation. An RBF kernel can capture nonlinear class boundaries. Tune $C$ (margin violations) and kernel parameters using cross-validation. SVM scores are not calibrated probabilities unless you add a calibration step. They can be attractive for medium-size datasets but often require special engineering for very large inference workloads.
+
+::::
+
+
+#### Q16. What is a silhouette score for clustering?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A silhouette score compares how close a point is to its own cluster against the nearest competing cluster; values range roughly from −1 to 1.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For observation $i$, let $a_i$ be mean distance to other points in its cluster and $b_i$ be the smallest mean distance to another cluster. Then $s_i=(b_i-a_i)/\max(a_i,b_i)$. A value near 1 suggests good separation; near 0 suggests overlapping clusters. An average silhouette score can help compare K values, but it favors certain geometries and does not show that clusters are useful for the business task.
+
+::::
+
+
+#### Q17. What is a Gaussian mixture model (GMM), and how does it differ from K-means?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A GMM models data as a weighted mixture of Gaussian distributions and gives soft cluster probabilities; K-means typically gives hard assignments based on distance.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With two overlapping customer groups, K-means assigns each user to one center. A GMM may assign a user 70% probability to component A and 30% to B. Expectation–maximization alternates between estimating component responsibilities (E-step) and updating means, covariances, and weights (M-step). GMMs can model elliptical clusters, but initialization and covariance constraints matter. A mixture component is not automatically a meaningful customer segment.
+
+::::
+
+
+#### Q18. What is decision-tree pruning and when should you use it?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Pruning removes splits that add complexity without enough expected improvement in generalization.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A tree that isolates each training user may achieve almost zero training error but perform poorly on new customers. Pre-pruning limits depth, leaf size, or minimum split gain. Post-pruning grows a tree and then removes subtrees using a complexity penalty. Select the pruning strength on validation data. A smaller tree can be easier to explain and faster to serve, while keeping enough structure for predictive accuracy.
+
+::::
+
+
+### Hard (8)
+
+
+#### Q19. How do you tune gradient-boosted trees for a large, imbalanced dataset?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Start with a correct split and business metric, then tune class weighting, tree complexity, learning rate, subsampling, and threshold separately.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For fraud detection, evaluate PR-AUC and precision at the investigation budget rather than only accuracy. Use enough validation data to measure rare positives. Tune `num_leaves` or depth, `min_child_weight` or leaf counts, and sampling. Try class weights or careful sampling, but evaluate calibration on the original prevalence. Choose a classification threshold based on action costs after training. Monitor slices, missingness, and drift after deployment.
+
+::::
+
+
+#### Q20. How is feature importance calculated for trees, and what can go wrong?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Split-based importance sums reductions in a training criterion; permutation importance measures the performance drop when a feature is shuffled. Both require careful interpretation.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If ZIP code has many categories, impurity-based importance can favor it even when it does not generalize. If income and wealth are correlated, permutation of income alone may show little importance because wealth substitutes for it. Compute importance on representative holdout data, group correlated features when useful, and distinguish predictive contribution from causal impact. No importance method automatically answers "What happens if the company changes this variable?"
+
+::::
+
+
+#### Q21. What are SHAP values, and how should you explain their limitations?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+SHAP values attribute a model prediction to features relative to a chosen baseline using Shapley-value ideas.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If the baseline predicted churn probability is 10% and the model predicts 25%, feature attributions may explain the 15-point difference on a chosen output scale. Attributions depend on the background distribution and how correlated or missing features are treated. SHAP tells you how model predictions are allocated, not what would happen if you causally changed a feature. Check whether the output scale is log-odds, probability, or raw score before interpreting numbers.
+
+::::
+
+
+#### Q22. Why can K-means fail on real customer segments?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+K-means assumes distance to centroids summarizes similarity and tends to favor compact, roughly spherical, similarly sized clusters.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine customers lying in two crescent-shaped groups. K-means may split each crescent rather than recovering the visible shapes. Different scales, outliers, initialization, and irrelevant features also affect its result. Alternatives include DBSCAN for density-based shapes, hierarchical clustering, or mixture models with flexible covariance. Always evaluate stability and business utility, not just an attractive cluster plot.
+
+::::
+
+
+#### Q23. How does the curse of dimensionality affect KNN and clustering?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+In high dimensions, distances can become less informative, many points become far apart, and irrelevant features can overwhelm meaningful similarity.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With hundreds of noisy customer attributes, the nearest neighbor may be only slightly closer than distant neighbors. Feature scaling alone cannot fix irrelevant dimensions. Use feature selection, appropriate embeddings, dimensionality reduction, or a learned similarity metric. Compare against simple baselines. For KNN retrieval at scale, approximate-nearest-neighbor indexes reduce serving cost but can trade speed against recall.
+
+::::
+
+
+#### Q24. What happens when you pass a novel category to a trained tree model?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Behavior depends on the encoder and model implementation; some handle unknown categories, while others error or send them through an unsuitable path.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a model trained on the categories iOS and Android receives "Web" after a launch. A one-hot encoder configured to ignore unknown categories may output all zeros, which can have an unintended interpretation. A native categorical tree may apply a documented default behavior. Design an unknown-category strategy during training, add pipeline tests, and monitor its frequency in production.
+
+::::
+
+
+#### Q25. How would you implement KNN classification from scratch in Python?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Compute the distance from the query to each labeled training observation, take the nearest K, and return the majority class (or a distance-weighted vote).
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Here is a minimal implementation using NumPy. It assumes numeric scaled features and a valid K. It uses stable label counts and Euclidean distance. For a production implementation, add tie handling, missing-value policy, batching, and indexing for large datasets.
+
+```python
+import numpy as np
+
+def knn_predict(X_train, y_train, x, k=3):
+    X_train = np.asarray(X_train, dtype=float)
+    x = np.asarray(x, dtype=float)
+    if not 1 <= k <= len(X_train):
+        raise ValueError("k must be 1..number of training rows")
+    distances = np.linalg.norm(X_train - x, axis=1)
+    nearest = np.argsort(distances, kind="stable")[:k]
+    labels, counts = np.unique(y_train[nearest], return_counts=True)
+    return labels[np.argmax(counts)]
+```
+
+This is a prediction function, not a learned feature transformation. Standardize numeric features using training statistics before measuring distance. Complexity is roughly $O(nd)$ per prediction for $n$ rows and $d$ features.
+
+::::
+
+
+#### Q26. How would you implement K-means clustering from scratch and check convergence?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Initialize K centers, repeatedly assign observations to their nearest center and replace each center by its assigned mean, and stop when center movement is small.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Here is a simplified numeric implementation. It handles empty clusters by keeping the old center. A careful implementation uses K-means++ initialization, multiple random starts and checks for assignment changes.
+
+```python
+import numpy as np
+
+def kmeans_simple(X, k=2, max_iter=100, tol=1e-5, seed=0):
+    X = np.asarray(X, dtype=float)
+    if not 1 <= k <= len(X):
+        raise ValueError("Invalid k")
+    rng = np.random.default_rng(seed)
+    centers = X[rng.choice(len(X), size=k, replace=False)].copy()
+    for _ in range(max_iter):
+        distances = ((X[:, None, :] - centers[None, :, :]) ** 2).sum(axis=2)
+        labels = distances.argmin(axis=1)
+        new = centers.copy()
+        for j in range(k):
+            if np.any(labels == j):
+                new[j] = X[labels == j].mean(axis=0)
+        shift = np.linalg.norm(new - centers, axis=1).max()
+        centers = new
+        if shift < tol:
+            break
+    labels = ((X[:, None, :] - centers[None, :, :]) ** 2).sum(axis=2).argmin(axis=1)
+    return labels, centers
+```
+
+Use **absolute or normed center displacement**; checking only the largest signed coordinate change can falsely report convergence if all changes are negative.
+
+::::
+
+
+## Evaluation & Model Selection
+
+**22 questions** · Easy → Medium → Hard
+
+
+### Easy (7)
+
+
+#### Q01. What are MAE, MSE, RMSE, and R-squared?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+MAE averages absolute errors; MSE averages squared errors; RMSE is the square root of MSE; R-squared compares squared errors with a mean-only baseline.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If a forecast misses by USD 10 and USD 100, MAE treats the errors in direct dollar amounts while MSE weights the USD 100 miss much more heavily. RMSE returns to the target’s units. $R^2 = 1 - SSE/SST$ on a test set may be negative if the model is worse than predicting the test mean. Choose metrics based on the cost of mistakes, not merely convention.
+
+::::
+
+
+#### Q02. Define precision, recall, accuracy, specificity, and F1 score.
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Accuracy is overall correctness; precision is the share of predicted positives that are true; recall is the share of true positives found; specificity is the share of negatives correctly rejected; F1 balances precision and recall.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With TP=40, FP=10, FN=20, TN=930: precision=40/50=0.80, recall=40/60≈0.67, specificity=930/940≈0.99, accuracy=970/1000=0.97. The high accuracy hides imperfect detection of a rare positive class. $F1=2PR/(P+R)≈0.73$. Choose metrics from the product’s failure costs.
+
+::::
+
+
+#### Q03. How do precision and recall trade off as the classification threshold changes?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Lowering the threshold generally flags more samples, increasing recall and often reducing precision; raising it usually has the opposite effect.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A fraud model with a 0.2 threshold flags more transactions than one with a 0.8 threshold. It catches more actual fraud but makes more false alarms. The threshold should reflect investigation capacity and cost, not always 0.5. Plot precision and recall against threshold on a representative validation set. A higher threshold does not guarantee strictly higher precision at every observed cutoff.
+
+::::
+
+
+#### Q04. What is an ROC curve and what does ROC-AUC measure?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+An ROC curve plots true positive rate against false positive rate across classification thresholds. ROC-AUC measures ranking discrimination between positive and negative examples.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+ROC-AUC can be interpreted as the probability that a randomly selected positive receives a higher score than a randomly selected negative, with the usual tie convention. AUC = 0.5 indicates random-order discrimination on average. It does not tell you the positive predictive value at your chosen operating threshold. A model can have good ROC-AUC and still generate many false alerts when the positive class is very rare.
+
+::::
+
+
+#### Q05. When is a precision–recall curve more useful than an ROC curve?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+PR curves often better reflect positive-class retrieval when positives are rare and the cost of investigating predicted positives matters.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine 1,000 real frauds among one million transactions. If a model catches 500 frauds but flags 10,000 legitimate payments, recall is 50% and precision is about 4.8%. The false-positive rate is only about 1%, which can make ROC performance appear operationally comfortable. Precision tells you that about 95 of 100 investigations would be false alerts. Report the prevalence and PR-AUC or average precision carefully.
+
+::::
+
+
+#### Q06. What is cross-validation and why is stratified K-fold useful?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+K-fold CV trains on K−1 folds and validates on the held-out fold in turn; stratification helps keep label proportions similar across folds.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With five folds, each row can be held out once and used for training four times. Average the validation scores to compare candidates. Stratified K-fold can stabilize classification results when positives are rare, but it does not prevent leakage among correlated users or across time. All imputation and preprocessing must be refitted within each training fold. Use group-aware or time-aware CV when needed.
+
+::::
+
+
+#### Q07. How do you select a classification threshold for a real business action?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Choose the threshold using a validation set and a declared objective or constraint such as expected cost, precision, recall, or review capacity.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a fraud team can review only 200 transactions daily. It may be better to choose the top 200 scores than a fixed threshold of 0.5. If false blocks are costly, impose a precision target. If missed frauds are costly, impose a recall floor. Estimate the operating point using representative prevalence and confirm after launch. Keep probability calibration separate from the threshold decision.
+
+::::
+
+
+### Medium (9)
+
+
+#### Q08. What is the difference between ROC-AUC, PR-AUC, log loss, and calibration?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+ROC-AUC and PR-AUC assess ranking; log loss evaluates probabilistic predictions; calibration asks whether predicted probabilities match observed frequencies.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A model can rank risk correctly but predict 90% for customers who default only 30% of the time. It might have high AUC yet poor calibration and log loss. Among customers assigned 0.20 probability, roughly 20% should experience the outcome for good calibration. Check reliability diagrams and Brier score. Calibration can shift over time if the class prevalence changes. Choose evaluation based on whether you rank, estimate risk, or make thresholded decisions.
+
+::::
+
+
+#### Q09. What is the Brier score?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+The Brier score is the mean squared difference between predicted probabilities and observed binary outcomes.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If a model predicts 0.8 for a user who purchases (label 1), the Brier loss is $(0.8-1)^2=0.04$. If the user does not purchase, the loss is $0.8^2=0.64$. Average across users. It rewards accurate probabilities rather than just class labels and reflects both calibration and refinement. Compare against simple baselines; a low Brier score can be partly due to rare outcomes, so also inspect calibration and discrimination.
+
+::::
+
+
+#### Q10. What is the difference between model selection and hyperparameter tuning?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Model selection chooses an algorithm family or representation; hyperparameter tuning chooses settings within a candidate model.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Comparing logistic regression with XGBoost is model selection; choosing XGBoost maximum depth and learning rate is hyperparameter tuning. Both use validation information and both can overfit it through many trials. Keep a locked test set for final evaluation. For small datasets, nested cross-validation can estimate generalization while using inner folds for selection and outer folds for assessment.
+
+::::
+
+
+#### Q11. Compare grid search, random search, and Bayesian optimization.
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Grid search tests a predefined lattice; random search samples configurations; Bayesian optimization uses prior observations to choose potentially promising configurations.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If only two of ten parameters strongly affect quality, random search may spend its trials more effectively than a dense grid over all ten. Bayesian optimization builds a surrogate of objective performance and trades off exploring uncertainty against exploiting good regions. It is not universally fastest: overhead, mixed constraints, noisy results, and parallelism matter. All approaches need proper validation and an explicit tuning budget.
+
+::::
+
+
+#### Q12. How do you choose a performance metric when classes are imbalanced?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Begin with the decision and error costs, then choose metrics such as precision/recall, PR-AUC, expected cost, recall at fixed false-positive rate, or precision at K.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For fraud review, a team capacity of 100 cases makes precision@100 and fraud detected@100 meaningful. For a medical screening tool, missing cases may be especially costly, so sensitivity at a specified specificity could be a better target. F1 is not automatically optimal: it implicitly gives precision and recall a particular balance and ignores true negatives. Evaluate calibration if probabilities inform financial decisions.
+
+::::
+
+
+#### Q13. What is the difference between permutation importance and SHAP?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Permutation importance measures the effect on a model score when a feature is disrupted; SHAP decomposes individual predictions relative to a baseline.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If permuting income drops validation AUC by 0.03, the model depends on income in that validation population. SHAP might explain why one particular loan received a high risk score. Correlated variables complicate both techniques, and the background data choice matters for SHAP. Neither method proves a causal effect. When an interviewer asks for feature importance, clarify whether they need global prediction dependence, local explanation, or causal impact.
+
+::::
+
+
+#### Q14. Why is using a test set repeatedly for model development a problem?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Repeatedly using test feedback turns the test set into another validation set, making reported generalization overly optimistic.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If you train 200 models and choose the one with the highest test AUC, part of the apparent win may be random test noise. Separate model selection from final testing. If the test has already influenced choices, obtain a new holdout or use a rigorous outer validation protocol. A final test should reproduce how new data arrive, including new users and delayed labels where relevant.
+
+::::
+
+
+#### Q15. How do you compare two classifiers that have nearly the same AUC?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Compare uncertainty, calibration, business operating points, subgroup results, inference cost, stability, and practical deployment constraints.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+An AUC difference of 0.002 might be noise; a paired bootstrap over independent evaluation units can help quantify uncertainty. One model might achieve much higher precision at a fixed review budget despite similar global AUC. Another might be faster, fairer under an agreed metric, or easier to maintain. Confirm a relevant gain on later data, and consider an online experiment when the system’s decisions affect user behavior.
+
+::::
+
+
+#### Q16. What is a learning curve and how can it guide data collection?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A learning curve plots training and validation performance against the amount of training data or training iterations.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If performance improves steadily as more labels are added, collecting labels may be valuable. If it plateaus, better features or an improved label definition may matter more. A large gap between training and validation can suggest high variance or evaluation mismatch. Plot uncertainty and repeat splits where possible. The shape alone does not prove that more data will solve the problem.
+
+::::
+
+
+### Hard (6)
+
+
+#### Q17. How should you validate a time-series forecasting model?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use forward-in-time evaluation that respects data availability and forecast horizons instead of random cross-validation.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a weekly demand forecast, train through June and test on July, then move the training cutoff forward. Do not compute rolling features using observations later than the forecast creation time. Choose gaps when labels or features are delayed. Report errors by horizon, season and product segment. If the model will retrain every week, simulate that retraining schedule during backtesting.
+
+::::
+
+
+#### Q18. How do you evaluate an algorithm that recommends the top K items?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use ranking metrics such as Recall@K, Precision@K, NDCG@K or MRR, and evaluate business outcomes when the ranking changes what users see.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+NDCG rewards relevant results near the top and can use graded relevance; MRR focuses on the first relevant result. Offline labels based on past clicks can be biased toward items previously shown. Thus good NDCG does not guarantee improvements in engagement or purchases. Define query-level aggregation, candidate coverage, latency and diversity constraints. Where feasible, compare online with randomized experiments.
+
+::::
+
+
+#### Q19. Why can a model with better offline AUC be worse in production?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Offline samples may differ from live traffic, labels may be biased, and better discrimination may not improve the business decision at its operating point.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A fraud model could improve average AUC by ranking easy cases better while reducing recall among the top 100 highest-risk transactions. It may also depend on a feature unavailable online or one that arrives with long delay. Compare precision at capacity, latency, calibration, leakage audits, slice metrics, and production-feature availability. Evaluate after deployment with shadow traffic or a guarded A/B test.
+
+::::
+
+
+#### Q20. How should you evaluate probabilistic forecasts under a changing base rate?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Check ranking, calibration, class prevalence, and whether recalibration or model retraining is appropriate for the shift.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose default prevalence rises from 1% in training to 3% during a downturn. The rank ordering may remain useful while predicted probabilities systematically understate risk. A calibration-in-the-large adjustment may help under pure prior-probability shift, but changes in feature–outcome relationships require deeper investigation. Evaluate by time and segment, and never use future labels to set parameters for an earlier prediction date.
+
+::::
+
+
+#### Q21. How would you report uncertainty when evaluation rows belong to the same users?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Resample or cluster at the independent unit, usually the user, rather than treating each event as independent.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A mobile app may have 10,000 clicks from only 200 people. Bootstrapping the 10,000 individual clicks treats within-user repeated behavior as independent and can give misleadingly narrow intervals. Resample users and bring their events together, or use an appropriate cluster-robust method. If randomization occurred by market, market-level clustering may be necessary. State the independent unit and its sample count, not just the number of events.
+
+::::
+
+
+#### Q22. What is the difference between bias, variance, and irreducible noise in prediction error?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Under squared-error regression, expected prediction error decomposes into squared bias, estimator variance, and irreducible outcome noise under standard conditions.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A very rigid model may consistently miss a nonlinear pattern: that is bias. A very deep model can move sharply when trained on a different sample: that is variance. Random uncertainty in an outcome remains even with the correct model: that is irreducible noise. The ideal level of complexity balances bias and variance. The decomposition concerns averaging over possible training samples; it is not simply the training-versus-test error gap.
+
+::::
+
+
+## Neural Networks, Causal ML & Production
+
+**34 questions** · Easy → Medium → Hard
+
+
+### Easy (5)
+
+
+#### Q01. What is a neural network, and what is forward propagation?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A neural network composes layers of learned linear transformations and nonlinear activations. Forward propagation computes an output from an input using the current weights.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a two-layer network, the first layer computes $h=\mathrm{ReLU}(W_1x+b_1)$ and the output layer computes $\hat y=W_2h+b_2$. The activation lets the model represent nonlinear patterns. During training, the loss compares predictions with targets; parameters change after gradients are computed. In inference, forward propagation still runs, but gradients and parameter updates are usually disabled.
+
+::::
+
+
+#### Q02. What is backpropagation?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Backpropagation applies the chain rule to compute how the loss changes with every neural-network parameter.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a model predicts a home price too high. The final layer first receives information about the prediction error. The chain rule propagates gradients backward through earlier layers to show which weight changes would reduce the loss. An optimizer then updates parameters. Backpropagation computes gradients; it is not the optimizer itself. Automatic-differentiation frameworks do this mechanically, but understanding tensor shapes and the chain rule helps debug models.
+
+::::
+
+
+#### Q03. What are common activation functions and why are they used?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Activations introduce nonlinearity; popular examples include ReLU, sigmoid, tanh, and GELU.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If every layer were only a linear transformation, stacking layers would still represent a single linear function. ReLU applies $\max(0,x)$ and is computationally simple. Sigmoid maps values into $(0,1)$ and is often used for binary probabilities. Tanh maps into $(-1,1)$. GELU is used in many modern neural architectures. Saturated sigmoid or tanh units can yield very small gradients, so initialization and architecture matter.
+
+::::
+
+
+#### Q04. What are dropout, weight decay, and early stopping?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+They are regularization approaches: dropout randomly masks activations during training, weight decay discourages large weights, and early stopping halts training when validation performance stops improving.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Dropout makes a network less dependent on individual units. Weight decay adds pressure toward smaller weights, commonly implemented in an optimizer. Early stopping uses a validation metric to avoid continuing to fit training noise. These methods are not interchangeable and need validation. The best choice depends on model architecture, data volume and training duration. Disable ordinary dropout randomness at inference time.
+
+::::
+
+
+#### Q05. What are unit tests in machine-learning projects?
+
+**Difficulty:** Easy · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Unit tests verify small, deterministic components such as preprocessing, feature calculations, loss functions, and input-output contracts.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Test that a date parser handles nulls and time zones, that the feature pipeline never returns NaNs unexpectedly, and that a loss function produces a finite value for extreme inputs. Integration tests go further: can the saved model load and serve a sample request using the real preprocessing path? Data-quality tests check schema and valid ranges. A good ML system needs both software tests and model-quality evaluation, because passing a code test does not prove good predictions.
+
+::::
+
+
+### Medium (15)
+
+
+#### Q06. How does dropout differ from batch normalization?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Dropout is primarily a regularization technique. Batch normalization normalizes intermediate activations using training-time batch statistics and learned scale and shift parameters.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Batch normalization helps control activation scales and often improves optimization. During inference it commonly uses running statistics instead of the current batch. Dropout randomly removes certain activations during training and scales outputs appropriately. Applying both is possible, but interactions can make tuning harder. For transformer models, LayerNorm or RMSNorm is more common because normalization should not depend on other users’ batch members.
+
+::::
+
+
+#### Q07. What causes vanishing or exploding gradients?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Gradients can shrink or grow rapidly as derivatives multiply through many network layers or time steps.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If each of 20 layers roughly multiplies a gradient by 0.5, the early gradient becomes tiny. If multipliers consistently exceed one, gradients can explode. Residual connections, suitable initialization, normalization, gating, appropriate activations, and gradient clipping can improve stability. Diagnose with gradient norms and loss curves. Gradient clipping controls exploding updates but does not fix a fundamentally incorrect architecture or learning rate.
+
+::::
+
+
+#### Q08. Why does weight initialization matter in neural networks?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Initialization helps maintain stable activation and gradient scales and breaks symmetry between hidden units.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If two hidden units start with identical weights in a symmetric network, they can receive identical gradients and learn redundant features. Random initialization breaks the tie. Xavier/Glorot methods are often suited to tanh-like activations; He/Kaiming methods are commonly used with ReLU-like activations. Too-small weights can weaken signals, while too-large weights can make activations unstable. Match initialization to architecture and activation.
+
+::::
+
+
+#### Q09. How do you decide how many layers and hidden units a network needs?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Start with a simple baseline, inspect training and validation behavior, then increase capacity only when data and the task justify it.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a small tabular dataset, gradient-boosted trees may beat a large neural network. If a shallow network underfits a complex signal, try more width, depth, features, or an architecture that matches the structure of the input. If the larger model improves training but worsens validation, regularization or more representative data may help. Account for latency, memory, interpretability, and maintenance before choosing a larger model.
+
+::::
+
+
+#### Q10. What is the difference between concept drift and data drift?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Data drift changes the input distribution; concept drift changes the relationship between inputs and the target.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose average customer age rises. This is input drift, even if risk given age is unchanged. If the relationship between tenure and churn changes after a pricing revision, the conditional target relationship has shifted: concept drift. They can occur together. Watch input quality continuously, and measure labeled performance when ground truth becomes available. A single PSI or KS test cannot prove a concept drift.
+
+::::
+
+
+#### Q11. How do offline inference, batch inference, and online inference differ?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Batch inference scores many records on a schedule; online inference serves predictions for incoming requests with a latency requirement.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A marketing team may score all customers overnight and store the resulting campaign list: batch inference. A fraud decision at checkout needs online scoring within a strict latency budget. A hybrid system can precompute expensive embeddings and score candidates online. The correct choice depends on freshness, traffic volume, compute cost, and consequences of stale predictions. Include caching and fallback behavior in the design.
+
+::::
+
+
+#### Q12. What is train–serving skew?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Train–serving skew is a mismatch between data transformations, feature definitions, timing, or distributions used in training and production serving.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A training pipeline may measure last-30-day purchases ending at midnight, while the serving service uses the previous 30 calendar days plus the current partial day. Both appear to compute the same feature but yield different numbers. Share transformation logic where possible, version feature definitions, compare offline and online feature values for sampled entities, and validate point-in-time correctness. This problem often hurts production quality more than adding another model layer.
+
+::::
+
+
+#### Q13. What should be included in a production model monitoring dashboard?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Monitor service health, data health, predictions, delayed outcome quality, and business effects, with alerts tied to actionable thresholds.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Service health: latency percentiles, errors, throughput, memory. Data health: schema violations, missing values, staleness, out-of-range categories. Prediction health: score distributions and segment shifts. Outcome health: AUC, precision at K, calibration, cost, fairness, and drift once labels arrive. Business health: conversion, complaints, or loss. Monitoring a distribution change is a diagnostic signal, not an automatic reason to retrain.
+
+::::
+
+
+#### Q14. How should you release a new model safely?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use offline validation, shadow testing or canary traffic, guarded online measurement, and a rollback plan.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Shadow mode sends real requests to the candidate model but does not use its decisions. It reveals latency, failures and train–serving skew. A canary release routes a small proportion of traffic to the new model, which limits risk. Monitor business guardrails and compare compatible populations. Keep the previous model and feature pipeline available for rollback. If the model’s action affects later labels, design post-release evaluation carefully.
+
+::::
+
+
+#### Q15. What is a feature store, and when is it useful?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A feature store manages reusable feature definitions, lineage, point-in-time training extraction, and sometimes low-latency online feature access.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If teams independently compute "spending in last 7 days," definitions can drift. A feature store can standardize that feature and track its freshness. Offline data must reproduce values that were known at the historical prediction time; otherwise training leaks future information. Online features need availability and latency guarantees. A feature store can improve consistency, but a small project with a few stable features may not need one.
+
+::::
+
+
+#### Q16. What are the main approaches to handling class imbalance during training?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use suitable metrics and decision thresholds first; then consider class weights, resampling, loss design, and better data collection.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For rare fraud, class weights give positive cases more influence during fitting. Oversampling can help optimization, but apply it only inside the training fold—not before splitting—so duplicates do not leak into validation. Undersampling reduces majority examples but throws away information. After heavy resampling, predicted probabilities may need recalibration on the original population. Evaluate at real prevalence and the intended operational constraint.
+
+::::
+
+
+#### Q17. What is algorithmic fairness, and can fairness be summarized by one number?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Fairness refers to different notions of equitable model behavior across groups; there is no single metric that resolves every fairness objective.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For loan approvals, you might compare approval rates (demographic parity), true-positive rates among qualified applicants (equal opportunity), or probability calibration across groups. These criteria can conflict when underlying outcome rates differ. Assess label quality, historical disadvantage, legal and policy constraints, and error costs. Do not assume deleting a protected feature solves bias: proxy variables can carry similar information. Report trade-offs rather than pretending one metric proves fairness.
+
+::::
+
+
+#### Q18. What is Marketing Mix Modeling (MMM)?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+MMM estimates relationships between marketing inputs and aggregate business outcomes while accounting for factors such as seasonality, promotions, pricing and economic conditions.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A weekly revenue model might use spending on TV, paid search and social ads plus holiday and price controls. Adstock models delayed advertising effects; saturation captures diminishing returns. MMM can support scenario planning, but observational relationships are not automatically incremental causal lift. Strong validation may require randomized geo experiments or other external evidence. Use uncertainty intervals when communicating channel contributions and budget choices.
+
+::::
+
+
+#### Q19. What is multi-touch attribution (MTA), and how is it different from MMM?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+MTA assigns conversion credit across observed customer touchpoints, while MMM uses aggregate time-series variation to estimate channel contributions.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A shopper sees a social ad, later clicks search, and finally buys after an email. Last-click gives all credit to email; rule-based or model-based MTA spreads credit. However, observed touchpoints are selected by user behavior and often omit offline exposures, so attributed credit is not necessarily causal lift. MMM can include offline media and macro effects but has aggregation and identification challenges. Experiments can help calibrate both approaches.
+
+::::
+
+
+#### Q20. What is a Bayesian posterior and why would you use MCMC?
+
+**Difficulty:** Medium · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A Bayesian posterior combines prior information with the likelihood of observed data. MCMC approximates complex posterior distributions by drawing dependent samples.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+In MMM, the coefficients for TV and search effects may be uncertain and correlated. Rather than report one coefficient, a Bayesian model gives distributions for coefficients and budget outcomes. When the posterior cannot be integrated analytically, Hamiltonian Monte Carlo or other MCMC algorithms can approximate it. Check convergence, effective sample size, posterior predictive fit, and prior sensitivity. A posterior credible interval has a Bayesian interpretation conditional on model assumptions.
+
+::::
+
+
+### Hard (14)
+
+
+#### Q21. What is CATE, and why is predicting treatment effect different from predicting outcomes?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+CATE is the conditional average treatment effect, $E[Y(1)-Y(0)\mid X=x]$. Predicting the outcome alone does not tell you which users benefit most from treatment.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A discount campaign may produce high purchase rates among loyal customers even without a discount. A purchase-propensity model would select these users, but many may buy anyway. A treatment-effect model asks how much the discount changes their outcomes relative to no discount. In randomized data, compare treatment and control conditional on features or use CATE learners. You never observe both potential outcomes for the same user, so evaluation requires special care.
+
+::::
+
+
+#### Q22. What are S-learners, T-learners, and doubly robust methods in treatment-effect modeling?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+S-learners use one outcome model with treatment as a feature; T-learners fit separate treatment and control outcome models; doubly robust estimators combine outcome models with propensity models.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+An S-learner may model $E[Y\mid X,T]$ and compare its predictions at $T=1$ versus $T=0$. A T-learner uses two fitted functions instead. With observational data, treatment assignment is not random, so propensity adjustment can address measured confounding under assumptions. Doubly robust methods remain consistent if certain nuisance models are correctly specified, not under arbitrary misspecification. Always discuss overlap and unmeasured confounding.
+
+::::
+
+
+#### Q23. What is double/debiased machine learning (DML)?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+DML uses flexible models for nuisance relationships with orthogonalized scores and cross-fitting to estimate a targeted causal parameter under identification assumptions.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If you want the effect of a marketing exposure on sales while controlling many customer attributes, fit nuisance models for exposure and outcome using folds that exclude the observation being scored. Residualization can separate variation not explained by controls, and an orthogonal score reduces sensitivity to small nuisance-estimation errors. DML does not eliminate unmeasured confounding. Identification still depends on a valid causal design, overlap, and reliable temporal ordering.
+
+::::
+
+
+#### Q24. Why should you avoid controlling for a mediator or collider in causal analysis?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A mediator carries part of a treatment’s effect, while conditioning on a collider can create a spurious association between its causes.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a promotion increases website visits, which then increase purchases. If you control for visits while estimating total promotion effect, you can remove part of the effect you wanted. Suppose both treatment and underlying intent affect whether a user clicks; conditioning on click may induce a misleading association between treatment and intent. Draw a causal diagram and define the estimand before choosing controls. Predictive feature importance is not a substitute for causal reasoning.
+
+::::
+
+
+#### Q25. How do you detect and address Simpson’s paradox in model or product metrics?
+
+**Difficulty:** Hard · **Based on source notes**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Simpson’s paradox occurs when an aggregate association differs from relationships seen within relevant subgroups because group composition changes.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine model B has a lower overall approval accuracy than model A, but is better in both low-risk and high-risk customer groups. The aggregate can reverse if the models were evaluated on very different mixes of low-risk and high-risk users. Examine stratified tables, weighting, assignment mechanisms, and causal context. In a randomized experiment, confirm balance and pre-specify important heterogeneity analyses before interpreting unexpected reversals.
+
+::::
+
+
+#### Q26. What do you do if a deployed model’s performance suddenly drops?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Check service, data, features, labels, traffic composition, and external changes before deciding to retrain or roll back.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+First confirm whether the reported metric itself is reliable: delayed fraud labels can make recent recall look worse. Check errors, latency, missing features, model version, categorical mappings, and training–serving parity. Compare recent prediction cohorts with a stable baseline and inspect segments. If the new version causes harm, roll back safely. Retrain only when a reliable recent evaluation shows that fresh data or a changed relationship warrants it.
+
+::::
+
+
+#### Q27. How would you design an end-to-end fraud-detection ML system?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Define the decision and error costs, collect point-in-time features and labels, train robust baselines, validate by time, serve reliably, and monitor feedback and calibration.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+At checkout, the model must score within a latency budget and choose approve, challenge, or decline. Use historical payment features available **before** the decision, guard against merchant and customer leakage, and hold out later time periods. Measure fraud value captured, false declines, precision at review capacity, and drift by merchant and region. Shadow and canary test releases. Correct for delayed labels and feedback from blocked transactions where feasible.
+
+::::
+
+
+#### Q28. How would you scale model inference when prediction latency is too high?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Profile preprocessing, feature retrieval and model execution; then reduce avoidable work, optimize representation, cache suitable features, and adjust architecture or serving resources.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A 100 ms deadline might be missed because an online database lookup takes 80 ms even though the model runs in 5 ms. Instrument each stage. Precompute stable features, batch compatible requests, optimize serialization, and consider model compression or quantization for neural networks. Evaluate speed versus accuracy using real hardware and traffic patterns, including p95/p99 latency, cold starts and cost. Include fallbacks and load shedding where safe.
+
+::::
+
+
+#### Q29. What is the difference between data drift, covariate shift, label shift, and concept shift?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Covariate shift changes $P(X)$ while keeping $P(Y\mid X)$ stable; label shift changes $P(Y)$ while often assuming $P(X\mid Y)$ stable; concept shift changes $P(Y\mid X)$.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+These are modeling assumptions, not diagnoses automatically revealed by one plot. A seasonal rise in new customers may shift input features. A fraud prevalence surge changes the class prior and may also change conditional risk. If the same behavior now has a different outcome risk, concept shift is possible. Check feature distributions, delayed labels, calibration and conditional performance; choose adaptation based on evidence.
+
+::::
+
+
+#### Q30. How would you evaluate a recommender or ranking model when logs only contain shown items?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Historical clicks reflect the old exposure policy, so naive offline evaluation is biased. Use appropriate randomized logging or carefully justified off-policy estimators.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If the old ranking never showed a niche product, no click history can prove users dislike it. Logged interactions depend on position, popularity, and the earlier ranking system. Random exploration with guardrails can give propensity information. Inverse propensity weighting and doubly robust off-policy evaluation may help when assumptions hold and the new policy has support in logged actions. Ultimately evaluate user and business outcomes with online tests.
+
+::::
+
+
+#### Q31. How would you choose between a simpler model and a larger model for production?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Compare business value and uncertainty against latency, cost, reliability, maintainability, fairness, and observability—not only offline accuracy.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If an extra neural layer improves AUC by 0.001 but doubles p99 latency and makes explanations unstable, a smaller boosted tree may be preferable. Estimate the improvement at the actual decision threshold, replicate it on later cohorts, and consider serving load. Complexity must earn its cost. A strong baseline and clear experiment plan often provide more value than a model that is marginally better on one historical split.
+
+::::
+
+
+#### Q32. How do you build reproducible ML training and release workflows?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Version code, data snapshots, feature transformations, training configuration, dependencies, model artifacts and evaluation reports, then gate deployment with tests.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For each model version, record the training data time window, label definition, random seed, preprocessing fitted state, feature schema, hyperparameters, metric slices, and model checksum. An automated workflow can run unit, data-contract and integration tests, build an artifact, evaluate against a baseline, and deploy through a controlled release. A registry and lineage make rollbacks and audits possible. Reproducibility is especially important when results influence regulated decisions.
+
+::::
+
+
+#### Q33. How should you handle delayed labels when evaluating a live model?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use mature outcome cohorts, track label latency, and avoid comparing incomplete recent labels with fully observed historical outcomes.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For 90-day loan delinquency, a prediction made last week cannot yet have a final 90-day label. Evaluating those rows as non-delinquent would bias performance. Define a label maturity window, monitor leading indicators separately, and account for censoring if using partial outcome information. Compare the same horizons across model versions. Explicitly state when final quality metrics will become trustworthy.
+
+::::
+
+
+#### Q34. How do you evaluate causal uplift rather than just predictive accuracy?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Estimate incremental treatment outcomes using randomized or otherwise credible causal information, and evaluate targeting policies on holdout data.
+
+::::
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A highly accurate purchase predictor might target people who would buy without a coupon, wasting promotion budget. Uplift modeling ranks users by estimated $Y(1)-Y(0)$. With randomized data, estimate incremental gain by score buckets or compare policy value against random targeting. Use honest sample splitting, account for treatment propensity, and report uncertainty. Do not calculate ordinary classification AUC against factual purchases and call it treatment-effect accuracy.
+
+::::
+
+
+:::::
+
+---
+
+**Scope:** This is a **Machine Learning** interview bank, not a substitute for separate SQL/Python coding, experimentation/statistics, system design, or LLM-specific preparation. Model APIs and performance characteristics can change by implementation and version. Always verify behavior in your chosen library.

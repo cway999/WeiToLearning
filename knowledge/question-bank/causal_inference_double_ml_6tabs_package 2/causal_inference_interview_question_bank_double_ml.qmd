@@ -1,0 +1,2883 @@
+---
+title: "Causal Inference — Interview Question Bank"
+subtitle: "Data Scientist & Economist · Easy to Hard · Includes Double ML"
+toc: false
+page-layout: full
+format:
+  html:
+    code-copy: true
+    html-math-method: mathjax
+---
+
+# Causal Inference — Interview Question Bank
+
+This guide is based on the supplied 154-page **Causal Inference Notion** document. Repeated passages have been consolidated, assumptions and derivations corrected, and interview questions added for **Data Scientist and Economist** roles. New material is labeled **Added for interview prep**. Examples are illustrative, not study findings.
+
+**How to use:** Select a topic, answer the question first, then expand **Reference Answer** (short interview response) and **Detailed Explanation** (intuitive explanation, equations and concrete examples). Each topic goes from **Easy → Medium → Hard**.
+
+**Core principle:** A complicated estimator does not create causal identification. Identify the treatment, estimand, counterfactual and assumptions **before** choosing a model.
+
+:::::: {.panel-tabset}
+
+
+## Causal Foundations & Regression
+
+**33 questions** · Easy → Medium → Hard
+
+### Q1. What is the difference between correlation and causation?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Correlation describes association. Causation asks what would happen to an outcome if we intervened and changed a treatment while holding the relevant causal process fixed.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+People with more years of education often earn more. This association does not prove that adding a year of education causes the full observed wage difference. Family resources, motivation, and prior skills may affect both education and wages.
+
+A **causal question** must name an intervention, an outcome, a population, and a time frame. For example: “What would happen to average earnings five years later if eligible students were offered an extra year of schooling?” The distinction matters because predictive variables are not necessarily useful intervention targets.
+
+:::
+
+
+### Q2. How do expectation, variance, standard deviation, and standard error differ?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Expectation is the probability-weighted mean; variance and standard deviation describe outcome dispersion; standard error describes variation of an estimator across repeated samples.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a random variable $X$, $E[X]$ is its average over the probability distribution and $\operatorname{Var}(X)=E[(X-E[X])^2]$. The **standard deviation (SD)** is the square root of that variance and has the same units as $X$.
+
+The **standard error (SE)** is different: it is the SD of an estimator such as the sample mean. For independent observations with sample SD $s$, $SE(\bar X)\approx s/\sqrt{n}$. If student test scores have SD 20 points and you sample 100 independent students, the mean's SE is approximately 2 points. Correlated observations require a different SE calculation.
+
+:::
+
+
+### Q3. What does ordinary least squares (OLS) minimize?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+OLS chooses coefficients that minimize the sum of squared residuals between observed and fitted outcomes.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+In a simple regression $Y_i=\beta_0+\beta_1X_i+u_i$, OLS chooses $\hat\beta_0$ and $\hat\beta_1$ to minimize $\sum_i(Y_i-\hat\beta_0-\hat\beta_1X_i)^2$. A residual is the observed minus the predicted value.
+
+**Example:** If predicted sales are 80 and actual sales are 90, the residual is 10 and its squared contribution to the objective is 100. OLS provides the best linear least-squares fit to the observed data, but the minimization itself says nothing about whether the coefficient is causal.
+
+:::
+
+
+### Q4. How do you interpret an OLS coefficient and R-squared?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A regression coefficient describes a conditional fitted relationship. R-squared describes the fraction of sample outcome variation explained by the fitted model, not causal validity.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+In $\widehat{\text{wage}}=12+2\,\text{education}$, one extra year of education corresponds to 2 additional wage units in the fitted model. Calling the 2-unit difference a **causal effect** requires further assumptions about confounding and model specification.
+
+With an intercept, $R^2=1-SSR/SST$. A high $R^2$ can result from strong prediction with severe confounding, while a randomized experiment can identify a real causal effect with low $R^2$. Do not use predictive fit as evidence that treatment assignment is exogenous.
+
+:::
+
+
+### Q5. What is the zero conditional mean assumption?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+For causal interpretation of a correctly specified linear regression, a key assumption is $E[u\mid X]=0$: unobserved determinants of the outcome have zero conditional mean given included regressors.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+In the model $Y=\beta_0+\beta_1X+u$, $E[u\mid X]=0$ means values of $X$ do not systematically reveal positive or negative residual components. It is stronger than $E[u]=0$ or $\operatorname{Cov}(X,u)=0$.
+
+**Example:** If motivation affects both education $X$ and wages $Y$, and motivation is omitted from $u$, then schooling may be correlated with the error. Controlling for measured family background helps only if the relevant confounding has actually been removed. Merely adding covariates does not guarantee exogeneity.
+
+:::
+
+
+### Q6. What is the potential-outcomes framework?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Each unit has a potential outcome under treatment and another under control. The observed outcome is the one corresponding to the treatment actually received.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For person $i$, write $Y_i(1)$ for earnings if they receive training and $Y_i(0)$ for earnings if they do not. With binary treatment $D_i$, observed earnings are:
+
+$$Y_i=D_iY_i(1)+(1-D_i)Y_i(0).$$
+
+The treatment effect for the person is $Y_i(1)-Y_i(0)$. We never directly observe both outcomes for the same person at the same time. This missing-counterfactual problem explains why causal inference needs a credible comparison strategy rather than just a predictive model.
+
+:::
+
+
+### Q7. What are ATE, ATT, ATU, and CATE?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+ATE averages effects across the target population; ATT across treated units; ATU across untreated units; CATE within a subgroup defined by covariates.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Let $\tau_i=Y_i(1)-Y_i(0)$. Then $ATE=E[\tau_i]$, $ATT=E[\tau_i\mid D_i=1]$, $ATU=E[\tau_i\mid D_i=0]$, and $CATE(x)=E[\tau_i\mid X_i=x]$.
+
+**Example:** A job-training program may increase earnings by $5,000$ for unemployed applicants and $500$ for already-employed workers. The ATE depends on the population mix; ATT depends on who actually enrolled. Always define the treatment, outcome horizon, and population before choosing an estimator. A local experiment may identify a local or treated-population effect, not the national ATE.
+
+:::
+
+
+### Q8. What is selection bias in the simple treated–control difference?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The observed difference mixes a treatment effect with baseline differences between those selecting treatment and control.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Under no interference and well-defined treatments:
+
+$$ E[Y\mid D=1]-E[Y\mid D=0]=ATT+\{E[Y(0)\mid D=1]-E[Y(0)\mid D=0]\}. $$
+
+The term in braces is baseline selection bias. Suppose trainees earn $60k$ and non-trainees earn $50k$, a $10k$ gap. If trainees would have earned $57k$ without training, the ATT is only $3k$ and selection accounts for $7k$. The counterfactual $57k$ is not observed; design assumptions or auxiliary data are needed to estimate it.
+
+:::
+
+
+### Q9. Why is a randomized controlled trial powerful for causal identification?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Proper random assignment makes treatment assignment independent of potential outcomes in expectation, so group outcome differences identify assignment effects.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Flip a fair coin for each eligible customer to decide whether to show a free-shipping offer. Before assignment, characteristics such as demand, income, and motivation have no systematic relationship with the coin flip. The two groups therefore provide a credible counterfactual comparison **in expectation**.
+
+Small experiments can still have chance imbalances. Randomization also does not solve noncompliance, lost observations, interference between users, or generalizability beyond the experiment population. Check assignment integrity and report the estimated effect and its uncertainty.
+
+:::
+
+
+### Q10. What causes omitted-variable bias (OVB), and how do you predict its direction?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+OVB arises when an omitted determinant of $Y$ is associated with an included explanatory variable. The bias direction depends on both associations.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose the true model is $Y=\beta X+\gamma Z+u$, but you regress $Y$ on $X$ alone. Under standard linear projection conditions:
+
+$$
+\operatorname{plim}\hat\beta_{\mathrm{short}}=\beta+\gamma\frac{\operatorname{Cov}(X,Z)}{\operatorname{Var}(X)}.
+$$
+
+If risk tolerance increases speeding ($\gamma>0$) and risk-tolerant drivers are more likely to buy sports cars ($\operatorname{Cov}(X,Z)>0$), omitting risk tolerance biases the estimated effect of sports-car ownership **upward**. A sign argument can be useful without knowing the exact magnitude; it does not automatically give a numerical bound unless additional assumptions justify one.
+
+:::
+
+
+### Q11. What is the Frisch–Waugh–Lovell (FWL) theorem?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+In linear regression, the coefficient on treatment equals the coefficient from regressing the outcome residualized on controls against treatment residualized on the same controls.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose $Y=\tau D+X\gamma+u$. First regress $D$ on $X$ and keep residuals $\tilde D$. Separately regress $Y$ on $X$ and keep residuals $\tilde Y$. Then regress $\tilde Y$ on $\tilde D$. The slope equals $\hat\tau$ from the original multiple regression.
+
+**Intuition:** Compare units on the part of treatment not linearly predicted by the included controls, after also removing the controls' linear contribution to outcomes. **Important correction:** $\tilde D$ is uncorrelated with the included regressors **in the sample**, not automatically with unobserved confounders. FWL is an algebraic identity, not a causal-identification method.
+
+:::
+
+
+### Q12. When is an OLS estimate unbiased or BLUE?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Finite-sample unbiasedness requires suitable exogeneity and standard regression conditions. Under the Gauss–Markov conditions, OLS is the best linear unbiased estimator (BLUE).
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Key conditions include a correctly specified linear-in-parameters model, full column rank, zero conditional mean of disturbances, and appropriate sampling/design conditions. For the **BLUE** variance comparison, homoskedasticity and lack of relevant error correlation are important.
+
+Normal errors are **not required** for Gauss–Markov. Exogeneity matters for unbiasedness; homoskedasticity matters for conventional efficiency and standard-error formulas. When errors are heteroskedastic, OLS may still be consistent under exogeneity, but conventional homoskedastic standard errors can be wrong.
+
+:::
+
+
+### Q13. What are heteroskedasticity-robust standard errors?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+They estimate coefficient uncertainty while allowing conditional error variance to differ across observations, under suitable independence conditions.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine earnings with relatively small variation among entry-level workers but large variation among executives. A constant residual variance assumption is implausible. Heteroskedasticity-robust (sandwich) SEs account for this difference without changing the OLS point estimates.
+
+**Important:** Robust SEs fix a particular **inference problem**, not confounding, measurement error, functional-form mistakes, or dependence between observations. For data clustered within schools, firms, or users, heteroskedasticity-only robust SEs are not enough; you may need cluster-robust inference.
+
+:::
+
+
+### Q14. When and at what level should standard errors be clustered?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Cluster when disturbances may be correlated within groups. Choose clusters to reflect treatment assignment or plausible dependence, not merely the reporting level.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If treatment is assigned to schools, students in a school share teachers and school conditions. A school-level cluster-robust SE allows arbitrary within-school correlation while relying on suitable independence across schools. Counting every student as an independent randomized unit will usually exaggerate effective sample size.
+
+For a panel of firms observed each month, clustering by firm often handles serial correlation within a firm. Few clusters require special care: ordinary asymptotic cluster-robust SEs can perform badly, and a wild-cluster bootstrap or design-based method may be more appropriate. Clustering does not automatically **always** increase the SE; the direction is data-dependent.
+
+:::
+
+
+### Q15. How do you interpret level–log, log–level, and log–log regressions?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Level–log: coefficient divided by 100 is approximately the outcome-unit change per 1% increase in $X$. Log–level: 100 times the coefficient is an approximate percent change in $Y$ per one-unit increase in $X$. Log–log: coefficient is an elasticity.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For $Y=\alpha+\beta\ln X+u$, increasing $X$ by 1% changes fitted $Y$ by about $0.01\beta$ **units**. For $\ln Y=\alpha+\beta X+u$, a one-unit increase in $X$ changes fitted $Y$ by approximately $100\beta$%; the exact change is $100(e^\beta-1)$%.
+
+For $\ln Y=\alpha+\beta\ln X+u$, a 1% increase in $X$ is associated with about a $\beta$% change in $Y$. These statements describe **regression associations** unless causal assumptions hold. Log specifications also need careful handling of zero and negative outcomes.
+
+:::
+
+
+### Q16. What do dummy-variable and interaction coefficients mean?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A dummy coefficient is a conditional group difference at the reference level of other variables. An interaction coefficient shows how that difference changes with another covariate.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Consider $Y=\beta_0+\tau D+\gamma X+\delta(D\times X)+u$, where $D$ indicates participation in job training and $X$ is prior experience. The fitted difference between treated and untreated at $X=x$ is $\tau+\delta x$.
+
+If $\tau=100$ and $\delta=20$, the fitted gap is 100 at zero experience and 160 at three years. **Centering** $X$ at a meaningful value changes the interpretation of $\tau$ but not model predictions. An interaction documents conditional association; identifying heterogeneous **causal** effects still requires credible treatment assignment assumptions.
+
+:::
+
+
+### Q17. What is SUTVA, and what can violate it?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+SUTVA requires well-defined treatment versions and no interference: one unit’s potential outcome must not depend on other units’ treatment assignments.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+In a ride-sharing marketplace, giving coupons to treated riders may consume available cars. Untreated riders could face longer waits even though their own coupons did not change. This is **interference**; the usual user-level treatment/control contrast may not estimate the policy-wide effect.
+
+Treatment versions also matter: “receiving training” may differ across instructors and program intensity. Possible responses include cluster randomization, market-level experiments, switchback designs, exposure mapping, or explicitly redefining the treatment. No-interference is an assumption about how the system works, not something that p-values establish.
+
+:::
+
+
+### Q18. What is conditional exchangeability (ignorability)?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Conditional on a valid set of pre-treatment covariates, treatment is independent of potential outcomes: $(Y(0),Y(1))\perp D\mid X$.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose training enrollment is not random, but, after conditioning on prior earnings, age, education, and employment history, enrollment is plausibly unrelated to unmeasured factors that influence future earnings. Then treatment and comparison groups can be adjusted for those covariates to estimate an effect.
+
+This assumption is **untestable from observed data** because both potential outcomes are never observed together. Seeing covariate balance after matching supports balance on measured variables, not balance on hidden motivation or ability. State why the observed variables are sufficient rather than saying “the regression makes treatment random.”
+
+:::
+
+
+### Q19. What is the overlap or positivity assumption?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Every relevant covariate profile must have a positive probability of receiving each treatment considered: $0<P(D=1\mid X=x)<1$.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a bank gives a hardship plan to every customer whose risk score exceeds 900 and to no one below 900. Within an exact score group, there may be no treated/control comparison, violating overlap for a purely observational adjustment method.
+
+When propensity scores are near zero or one, inverse weights become extreme and estimates unstable. Inspect overlap distributions, report where inference is supported, and consider trimming or redefining the target population. More data cannot create counterfactual observations in groups whose treatment probability is structurally zero.
+
+:::
+
+
+### Q20. What are confounders, mediators, and colliders in a DAG?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A confounder causes both treatment and outcome; a mediator lies along a treatment-to-outcome path; a collider is a common effect of two variables.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+**Confounder:** Motivation → Training, Motivation → Earnings. Conditioning on motivation can block the backdoor path between training and earnings.
+
+**Mediator:** Email → Email opened → Purchase. Adjusting for opening can remove part of the total effect of sending the email.
+
+**Collider:** Talent → Hiring decision ← Referral. If talent and referral are otherwise independent, analyzing only hired workers can create a spurious relationship between them. DAGs help determine which adjustment set addresses the requested causal estimand.
+
+:::
+
+
+### Q21. What is the backdoor criterion?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A valid adjustment set blocks every noncausal path entering treatment through an incoming arrow, without conditioning on forbidden descendants or opening collider paths.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For $X\leftarrow U\rightarrow Y$, $U$ is a common cause and the path creates confounding. Conditioning on measured $U$ blocks it. For $X\rightarrow M\rightarrow Y$, adjusting for $M$ would remove a mediated route from $X$ to $Y$ if the goal is the total effect.
+
+For $X\rightarrow C\leftarrow U\rightarrow Y$, conditioning on $C$ **opens** a path through the collider. The correct set depends on the full graph and target effect; the rule “adjust for all available features” is often wrong.
+
+:::
+
+
+### Q22. How can conditioning on a collider introduce bias?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A collider blocks an association by default; selecting or controlling on it can make its causes statistically dependent.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine admission to a highly selective program depends on grades and athletic talent, which are independent in the applicant pool. Among **admitted** applicants, a person with weaker grades may need unusually strong athletic talent to be admitted. The two characteristics become negatively associated inside this selected sample.
+
+This matters for causal analysis when data are available only for applicants admitted to a program, or when researchers adjust for a variable influenced by both treatment and outcome-related factors. The association can be entirely due to selection rather than a genuine causal relationship.
+
+:::
+
+
+### Q23. What is post-treatment bias, and why is conditioning on purchasers dangerous?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Adjusting for a variable changed by treatment can destroy the treatment/control comparison when estimating a total effect.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A marketing message may turn some non-buyers into buyers. Suppose you analyze **spending only among customers with positive purchases**. Treated purchasers now include people induced to buy by the message, while control purchasers are a different subset who might have bought anyway.
+
+You can model purchase incidence and amount separately for prediction or decomposition, but simply comparing conditional spend among purchasers is not the overall causal effect on revenue per eligible user. For that total effect, keep everyone in the original randomized population, including zeros. This corrects the original notes' “Bad COP” example.
+
+:::
+
+
+### Q24. What is intention-to-treat (ITT), and how does it differ from treatment-on-treated?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+ITT is the effect of assignment or offer, regardless of compliance. The effect of actual treatment receipt is a different estimand and may not be identified by a naive comparison.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If 1,000 people are randomly offered job training but only 700 participate, compare outcomes of all **offered** people with all **not offered** people to estimate the offer's ITT effect. Do not move the 300 nonparticipants into the control group. Their decision not to participate may reflect motivation or constraints that also predict earnings.
+
+ITT is often the appropriate operational question: “What happens if the company sends the offer?” To estimate the effect of **receiving** training among compliers, additional assumptions and an instrumental-variables approach may be needed.
+
+:::
+
+
+### Q25. How is a CATE estimated using an interaction term?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+An interaction lets the treatment contrast vary with a covariate; under credible identification, it can represent a conditional average treatment effect.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+In $Y=\alpha+\tau D+\beta X+\delta(D\times X)+u$, the fitted treatment contrast at $X=x$ is $\tau+\delta x$. If discounts raise spending by $4$ at $X=0$ and the interaction is $-1$ for each unit of baseline loyalty, the fitted effect at loyalty score 2 is $2$.
+
+The relationship can be nonlinear, and the uncertainty of the **sum** $\tau+\delta x$ must account for covariance between coefficients. Do not interpret subgroup differences as causal unless the underlying treatment identification remains valid within those subgroups.
+
+:::
+
+
+### Q26. How can good controls reduce variance while bad controls introduce bias?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Pre-treatment outcome predictors can improve precision; conditioning on post-treatment mediators or colliders can distort the target effect.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose randomized reminder emails affect repayment. A credit score measured **before** randomization predicts repayment. Adjusting for it can reduce unexplained outcome variance and improve precision. Whether adjustment helps depends on the model and design.
+
+“Opened email” is measured **after** assignment and may lie on the path Email → Open → Repayment. Controlling for it can remove part of the **total effect** of assignment and may introduce selection bias. Also avoid conditioning on variables caused jointly by treatment and unobserved determinants of the outcome. Select controls from a causal model and the desired estimand, not from automated feature importance.
+
+:::
+
+
+### Q27. Why can a regression coefficient change after adding controls without proving the first model was biased?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Changing the adjustment set can change the estimand, functional form, measurement, sample composition, or precision; coefficient movement alone does not diagnose confounding.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a training program has a larger effect on less-experienced workers. A regression that adds interactions may estimate different conditional contrasts, so its treatment coefficient can shift even with valid identification. If the outcome is binary and a logistic model is used, coefficients can change with covariate adjustment because odds ratios are non-collapsible.
+
+For a causal interpretation, identify which variables are true pre-treatment confounders and what population effect is targeted. Explain model assumptions and compare estimates on the **same sample** when assessing sensitivity. A stable coefficient also does not prove that hidden confounding is absent.
+
+:::
+
+
+### Q28. What is the difference between weighting grouped means and having individual-level data?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Weighted regression on appropriately aggregated cell means may reproduce particular individual-level point estimates, but aggregation can lose information and change uncertainty calculations.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a dataset gives the average wage for each education group and the number of workers in that group. Weighting each group mean by its worker count can recover the individual-data linear regression fit **when regressors are constant within groups** and aggregation aligns with the model.
+
+However, only ten grouped averages do not magically provide ten independent observations or preserve all individual-level variance. Inference requires correctly accounting for group composition, underlying variation, and how groups were generated. Ecological interpretation is also risky: a relationship between group averages need not equal the individual-level relationship.
+
+:::
+
+
+### Q29. When do an observed mean difference, ATE, ATT, and ATU coincide?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Under random assignment independent of both potential outcomes, the observed treatment–control difference identifies ATE, and ATE equals ATT and ATU for the assignment-defined population.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With treatment-effect heterogeneity, observationally treated people can have a different average effect from untreated people. In that setting, ATE, ATT, and ATU generally differ. Under a true random assignment $D\perp(Y(0),Y(1))$, treatment assignment does not select people on their potential responses, so those population expectations coincide.
+
+Randomized **assignment** with noncompliance identifies ITT for assignment; it does not imply that actual receipt is independent of potential outcomes. Keep the assignment variable $Z$ distinct from received treatment $D$ to avoid confusing ITT with ATE of actual treatment.
+
+:::
+
+
+### Q30. What is the difference between a total effect, direct effect, and indirect effect?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The total effect includes all causal pathways. A direct effect excludes pathways mediated through specified variables; an indirect effect captures mediation under additional assumptions.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a training program affects wages partly by raising job skills and partly by improving referral networks. The **total effect** includes both channels. If you condition on observed skill level after treatment, the coefficient on training does not automatically identify a direct effect: unmeasured mediator–outcome confounding and treatment-induced confounders may exist.
+
+Mediation analysis needs a precise estimand (controlled, natural, or interventional direct effect) and stronger assumptions than ordinary treatment-effect estimation. In interviews, define what policy decision depends on the decomposition before proposing a mediation model.
+
+:::
+
+
+### Q31. How do interference and equilibrium effects change the target estimand?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+If treatment changes other users’ outcomes or market conditions, individual direct effects may differ from the effect of launching a policy at scale.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A delivery platform could offer discounts to 10% of riders. This may slightly improve treated riders' demand while barely changing system congestion. A discount to 100% of riders may increase surge prices, overload drivers, and change everyone’s experience.
+
+To evaluate a platform-wide policy, consider group or market randomization, switchback experiments, saturation designs, and explicit models of spillovers. The small-experiment ATE need not extrapolate linearly to all users. This is particularly important for marketplaces, networks, housing, and labor-market interventions.
+
+:::
+
+
+### Q32. What is external validity, and how do you transport an effect to a new population?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+External validity concerns whether a causal effect identified in one setting applies to another population, period, or treatment implementation.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+An experiment on frequent buyers may show a $12$ increase in spending. New buyers might react differently because they have less trust or fewer purchases. Even a perfectly randomized experiment among frequent buyers is not automatically representative of all customers.
+
+Look for covariates that modify effects, measure the mix of those covariates in the target population, and consider reweighting or transport formulas under justified conditional exchangeability and overlap between source and target. Report uncertainty due to effect heterogeneity and limitations such as changed product design.
+
+:::
+
+
+### Q33. What is M-bias and why can controlling for a pre-treatment variable sometimes hurt?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A pre-treatment variable can be a collider on a backdoor path. Conditioning on it can open a spurious association even though it precedes treatment.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Consider $U_1\rightarrow D$, $U_1\rightarrow C$, $U_2\rightarrow C$, $U_2\rightarrow Y$, with no arrow $C\rightarrow D$ or $C\rightarrow Y$. The path $D\leftarrow U_1\rightarrow C\leftarrow U_2\rightarrow Y$ is blocked by the collider $C$. Conditioning on $C$ can open it and bias the treatment–outcome association.
+
+This is a conceptual **counterexample** to “always control for every baseline variable.” In practice, whether adjusting for $C$ does more harm than good depends on the full graph and other paths. Good causal analysis chooses controls from a defensible graph and estimand, not from correlation alone.
+
+:::
+
+## Matching & Propensity Scores
+
+**16 questions** · Easy → Medium → Hard
+
+
+### Q1. What is matching in observational causal inference?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Matching constructs treated and comparison groups similar on observed pre-treatment covariates, then compares their outcomes.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose employees choose whether to take a certification course. To compare outcomes fairly, match each participant to one or more nonparticipants with similar pre-course salary, tenure, job function, and education.
+
+Matching can make an observational comparison more transparent, but it does not solve bias from unmeasured motivation or manager support. Identification still requires conditional exchangeability and overlap. Matching also introduces design choices: which variables to match, distance metric, whether to replace controls, and which treated units to discard.
+
+:::
+
+
+### Q2. What are subclassification and exact matching?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Subclassification compares treated and untreated units within covariate strata; exact matching requires identical values on specified observed covariates.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+To estimate the effect of a new seller tool, you might stratify sellers by prior sales quartile and region. Compute within-stratum treated–control outcome differences and then average using weights appropriate for the target population (ATE or ATT).
+
+Exact matching on region and seller category is easy to explain, but if you require exact matches across 20 characteristics, many units will have no matches. Report dropped units and the population your estimate represents. Balance of observed covariates does not establish balance of unobserved characteristics.
+
+:::
+
+
+### Q3. What is nearest-neighbor matching, and why does scaling matter?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Nearest-neighbor matching selects comparison units closest to treated units under a specified distance over pre-treatment features.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With Euclidean distance, annual revenue measured in millions can dominate tenure measured in years even if both matter. Standardization or a Mahalanobis distance can correct for scale and feature correlation.
+
+**Example:** Seller A has $1.0M$ in prior sales and 3 years of tenure. Compare with sellers matched on both characteristics rather than only sales. However, “nearest” does not necessarily mean “close enough.” Set calipers or distance thresholds and examine covariate balance before trusting the estimate. Distances should not use outcomes or post-treatment covariates.
+
+:::
+
+
+### Q4. How do 1:1 and 1:k matching trade bias for precision?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+1:1 uses one comparison unit per treated unit. 1:k can use more information and improve precision but may use less similar controls.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a treated employee has one nearly identical control and four more controls with somewhat different prior earnings. Using all five may reduce sampling variance, but differences in their covariates can introduce additional matching bias unless corrected.
+
+Matching with replacement lets high-quality control units serve several treated units, improving match quality but complicating standard errors. There is no universal winner: use balance, overlap, sample size, estimand, and appropriate variance estimation to choose a strategy.
+
+:::
+
+
+### Q5. What is a propensity score?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The propensity score is $e(X)=P(D=1\mid X)$, the probability of treatment given observed pre-treatment covariates.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If a seller's historical sales, region, and category suggest a 70% likelihood of adopting a new feature, that seller's estimated propensity score is 0.70. Under conditional exchangeability and overlap, the score can summarize many observed treatment predictors into a scalar for adjustment.
+
+A propensity model is **not** a causal model of the outcome. High propensity prediction accuracy does not guarantee successful causal adjustment. Compare covariate balance and score overlap after applying the adjustment method.
+
+:::
+
+
+### Q6. Why can propensity-score adjustment reduce a high-dimensional matching problem?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Under suitable assumptions, the propensity score is a balancing score: conditioning on it balances the distribution of observed covariates between treated and untreated units.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Exact matching on 15 binary covariates could create $2^{15}$ possible cells, most of them empty. A propensity model compresses these observed covariates into one number. Matching or stratifying on similar propensity scores can make matching feasible.
+
+**Caution:** Balance is in a theoretical sense for the true score and in large samples. Estimated scores require diagnostics; two people with the same estimated propensity score may still differ on important individual covariates. The balancing property never removes hidden confounding.
+
+:::
+
+
+### Q7. What is inverse probability weighting (IPW)?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+IPW reweights observed units by inverse probabilities of receiving their observed treatment to construct a pseudo-population with balanced measured baseline covariates.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For an ATE with binary treatment, treated observations receive weight $1/e(X)$ and untreated observations receive weight $1/[1-e(X)]$. A low-propensity treated unit receives more weight because few similar people were treated. Weighted outcomes can then be contrasted.
+
+$$\widehat{ATE}_{\mathrm{HT}}=\frac1n\sum_i\left[\frac{D_iY_i}{\hat e(X_i)}-\frac{(1-D_i)Y_i}{1-\hat e(X_i)}\right].$$
+
+These are Horvitz–Thompson style weights. Normalized/Hájek weights often behave better in finite samples. Very small propensity scores create huge weights; inspect overlap and weight distributions.
+
+:::
+
+
+### Q8. What does overlap look like in practice, and what if it fails?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Plot treated and untreated propensity-score distributions and examine whether each part of the target covariate space contains meaningful comparison support.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine treated customers have scores between 0.8 and 1.0 while controls have scores between 0.05 and 0.5. Matching all treated customers is implausible; IPW can be dominated by a handful of extreme observations.
+
+Possible actions include restricting to a credible overlap population, using overlap weights, changing the estimand, or obtaining additional control observations. If you trim observations, explicitly report that the result may no longer describe the original entire population. Do not treat an overlap plot as a test of unobserved ignorability.
+
+:::
+
+
+### Q9. What is a doubly robust / augmented IPW (AIPW) estimator?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+AIPW combines a propensity model and an outcome model. Under standard conditions it is consistent if either nuisance model is correctly specified, not necessarily both.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Let $m_1(X)=E[Y\mid D=1,X]$, $m_0(X)=E[Y\mid D=0,X]$, and $e(X)=P(D=1\mid X)$. The AIPW score for an ATE is:
+
+$$m_1(X)-m_0(X)+\frac{D(Y-m_1(X))}{e(X)}-\frac{(1-D)(Y-m_0(X))}{1-e(X)}.$$
+
+**Intuition:** An outcome model provides a counterfactual prediction; the propensity-weighted residual terms correct systematic prediction errors. If the outcome model is good, the corrections are small. If the propensity model is good, weighted corrections can fix a misspecified outcome model. Both approaches still fail with unmeasured confounding or no overlap.
+
+:::
+
+
+### Q10. How does cross-fitting help doubly robust estimation?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Cross-fitting separates nuisance-model training from evaluation of causal scores, reducing overfitting bias and improving statistical behavior with flexible ML models.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Split observations into folds. Train the propensity and outcome models on all folds except one; predict nuisance functions on that held-out fold. Repeat until every row has out-of-fold predictions, then compute the average orthogonal/AIPW score.
+
+If you estimate and evaluate a flexible outcome model on the same data, its in-sample errors can appear misleadingly small and distort uncertainty. Cross-fitting reduces this feedback. It does not replace exchangeability, overlap, or correct accounting for clustered observations.
+
+:::
+
+
+### Q11. What does matching quality mean and how should it be assessed?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Assess balance on pre-treatment features, overlap, matched sample size, effective weighting, and sensitivity to modeling choices—not just the propensity model’s AUC.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+After matching, calculate standardized mean differences for major covariates. A typical goal is small absolute standardized differences, but no cutoff proves causal validity. Compare distributions, not only means, especially for nonlinear confounding.
+
+**Example:** Average prior spend may balance while the treated group still has many high-spend outliers and the matched controls do not. This matters when outcomes respond nonlinearly to prior spend. Also assess matched controls reused many times, treatment coverage, and how estimates change under reasonable alternative covariate specifications.
+
+:::
+
+
+### Q12. Can you use the ordinary bootstrap to get standard errors for nearest-neighbor matching?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Not always. Standard nonparametric bootstrap can fail for some fixed-number nearest-neighbor matching estimators because the estimator is non-smooth.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With 1:1 nearest-neighbor matching, tiny changes in the dataset can abruptly change which comparison unit is selected. Standard row-resampling bootstrap does not always reproduce the estimator's sampling distribution. This is a classic issue for fixed-$k$ matching.
+
+Prefer an inference method justified for the specific estimator and sampling design, such as analytic matching standard errors, appropriate alternative resampling, or a smoother weighting estimator with valid bootstrap theory. For clustered data, retain cluster structure during inference. The blanket claim “bootstrap matching SEs” is too broad.
+
+:::
+
+
+### Q13. What is the difference between propensity-score matching and a propensity-adjusted regression?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Matching, stratification, weighting, and regression with a propensity score are different estimators and do not automatically identify the same target under the same model restrictions.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A regression $Y\sim D+\hat e(X)$ imposes a functional-form restriction on how the propensity score relates to the outcome, which may not be correct. Propensity-score matching defines a matched comparison sample; IPW changes the weighting distribution.
+
+For instance, with heterogeneous treatment effects, a model with one treatment coefficient may weight subgroups differently from an ATE-targeting IPW estimator. Always describe the estimand, conditional ignorability assumption, overlap, nuisance specifications, and uncertainty method rather than assuming any use of the propensity score is equivalent.
+
+:::
+
+
+### Q14. What is a sensitivity analysis for unmeasured confounding?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+It evaluates how strong hidden confounding would need to be to overturn a causal conclusion from observational data.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose matched employees who attended training earn $2,000$ more the following year. The observed variables balance, but unmeasured manager support could influence both training and promotion. Sensitivity analysis asks whether a plausible amount of hidden support would eliminate the estimated effect.
+
+Methods include Rosenbaum sensitivity bounds, bias formulas, negative-control outcomes, and alternative adjustment sets. They cannot identify unmeasured confounding directly, but they make the robustness assumption explicit. A result is not “causal because many controls were added.”
+
+:::
+
+
+### Q15. How does choosing the ATT rather than ATE affect matching and weighting?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+ATT targets the effect among treated people; its comparison weights emphasize untreated individuals resembling the treated covariate distribution.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If the policy question is “Did training help those who enrolled?”, ATT is natural. Match treated participants to suitable untreated units, then average treated-minus-matched-control differences over the treated participants.
+
+For propensity weighting, an ATT-style comparison leaves treated units with weight 1 and often weights controls proportional to $e(X)/(1-e(X))$. An ATE design instead weights both groups toward the full population. Report which population remains supported if overlap restrictions exclude some trainees.
+
+:::
+
+
+### Q16. When does the front-door criterion provide identification?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Under a specific causal graph and strong assumptions, front-door adjustment can identify a total effect through measured mediators even with some unmeasured treatment–outcome confounding.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose an ad $X$ changes exposure $M$, which in turn drives purchasing $Y$. The front-door strategy can work only if $M$ captures every causal path from $X$ to $Y$, there is no unblocked backdoor from $X$ to $M$, and backdoor paths from $M$ to $Y$ are blocked after adjusting for $X$.
+
+These conditions are demanding in real product settings. For example, an ad might also change brand perception directly, invalidating the first condition. Do not present front-door adjustment as a generic fix for hidden confounding; justify the DAG carefully.
+
+:::
+
+
+## IV & Regression Discontinuity
+
+**17 questions** · Easy → Medium → Hard
+
+
+### Q1. What is an instrumental variable (IV)?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+An instrument is a variable that shifts treatment receipt but, under key assumptions, does not affect the outcome except through that treatment and is not confounded with potential outcomes.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a training program is optional. A randomized **offer** of training could be an instrument $Z$ for **actual attendance** $D$. Employees who accept training differ systematically from those who do not, but the randomized offer is not selected by their motivation.
+
+The offer must affect attendance (relevance) and must not itself directly affect wages through another channel (exclusion). The instrument must be independent of relevant unmeasured causes of outcomes, given the design. Those assumptions require substantive argument, not just regression output.
+
+:::
+
+
+### Q2. What are the main assumptions for IV validity?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Relevance, instrument exogeneity, exclusion restriction, and, for a standard binary-instrument LATE interpretation, monotonicity.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+**Relevance:** $Z$ changes $D$, so the first stage is not zero. **Exogeneity:** $Z$ is independent of the relevant potential-outcome and compliance types, potentially conditional on covariates. **Exclusion:** $Z$ affects $Y$ only via treatment $D$. **Monotonicity:** the instrument does not push some people into treatment while pushing others out.
+
+A randomized training offer could satisfy these if it changes attendance but does not directly affect morale, networking, or wages. Relevance is empirically assessable; exogeneity and exclusion require design knowledge and cannot usually be proved by a statistical test.
+
+:::
+
+
+### Q3. What is the Wald IV estimator?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+For a binary instrument and treatment, the Wald estimator divides the reduced-form effect of the instrument on the outcome by the first-stage effect on treatment receipt.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$\widehat\tau_{\mathrm{Wald}}=\frac{E[Y\mid Z=1]-E[Y\mid Z=0]}{E[D\mid Z=1]-E[D\mid Z=0]}.$$
+
+**Example:** Training offers increase average earnings by $600$ and increase training participation by 0.30 (30 percentage points). Then the ratio is $600/0.30=$2,000$. Under independence, exclusion, monotonicity, and a nonzero first stage, this identifies an average treatment effect for **compliers**, not the full-population ATE.
+
+The numerator and denominator must refer to comparable populations and the same instrument contrast.
+
+:::
+
+
+### Q4. What is LATE, and does it have to be larger than ITT?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+LATE is the treatment effect for compliers whose treatment receipt changes because of the instrument. It need not be larger in absolute value or even have the same sign as any loosely defined ITT.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+In a binary randomized-encouragement design with no defiers, exclusion, and a first stage $p>0$, the outcome ITT (reduced-form effect) equals $p\times LATE$. Numerically, if ITT is $-3$ and the first stage is $0.6$, LATE is $-5$.
+
+It is **incorrect** to say “LATE is always greater than ITT” without specifying signs and assumptions; for negative effects $-5<-3$. Also, the ratio formula is not justified for arbitrary observational offers or when the instrument has direct effects. LATE describes compliers, who may not represent everyone.
+
+:::
+
+
+### Q5. How does two-stage least squares (2SLS) work?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+2SLS first projects endogenous treatment on instruments and exogenous controls; it then uses that instrument-driven component to estimate its relationship with the outcome.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+First stage: $D_i=\pi_0+\pi_1Z_i+X_i\pi+v_i$. This produces predicted treatment $\hat D_i$. Second stage: $Y_i=\alpha+\tau\hat D_i+X_i\gamma+e_i$.
+
+**Intuition:** Use the part of treatment variation shifted by the valid instrument rather than the self-selected part. For correct uncertainty, use an actual IV/2SLS estimator with the proper covariance formula, **not ordinary OLS standard errors from a manually generated fitted-treatment column**. With heterogeneous effects and multiple instruments, the interpretation can be more complicated than a single LATE.
+
+:::
+
+
+### Q6. What is a weak instrument, and why is it dangerous?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A weak instrument has little predictive power for endogenous treatment after controls, making IV estimates unstable and conventional inference unreliable.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine a free-training invitation changes attendance by only 0.2 percentage points. Even a modest amount of sampling noise in the earnings reduced form is magnified when divided by this tiny first stage. Estimates can become huge or vary dramatically from sample to sample.
+
+Check first-stage strength with statistics appropriate to the model, and use weak-IV-robust inference (for example Anderson–Rubin tests) when needed. A simple “first-stage F greater than 10” rule is only a rough diagnostic, not a universal guarantee—especially with multiple instruments, heteroskedasticity, or clustered data.
+
+:::
+
+
+### Q7. What is the difference between sharp and fuzzy RDD?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Sharp RDD has treatment status changing deterministically at the cutoff. Fuzzy RDD has a discontinuous jump in treatment probability smaller than one.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If every student with score at least 80 receives tutoring and no student below 80 receives it, the design is sharp. If students above 80 are offered tutoring but may decline, treatment probability jumps rather than switching perfectly from 0 to 1: fuzzy RDD.
+
+A sharp RD effect is the outcome jump. A fuzzy RD treatment effect can be expressed as the outcome jump divided by the treatment-probability jump, with IV-like assumptions. Fuzzy RDD targets local compliers at the threshold.
+
+:::
+
+
+### Q8. How do you estimate a sharp RDD with local linear regression?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Fit separate linear trends on each side of the cutoff within a bandwidth; the difference in predicted outcomes at the cutoff is the discontinuity estimate.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Define centered score $x_i=X_i-c$ and eligibility $Z_i=1[X_i\ge c]$. Within a chosen bandwidth fit $Y_i=\alpha+\tau Z_i+\beta x_i+\gamma(Z_ix_i)+u_i$. Then $\tau$ estimates the jump at $x=0$.
+
+Kernel weighting often emphasizes observations closer to the cutoff. Allowing slopes to differ across sides avoids an unnecessarily restrictive parallel-slope assumption. Select bandwidth carefully and use RD-specific, preferably robust bias-corrected inference rather than treating a very broad global polynomial as definitive.
+
+:::
+
+
+### Q9. What is the exclusion restriction, and how could an instrument violate it?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Exclusion means the instrument affects the outcome only through the measured endogenous treatment, with no alternative causal route.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A scholarship lottery offered to students can increase attendance, but it might also reduce financial stress and improve grades **even for students whose enrollment does not change**. In that case the lottery influences the outcome through both attendance and financial support, violating exclusion for an attendance-treatment IV.
+
+A statistically significant first stage does not demonstrate exclusion. Use institutional details, possible direct pathways, negative-control outcomes, and sensitivity analysis. Overidentification tests, when available, do not establish that every instrument satisfies exclusion.
+
+:::
+
+
+### Q10. What are monotonicity and compliance types?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Monotonicity requires that no unit moves opposite to the encouragement. Units can be compliers, always-takers, never-takers, and, if monotonicity fails, defiers.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A complier attends training if offered and does not attend otherwise. An always-taker attends regardless of the offer. A never-taker never attends. A defier would attend only if **not** offered.
+
+Random assignment identifies the effect of the offer for the full experiment. With exclusion and no defiers, the Wald ratio isolates the treatment effect for compliers. If the program offer actively discourages some workers, monotonicity may fail and the simple LATE interpretation breaks down.
+
+:::
+
+
+### Q11. When does a policy cutoff support a regression discontinuity design (RDD)?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+RDD can identify a local causal effect when treatment changes sharply at a cutoff and potential outcomes would be continuous through the cutoff without treatment.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose applicants with exam scores at or above 80 automatically qualify for a grant. Applicants scoring 79.9 and 80.1 may be broadly comparable. A jump in later outcomes at 80 can be attributed to grant eligibility if other factors do not also jump at that threshold and people cannot precisely manipulate scores.
+
+RDD estimates a **local** effect near the cutoff, not the effect for applicants scoring 30 or 100. The crucial assumption is continuity of potential-outcome regression functions, not a claim that every score is literally randomly assigned.
+
+:::
+
+
+### Q12. How should an RDD analyst check for manipulation and invalid discontinuities?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Examine score density near the cutoff, pre-treatment covariate balance, co-occurring policies, heaping, bandwidth sensitivity, and placebo thresholds.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If students can retake a test until crossing 80, those just above 80 may be systematically more motivated, threatening RDD identification. A density-discontinuity test can detect some types of sorting, although passing it does not prove no manipulation.
+
+Check whether pre-treatment GPA, age, or income jumps at 80. Investigate whether another program also becomes available at 80. A **donut RDD** can exclude potentially manipulated observations immediately around the threshold as a sensitivity check, but it changes the local comparison and is not an automatic fix.
+
+:::
+
+
+### Q13. Why is bandwidth choice a bias–variance tradeoff in RDD?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Narrow bandwidths improve local comparability but use fewer observations; wide bandwidths improve precision while risking functional-form bias.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For the exam cutoff at 80, comparing scores 79–81 is highly local but may yield few students. Comparing scores 50–100 gives many more observations but needs a credible model for outcomes far from the threshold. Curvature and subgroup differences may make a single linear fit misleading.
+
+Use a principled bandwidth selector, local polynomial estimation, robust bias-corrected CIs when appropriate, and sensible sensitivity analysis. A reported result should make clear that it applies to the chosen local region, not necessarily to all applicants.
+
+:::
+
+
+### Q14. How does fuzzy RDD relate to IV, and what is its local estimand?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Eligibility crossing the cutoff acts as an instrument for treatment receipt; under continuity, exclusion, monotonicity and relevance, the ratio of discontinuities identifies a local complier effect.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose the probability of getting a housing voucher rises from 20% below the threshold to 70% above it (a 50-point first-stage jump). Average rent changes by $100$ at the same cutoff. A fuzzy-RD Wald estimate is $100/0.5=$200$ for people whose voucher receipt was changed by eligibility at the cutoff.
+
+This is not necessarily the average effect for every voucher recipient. A direct effect of threshold eligibility apart from the voucher—for example, another subsidy starting at the same score—would violate exclusion.
+
+:::
+
+
+### Q15. What is overidentification testing, and what can it tell you?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+With more valid-looking instruments than endogenous regressors, overidentification tests assess some consistency restrictions among instruments, but cannot prove all instruments valid.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose distance to a training center and lottery invitation are both proposed as instruments for training attendance. A Hansen J test may reject if their implied moment restrictions are inconsistent. Rejection raises concern about at least one assumption or misspecification.
+
+A non-rejection does **not** prove both instruments satisfy exclusion: both could be invalid in similar ways. Always defend each instrument using the causal design and plausible pathways rather than substituting a formal overidentification test for economic reasoning.
+
+:::
+
+
+### Q16. How do you choose between RCT, IV, and RDD for a real policy question?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Choose the design from the assignment mechanism and estimand: RCT for feasible random assignment, IV for valid exogenous encouragement, and RDD for a credible threshold discontinuity.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+**Example:** A company wants the effect of a professional training certificate on earnings. If training slots can be randomly offered, use an RCT to estimate offer ITT. If participation is incomplete, use the offer as an instrument only if exclusion and monotonicity are credible. If a test-score cutoff determines eligibility, RDD can compare employees just above and below that threshold.
+
+These designs identify different populations and contrasts. Do not select a method merely because cross-sectional or panel data exist; first understand how treatment variation was generated.
+
+:::
+
+
+### Q17. When is a shift-share (Bartik) instrument credible?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Credibility rests on transparent exposure shares, shocks, and identifying assumptions; the instrument is not automatically valid because it is constructed from external industry shocks.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A local labor-market Bartik instrument might be $Z_i=\sum_s w_{is,0}g_{s,-i}$, where $w_{is,0}$ are predetermined local industry shares and $g_{s,-i}$ are national industry growth shocks excluding the local area. Intuitively, a region more exposed to a booming industry gets a bigger predicted demand shock.
+
+But validity can fail if local initial shares reflect unobserved trends, or aggregate shocks themselves correlate with omitted local determinants. Researchers must articulate whether identification comes from plausibly exogenous shifts, shares, or both; examine influential shocks and robustness; and explain the target population/effect. High predictive strength of $Z$ for $D$ does not prove instrument exogeneity.
+
+:::
+
+
+## Panel Data, DiD & Synthetic Control
+
+**20 questions** · Easy → Medium → Hard
+
+
+### Q1. What is panel data, and why can it help with causal inference?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Panel data follow the same units over time, allowing analysis of within-unit changes and time patterns that cross-sectional data cannot capture.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Consider monthly sales observed for each of 100 stores over three years. You can compare a store against its **own past**, helping separate stable store characteristics from changes after a new policy.
+
+Panel data do not by themselves make treatment causal. Demand shocks, evolving marketing, and reverse causality can still bias estimates. Identification depends on the treatment-assignment process and on assumptions about time-varying confounding, anticipation, and interference.
+
+:::
+
+
+### Q2. What is a unit fixed-effects model?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Unit fixed effects give each unit its own time-invariant intercept, controlling for additive unobserved characteristics that do not change over time.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Write $Y_{it}=\alpha_i+\beta D_{it}+X_{it}'\gamma+u_{it}$. Here $\alpha_i$ absorbs stable unit features, such as a firm's longstanding management culture, if those features have additive effects on the outcome.
+
+If training eligibility changes within a firm over time, that within-firm variation can identify $\beta$ under appropriate exogeneity assumptions. If every firm is always treated or always untreated, its time-invariant treatment indicator is collinear with firm fixed effects and cannot be separately identified. Fixed effects do **not** automatically control evolving economic conditions.
+
+:::
+
+
+### Q3. What is the basic two-period difference-in-differences (DiD) estimator?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+DiD subtracts the untreated group’s before–after change from the treated group’s before–after change.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+$$\widehat\tau_{DiD}=(\bar Y_{T,post}-\bar Y_{T,pre})-(\bar Y_{C,post}-\bar Y_{C,pre}).$$
+
+**Example:** Average weekly purchases rise from 100 to 125 in treated stores and from 90 to 105 in control stores. The treatment group's change is 25, the control group's change is 15, so DiD estimates a 10-purchase effect.
+
+This is causal only if, absent the treatment, treated stores' outcomes would have changed like the comparison stores', with suitable no-anticipation, stable composition, and no relevant spillovers.
+
+:::
+
+
+### Q4. How does the within estimator remove fixed effects?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+For each unit, subtract its time average from the outcome and time-varying regressors, which removes the unit-specific constant.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Starting from $Y_{it}=\alpha_i+\beta D_{it}+u_{it}$, subtract unit means: $Y_{it}-\bar Y_i=\beta(D_{it}-\bar D_i)+(u_{it}-\bar u_i)$. The constant $\alpha_i$ disappears.
+
+**Intuition:** Compare how a person's wage differs from their own average in periods with and without union membership. This removes the person's stable ability only if its effect is time-invariant and additive. If wages influence later union decisions or motivation changes, the within estimate can still be biased.
+
+:::
+
+
+### Q5. What do time fixed effects add to a panel regression?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Time fixed effects absorb shocks common to all units in a given period, such as macroeconomic conditions or a platform-wide outage.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+In $Y_{it}=\alpha_i+\lambda_t+\beta D_{it}+u_{it}$, $\alpha_i$ controls stable unit differences while $\lambda_t$ controls common monthly changes. For store sales, a holiday season affecting all stores can be captured by month indicators.
+
+But if treatment affects nearly all stores at exactly the same time and there is no untreated comparison or other identification variation, time fixed effects may make treatment impossible to distinguish from a common shock. Adding two-way fixed effects is not a substitute for credible identification.
+
+:::
+
+
+### Q6. Why does fixed-effects regression not automatically solve reverse causality?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Fixed effects remove some time-invariant confounding, but outcomes can still influence treatment decisions or be driven by unobserved time-varying shocks.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose struggling stores adopt a new inventory tool after sales decline. Comparing each store before and after adoption may confuse **declining sales triggering adoption** with the tool's effect on sales. Store fixed effects cannot remove this timing-related confounding.
+
+Investigate treatment timing, event-study patterns, policy assignment rules, instruments, or randomized rollouts. Ordinary FE consistency often needs strict exogeneity or another explicit design-specific condition; it should not be assumed simply because panel data are available.
+
+:::
+
+
+### Q7. What is the parallel-trends assumption?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+In the absence of treatment, treated and comparison groups would have had the same average trend in outcomes over the relevant period.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Two cities may have different baseline sales levels. DiD does not require those levels to match. It requires that, without the policy, their changes would be comparable. In symbols for untreated potential outcomes: $E[Y_{post}(0)-Y_{pre}(0)\mid D=1]=E[Y_{post}(0)-Y_{pre}(0)\mid D=0]$.
+
+Historical parallel trajectories lend credibility but cannot prove future counterfactual trends. Think about differing industry exposures, local economic shocks, and anticipation. The assumption refers to **untreated potential outcomes**, not automatically to all observed post-treatment trends.
+
+:::
+
+
+### Q8. What are event studies and leads/lags in DiD?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Event studies estimate outcome differences at multiple times relative to treatment; leads describe pre-treatment contrasts and lags describe dynamic post-treatment effects.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Index event time by $k=t-T_i$, where $T_i$ is a unit's treatment date. A standard event-study graph plots estimated coefficients for $k=-3,-2,-1,0,1,2,\ldots$, with one pre-treatment period as reference.
+
+A nonzero **lead** can warn of anticipation or different baseline trends. A zero lead is not proof of parallel trends because pre-tests can lack power. Post-treatment coefficients can show gradual adoption or delayed benefits, but their interpretation depends on the estimator and control group, especially with staggered timing.
+
+:::
+
+
+### Q9. What is synthetic control?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Synthetic control builds a weighted combination of untreated units that resembles the treated unit before intervention, using it as a counterfactual afterward.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose California adopts a health policy and other states do not. Choose nonnegative donor-state weights that sum to one and reproduce California's pre-policy outcomes and relevant predictors as closely as possible. After adoption, compare California's observed outcome with the weighted synthetic California:
+
+$$\widehat\tau_t=Y_{1t}-\sum_{j=2}^{J+1}w_jY_{jt},\quad t>T_0.$$
+
+This approach is most transparent when one or a few aggregate units receive treatment and ample pre-treatment history exists. Donors should not be affected by the intervention or closely related spillovers.
+
+:::
+
+
+### Q10. How do you choose the donor pool and pre-treatment period for synthetic control?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Choose unaffected, comparable donors and enough stable pre-treatment outcomes to evaluate counterfactual fit without using any post-treatment information.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If evaluating a shipping subsidy in one state, exclude states that adopted the same subsidy and states with strong spillovers. Select comparison states based on economic structure, pre-policy demand, industry composition, and trends—not on which donors later make the estimate look strongest.
+
+Longer pre-periods can help identify stable patterns but may include regime shifts; shorter periods may overfit temporary noise. Show pre-policy fit and sensitivity to the donor pool and training window. Do not assume synthetic control is unbiased just because weights are computed mechanically.
+
+:::
+
+
+### Q11. Why is naive two-way fixed effects (TWFE) problematic under staggered adoption?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+With heterogeneous treatment effects and different adoption dates, a single TWFE coefficient can combine comparisons using already-treated units as controls and assign undesirable weights.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine Store A adopts in January, Store B in July, and Store C never adopts. After July, a traditional TWFE regression may effectively compare later-treated Store B with Store A, which is already benefiting from treatment. If Store A's effect grows over time, that comparison can be misleading.
+
+Modern estimators identify group-time average treatment effects using appropriate not-yet-treated or never-treated controls, then aggregate them transparently. Examples include group-time ATT methods and interaction-weighted event studies. Do not assume “add unit and time dummies” fixes dynamic treatment heterogeneity.
+
+:::
+
+
+### Q12. How do modern staggered-DiD estimators improve on TWFE?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+They separately estimate treatment effects for adoption cohorts at each time using valid control groups, then aggregate effects under explicit weighting choices.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A Callaway–Sant'Anna-style group-time approach targets $ATT(g,t)$, the effect for units first treated in cohort $g$ at time $t$. A Sun–Abraham-style interaction-weighted event study targets relative-time effects without reusing contaminated comparisons in the same way as naive TWFE.
+
+**Example:** Estimate effects for January adopters against never-treated stores, and July adopters against units not yet treated in earlier periods. Decide how to average these effects to answer the policy question. Assumptions still include suitable cohort-specific parallel trends, and inference should reflect the treatment assignment structure.
+
+:::
+
+
+### Q13. What is a triple-difference (DDD) design?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+DDD compares two DiD contrasts across a third dimension, removing additional common trends if a stronger identifying assumption holds.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a new hiring rule affects young workers in State A but not older workers. Compare young versus old **before and after** in State A, then subtract that same age-group contrast in unaffected State B. This can remove some age-specific changes and state-wide changes simultaneously.
+
+DDD does not automatically rescue a DiD with failed parallel trends. It requires a credible **parallel-trends assumption for the third difference**. Check whether the policy also affected the supposedly unaffected comparison subgroup and whether other shocks altered the subgroup gap.
+
+:::
+
+
+### Q14. How do placebo or permutation tests work in synthetic control?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Reassign the intervention notionally to untreated donor units, re-estimate synthetic gaps, and compare the actual treated gap with the placebo distribution, with careful attention to pre-fit quality.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For each untreated state, pretend it was treated at the policy date and build a synthetic counterpart from other donors. The resulting placebo gaps show how unusual the actual state's post-policy gap is relative to comparable untreated units.
+
+**Important:** The number of donor units can be small, placebo gaps can have different pre-treatment fit, and states may not be exchangeable. Researchers often scale post-period deviations by pre-period RMSPE or restrict placebos to good pre-fit units. A naive fraction of larger placebo gaps is not always a valid conventional p-value.
+
+:::
+
+
+### Q15. What is synthetic difference-in-differences (SDID)?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+SDID combines weighting ideas from synthetic control with DiD-style time differencing, seeking credible comparison units and periods.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Classic DiD uses raw group averages and relies on comparable counterfactual trends. Synthetic control places weights on donors to match pre-treatment behavior. SDID typically adds **unit weights** and **time weights** to construct a comparison that better fits relevant pre-treatment characteristics.
+
+This may improve robustness when untreated trends differ in levels or when some comparison periods are more informative. It still requires a defensible treatment setting, enough pre-data, and appropriate uncertainty estimation. SDID is not a guarantee against unmeasured time-varying shocks or treatment spillovers.
+
+:::
+
+
+### Q16. What is the difference between cluster-robust and serial-correlation-robust inference in panel DiD?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Panel observations can correlate over time within treatment units; clustering at an appropriate assignment/dependence level usually addresses arbitrary within-cluster serial correlation.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If a policy is implemented by state, monthly outcomes from the same state are correlated through persistent economic shocks. Treating every state-month as independent may yield very small SEs. A state-clustered covariance allows correlation between months **within a state**.
+
+If only a few states are treated or there are few independent states, usual asymptotics can still fail. Consider design-based inference, randomization/permutation logic, or small-cluster techniques where justified. Standard errors are part of identification and uncertainty reporting, not a detail to add after selecting a model.
+
+:::
+
+
+### Q17. How do anticipation and spillovers threaten DiD estimates?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Anticipation changes outcomes before recorded treatment; spillovers change outcomes of comparison units, so untreated trends do not represent the intended counterfactual.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a minimum-wage increase is announced in January but takes effect in June. Firms may change staffing in February, contaminating pre-policy periods. Or businesses may shift hiring into neighboring untreated counties, altering the comparison group.
+
+Study announcements, exposure windows, geographic spillovers, and alternative controls. Include event-time leads and consider redefining treatment start, but neither fix is automatic. A plausible design should explain how units behave before and around the intervention, rather than treating the first official implementation date as unquestionable.
+
+:::
+
+
+### Q18. How do you decide among fixed effects, DiD, synthetic control, and RDD?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use the treatment-assignment mechanism and counterfactual requirements: fixed effects for stable unit confounding, DiD for comparable untreated trends, synthetic control for aggregate treated units with donor histories, RDD for thresholds.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If all stores independently decide when to adopt software based on expected future demand, ordinary FE and DiD can both be biased. If the company randomly phases rollout, an experimental/event-study design is much more credible. If one state enacts a policy, synthetic control may fit; if eligibility is assigned at a score threshold, RDD may be more local and convincing.
+
+A good interview response begins with **who gets treatment, why, when, the available units, and possible interference**, then names assumptions, validation checks, and the estimand. Data shape alone does not pick the method.
+
+:::
+
+
+### Q19. How do you distinguish treatment-effect dynamics from pretrends in an event study?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Event-study lead coefficients probe differences before treatment; lag coefficients show relative post-treatment effects. Their interpretation depends on valid comparisons, no anticipation, and an estimator suitable for treatment timing and heterogeneity.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Plot estimates by event time, such as two years before, one year before (omitted reference), launch year, and subsequent years. **Leads** significantly different from zero can indicate pre-existing trend differences, anticipation, or estimator contamination. **Lags** show how an estimated effect changes over the horizon.
+
+In staggered adoption, a vanilla TWFE lead/lag regression can use already-treated units as controls and produce misleading coefficients under heterogeneous effects. Prefer estimators that compare a newly treated cohort with never-treated or not-yet-treated units appropriately. Failing to reject pretrend tests is not proof of parallel trends when power is low.
+
+:::
+
+
+### Q20. How do spatial spillovers affect DiD and synthetic control studies?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Spillovers violate the assumption that donor/control units remain untreated by the intervention; contaminated controls can bias the counterfactual and change the estimand.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If one city implements a congestion fee, drivers may reroute into nearby cities used as controls. Those cities’ traffic outcomes are then also affected by treatment, so the treated-minus-control contrast no longer estimates the clean effect against an unaffected counterfactual.
+
+Map likely spillover channels and travel flows. Possible responses include geographically distant donors, exposure-weighted analyses, partial-interference designs, or modeling spillover effects explicitly. But replacing nearby cities with distant ones trades contamination for comparability. State which estimand matters: local direct effect, regional total effect, or equilibrium effect.
+
+:::
+
+
+## Double ML & Causal ML
+
+**23 questions** · Easy → Medium → Hard
+
+
+### Q1. How is a causal uplift model different from a predictive response model?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A predictive model estimates what outcome may happen; an uplift model estimates how the outcome would change if a specific treatment were applied.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A churn model identifies customers likely to cancel. A retention-offer uplift model identifies customers whose cancellation risk would **decrease because they receive an offer**. Some customers might stay without a discount, while others will leave regardless. Targeting solely by high churn probability can waste money.
+
+Uplift targeting requires assumptions or experimental variation allowing comparison of potential outcomes. Prediction accuracy on observed outcomes is not the same as accuracy of individual treatment effects, which cannot be directly observed.
+
+:::
+
+
+### Q2. What is heterogeneous treatment effect (HTE) estimation?
+
+**Difficulty:** Easy
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+HTE estimation studies how average causal effects differ across people, products, regions, or other pre-treatment characteristics.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A 10%-off coupon may increase purchases by $20$ for new customers but only $2$ for loyal customers. The overall ATE could hide this difference. HTE methods aim to estimate $\tau(x)=E[Y(1)-Y(0)\mid X=x]$.
+
+Subgroup analysis requires enough data and careful multiple-testing control. Searching thousands of segments and reporting only the largest apparent effect creates false discoveries. When feasible, confirm targeting rules on fresh randomized data or through a policy-evaluation holdout.
+
+:::
+
+
+### Q3. What does the “double” in Double / Debiased Machine Learning mean?
+
+**Difficulty:** Easy · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+DML combines Neyman-orthogonal scores with sample splitting/cross-fitting to limit regularization and overfitting bias when estimating a target causal parameter.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+“Double” does **not** mean fitting two unrelated ML models and averaging their predictions. DML commonly uses multiple nuisance models, but the essential ingredients are (1) **orthogonalization**, which makes estimation less sensitive to small errors in nuisance models, and (2) **cross-fitting**, which avoids using a row to both train and evaluate its own nuisance prediction.
+
+**Example:** To estimate how a price promotion affects spending, flexible ML models can learn how spending and promotions depend on prior purchase behavior. DML then uses specially constructed residuals or scores to estimate the promotion effect rather than treating a predictive ML coefficient as causal. The original identification assumption—e.g., no unmeasured confounding—remains necessary.
+
+:::
+
+
+### Q4. What is a target parameter versus a nuisance function in causal inference?
+
+**Difficulty:** Easy · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+The target is the low-dimensional effect of interest, such as an ATE or treatment coefficient. Nuisance functions are unknown prediction relationships needed to identify or estimate that effect.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose we want the average effect of a job-training program on future wages. The **target** might be one number: average dollars gained from the program. Nuisance functions could include $m(X)=E[D\mid X]$, the propensity for joining training given characteristics, and $\ell(X)=E[Y\mid X]$, the expected wage given characteristics.
+
+You may fit nuisance models with random forests, boosting, lasso, or neural nets. Predictive fit is useful for estimating nuisance functions, but it is **not** the final causal answer. Orthogonal estimating equations combine nuisance predictions and observed outcomes to obtain the effect with suitable statistical uncertainty.
+
+:::
+
+
+### Q5. What are S-learners, T-learners, and X-learners?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+S-learner uses one outcome model with treatment as an input; T-learner fits one outcome model per treatment group; X-learner uses imputed individual effects to improve CATE estimation.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+**S-learner:** Fit $m(X,D)$ and estimate $m(X,1)-m(X,0)$. This is compact but a powerful predictor may underuse a weak treatment signal.
+
+**T-learner:** Fit $m_1(X)$ and $m_0(X)$ separately, then subtract predictions. This gives each group flexibility but can struggle with small treated groups.
+
+**X-learner:** Use outcome models to impute treatment-effect pseudo-outcomes and learn effect models, often useful when treatment groups are imbalanced. All three require valid observational assumptions or randomized treatment variation; no learner removes hidden confounding by architecture alone.
+
+:::
+
+
+### Q6. What are R-learners and orthogonalization?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+R-learners remove estimated baseline outcome and treatment-assignment components, then fit treatment heterogeneity using residualized data.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Let $m(X)=E[Y\mid X]$ and $e(X)=E[D\mid X]$. A common R-learner objective fits $\tau(X)$ from:
+
+$$Y-m(X)\approx\tau(X)[D-e(X)].$$
+
+**Intuition:** Subtract what baseline characteristics predict from both outcomes and treatment. The remaining treatment variation is used to learn how effects change with features. This is related to orthogonal scores that reduce sensitivity to small nuisance-model errors, often combined with cross-fitting. Valid causal interpretation still requires exchangeability or another credible design and overlap.
+
+:::
+
+
+### Q7. State the partially linear regression (PLR) model used in DML and its interpretation.
+
+**Difficulty:** Medium · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A common PLR model is $Y=\theta_0D+g_0(X)+U$ with $E[U\mid D,X]=0$ and $D=m_0(X)+V$ with $E[V\mid X]=0$. Under its assumptions, $\theta_0$ is a constant partial treatment effect.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Think of $D$ as whether a customer received an intervention, $Y$ as later spending, and $X$ as pre-intervention history. The function $g_0(X)$ captures possibly nonlinear baseline spending differences; $m_0(X)$ captures which customers are more likely to be treated. The coefficient $\theta_0$ is the change in the conditional expected outcome associated with changing $D$ by one unit **at the same $X$**, under this structural specification and its causal assumptions.
+
+**Important distinction:** PLR assumes a constant additive treatment coefficient. If true effects vary sharply across customer types, a PLR coefficient may summarize effects with nontrivial weighting and should not automatically be called the population ATE. The flexible nuisance learners do not remove that model restriction. For heterogeneous binary treatments, an interactive regression model with outcome models by treatment arm may be preferable.
+
+:::
+
+
+### Q8. How do you derive the DML partialling-out estimator, step by step?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Estimate $\ell(X)=E[Y\mid X]$ and $m(X)=E[D\mid X]$ out of fold; form $\tilde Y=Y-\hat\ell(X)$ and $\tilde D=D-\hat m(X)$; regress $\tilde Y$ on $\tilde D$ without an intercept.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Start with $Y=\theta_0D+g_0(X)+U$. Taking expectations conditional on $X$ yields $\ell_0(X)=\theta_0m_0(X)+g_0(X)$, where $m_0(X)=E[D\mid X]$. Subtract this equation from the original model:
+
+$$
+Y-\ell_0(X)=\theta_0\{D-m_0(X)\}+U.
+$$
+
+Thus the variation in $Y$ not predictable from $X$ is related to the variation in $D$ not predictable from $X$. Using held-out nuisance predictions, estimate
+
+$$
+\hat\theta=\frac{\sum_i\{D_i-\hat m_{-k(i)}(X_i)\}\{Y_i-\hat\ell_{-k(i)}(X_i)\}}{\sum_i\{D_i-\hat m_{-k(i)}(X_i)\}^2}.
+$$
+
+**Concrete example:** Two users have identical pre-treatment spending patterns, but one received a randomly varied extra discount. DML focuses on treatment variation not explained by measured baseline characteristics. If treatment remains confounded by hidden purchase intent, this residualized estimate can still be biased.
+
+:::
+
+
+### Q9. What is Neyman orthogonality, and why does it matter?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A score is Neyman-orthogonal if its expected derivative with respect to small errors in nuisance functions is zero at the true nuisance values. First-order nuisance-estimation errors then cancel in the estimating equation.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For the PLR partialling-out score let
+
+$$
+\psi(W;\theta,\ell,m)=\{Y-\ell(X)-\theta[D-m(X)]\}\{D-m(X)\}.
+$$
+
+At the true functions and effect, $E[\psi]=0$. **Orthogonality** means that a small perturbation to $\ell$ or $m$ has zero *first-order* effect on this expected moment. That matters because ML nuisance models may be slightly wrong: their errors affect the final parameter largely through second-order products rather than directly at first order.
+
+**Analogy:** If a scale is calibrated so that small errors in two preparatory measurements cancel to first order, the final measurement is more stable. Orthogonality improves robustness to estimation error, **not** robustness to all causal confounding. It also does not mean a badly misspecified nuisance model is harmless.
+
+:::
+
+
+### Q10. What exactly is cross-fitting? How does it differ from ordinary cross-validation?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Cross-fitting obtains out-of-fold nuisance predictions for every observation, then combines their scores to estimate the causal parameter. Cross-validation primarily estimates predictive performance or chooses tuning parameters.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With 5-fold cross-fitting, divide observations into five folds. For fold 1, train the treatment and outcome nuisance models on folds 2–5, predict both on fold 1, and save those predictions. Repeat with each fold held out. At the end, **every row has nuisance predictions from models that did not see its outcome or treatment during fitting**. Insert these predictions into the orthogonal score and solve for the treatment effect.
+
+This is different from using a validation score to choose the most accurate random forest. You can tune hyperparameters using cross-validation **within each training fold** if needed; the final held-out fold must remain unused for those nuisance-model choices. For data clustered by person, store, or market, folds may also need to respect group or time dependence.
+
+:::
+
+
+### Q11. How is cross-fitting connected to Frisch–Waugh–Lovell (FWL)?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+DML partialling-out generalizes the residualization intuition of FWL from linear control models to flexible nuisance learners, using orthogonal scores and out-of-fold predictions.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+**FWL:** In OLS, regress both $D$ and $Y$ on the same control variables $X$. The regression of their residuals gives the same treatment coefficient as the full linear regression. It is an exact finite-sample algebraic identity for linear projections.
+
+**DML:** Replace the linear residualization with flexible estimates of $E[D\mid X]$ and $E[Y\mid X]$, use cross-fitting, and solve an orthogonal moment equation. It is not in general a finite-sample equality to an OLS coefficient. Because ML residuals are estimated, the orthogonality and statistical-rate requirements become central. Neither FWL nor DML makes unobserved confounding disappear.
+
+:::
+
+
+### Q12. What is double/debiased machine learning (DML)?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+DML uses orthogonal moment conditions and cross-fitting to estimate low-dimensional causal parameters while flexibly learning high-dimensional nuisance relationships.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose $Y=\theta D+g(X)+u$ and $D=m(X)+v$. Machine learning models estimate $g(X)$ and $m(X)$ without specifying simple linear relationships. Residualizing both variables and using a Neyman-orthogonal score can reduce first-order bias due to nuisance estimation.
+
+Use out-of-fold nuisance predictions and compute inference for $\theta$ under assumptions about unconfoundedness, model rates, overlap, and dependence. DML is **not** automatic causal identification from arbitrary high-dimensional data. Hidden confounding still breaks the result.
+
+:::
+
+
+### Q13. How should CATE or uplift models be evaluated when individual true effects are unobserved?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use randomized holdout experiments, aggregated uplift by predicted-effect groups, policy value, and appropriate doubly robust or inverse-weighted evaluation—not ordinary individual-effect MSE.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Sort randomized holdout users by predicted uplift. Compare average treated and control outcomes inside prespecified groups (for example deciles). If the model is useful, high-predicted-uplift groups should show larger observed **average** treatment effects.
+
+Consider uplift curves, Qini-style metrics, calibration by bins, and incremental profit under a targeting policy. With observational data, off-policy evaluations need credible propensities, overlap, and assumptions. Do not train and claim success using the same holdout to pick the best segmentation rule without correcting for selection.
+
+:::
+
+
+### Q14. What is off-policy evaluation and inverse propensity scoring (IPS)?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Off-policy evaluation estimates the value of a new decision rule using data collected by a different policy, accounting for action-assignment probabilities.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A recommendation platform previously showed one of several offers with known randomized probabilities. You want to estimate the benefit of a new targeting rule without deploying it. For logged action $A_i$, reward $Y_i$, logging propensity $p_i$, and target policy $\pi$, a basic IPS value estimator uses $Y_i\,\pi(A_i\mid X_i)/p_i$.
+
+If the new policy chooses actions rarely shown by the logging policy, inverse weights explode or the target policy cannot be identified. Doubly robust off-policy estimators combine reward models with propensity weighting. Logging probabilities and support coverage are essential.
+
+:::
+
+
+### Q15. What if treatment varies over time and past treatment changes future confounders?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Ordinary regression controlling for time-varying variables can be biased when those variables are affected by earlier treatment and also predict later treatment and outcomes.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a wellness program changes health in month 1. Month-1 health then influences whether participants continue treatment in month 2, and also affects long-run health. If you simply control for month-1 health in an outcome regression, you may block part of the first treatment's causal pathway and create selection problems.
+
+This motivates longitudinal g-methods, including the g-formula and marginal structural models with inverse probability of treatment weights. They require sequential exchangeability, consistency, positivity, and careful time-ordering. Repeated observations alone do not solve time-varying confounding.
+
+:::
+
+
+### Q16. How does DML estimate an ATE using an interactive regression model and AIPW?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+For a binary treatment with conditional exchangeability and overlap, cross-fit the propensity $e(X)$ and arm-specific outcomes $\mu_1(X),\mu_0(X)$; average their orthogonal AIPW score.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+The **interactive regression model (IRM)** allows the effect to vary with $X$. Let $\mu_d(X)=E[Y\mid D=d,X]$ and $e(X)=P(D=1\mid X)$. The AIPW score for each observation is
+
+$$
+\phi_i=\mu_1(X_i)-\mu_0(X_i)
++\frac{D_i\{Y_i-\mu_1(X_i)\}}{e(X_i)}
+-\frac{(1-D_i)\{Y_i-\mu_0(X_i)\}}{1-e(X_i)}.
+$$
+
+Estimate $ATE$ by the mean of $\phi_i$ using **out-of-fold** estimates of the nuisance functions. The first two terms compare predicted outcomes under both treatments. The residual terms correct prediction errors using inverse treatment probabilities. This score is doubly robust under standard missing-data / causal assumptions: consistency can hold if either the propensity model or both outcome regressions are correct, along with positivity and appropriate regularity. Double robustness and DML orthogonality are related but not identical ideas.
+
+**Example:** If highly engaged users are four times more likely to receive an offer, an unadjusted mean difference is misleading. Propensity weighting and conditional outcomes help reconstruct a comparable target population, assuming all relevant confounders are measured.
+
+:::
+
+
+### Q17. Does Double ML identify causal effects when there is an unobserved confounder?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+No. Flexible prediction, orthogonalization, and cross-fitting address estimation bias, not failure of the identifying assumptions; hidden common causes of treatment and outcome can still bias the causal estimate.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose customer motivation affects both voluntary training enrollment and later job income, but motivation is absent from the data. A neural network may predict income and enrollment extremely well using observed characteristics. Nevertheless, the estimates can still confound training with motivation.
+
+In the PLR example, $E[U\mid D,X]=0$ would be false if the remaining error contains motivation correlated with training. DML cannot repair this by fitting deeper models. Look instead for randomized encouragement, a credible instrument, a cutoff, valid pre/post comparison, or sensitivity analysis. **Interview answer:** “I would first defend identification, and only then choose a flexible nuisance learner.”
+
+:::
+
+
+### Q18. What nuisance-model accuracy conditions are usually needed for root-n DML inference?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Beyond regularity, orthogonal scores and cross-fitting often require products of nuisance estimation errors to be sufficiently small, for example $o_p(n^{-1/2})$, rather than demanding every nuisance function attain a parametric rate.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+As an illustration, if two nuisance estimation errors each converge in an appropriate $L_2$ norm at rate $o_p(n^{-1/4})$, their product is $o_p(n^{-1/2})$. This can be sufficient for a common class of DML scores, though exact rate and complexity conditions depend on the model and score.
+
+Why products? Orthogonality removes linear/first-order dependence on nuisance error, leaving a dominant error that behaves like the **product** of inaccuracies. If one nuisance model is extremely inaccurate or positivity is poor, this condition may fail. Root-$n$ asymptotic normality is a theorem under particular assumptions—not a universal guarantee of arbitrary black-box predictors.
+
+:::
+
+
+### Q19. How do you compute uncertainty for a DML estimate?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use an influence-function or orthogonal-score-based variance estimator, accounting for any relevant clustering and cross-fitting; do not report the prediction-model RMSE as a causal standard error.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a generic moment $E[\psi(W;\theta_0,\eta_0)]=0$, the influence-function estimate is roughly $-J^{-1}\psi_i$, where $J=E[\partial\psi/\partial\theta]$. A sample analog yields
+
+$$
+\widehat{SE}(\hat\theta)=\sqrt{\frac{\widehat{\operatorname{Var}}(\widehat{IF}_i)}{n}}.
+$$
+
+For the PLR partialling-out score, the influence contribution is proportional to $\tilde D_i(\tilde Y_i-\hat\theta\tilde D_i)$ divided by the average squared residualized treatment. Under appropriate i.i.d. asymptotics, construct $\hat\theta\pm 1.96\widehat{SE}$ for an approximate 95% CI.
+
+If customers appear many times, you must handle within-customer dependence; cross-fitting by observations alone does not automatically solve clustering. If there are only a few treated cities, large-sample i.i.d. formulas are especially risky.
+
+:::
+
+
+### Q20. What is the difference between DML, doubly robust estimation, causal forests, and meta-learners?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+DML is a framework for inference using orthogonal scores and cross-fitting; doubly robust AIPW targets consistency under alternative nuisance-model specifications; causal forests and meta-learners primarily learn heterogeneous treatment effects.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+**DML-PLR:** Often estimates one structural parameter $\theta$ while learning complex baseline functions. **AIPW/IRM:** Builds an orthogonal score for ATE; its doubly robust property concerns nuisance-model misspecification. **S-/T-/X-learners:** Estimate outcome differences by treatment status to produce $\widehat{\tau}(X)$, but naive estimates may be biased if overlap is poor or confounding is unaddressed. **Causal forests:** Partition feature space to estimate heterogeneity under identifying assumptions.
+
+**Example:** If the VP asks “Does training raise average output?”, an ATE-focused orthogonal estimator may be appropriate. If the VP asks “Which workers benefit most?”, CATE estimation and policy evaluation matter. Do not claim an individual treatment effect is observed: each worker supplies only one potential outcome.
+
+:::
+
+
+### Q21. How does DML extend to instrumental variables or Difference-in-Differences?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+DML adapts orthogonal scores and cross-fitting to different *identified* models, including partially linear IV and DiD, but each design requires its own assumptions and target estimand.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If treatment is endogenous even after conditioning on $X$, a credible instrument $Z$ may identify a local or structural parameter. DML for a **partially linear IV** model uses nuisance functions for treatment, outcome, and instrument relationships while preserving IV moment restrictions. It still needs relevance, exclusion, and instrument exogeneity.
+
+For **DiD**, machine learning can help estimate outcome trends and treatment propensities inside a doubly robust score, but credible parallel-trends assumptions (possibly conditional on $X$) and no-anticipation assumptions remain central. Do not simply put post-treatment outcomes and treatment flags into a generic RandomForestRegressor and label the coefficient causal.
+
+:::
+
+
+### Q22. How would you implement cross-fitted PLR DML in plain scikit-learn?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use KFold to predict outcome and treatment from controls strictly out of fold, regress residualized outcome on residualized treatment, and estimate a score-based standard error.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+The following is an **illustrative runnable example**, with nonlinear observed confounders and a constant treatment effect. It requires `numpy` and `scikit-learn`.
+
+```python
+import numpy as np
+from sklearn.model_selection import KFold
+from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn.base import clone
+
+rng = np.random.default_rng(42)
+n = 4500
+X = rng.normal(size=(n, 3))
+D = 0.8 * X[:, 0] + np.sin(X[:, 1]) + rng.normal(size=n)
+true_effect = 2.0
+Y = true_effect * D + 2 * np.sin(X[:, 0]) + X[:, 2] ** 2 + rng.normal(size=n)
+
+pred_y = np.empty(n)
+pred_d = np.empty(n)
+folds = KFold(n_splits=5, shuffle=True, random_state=42)
+base = HistGradientBoostingRegressor(max_iter=100, max_leaf_nodes=15, random_state=42)
+for train, test in folds.split(X):
+    model_y = clone(base).fit(X[train], Y[train])
+    model_d = clone(base).fit(X[train], D[train])
+    pred_y[test] = model_y.predict(X[test])
+    pred_d[test] = model_d.predict(X[test])
+
+r_y = Y - pred_y
+r_d = D - pred_d
+alpha = np.mean(r_d * r_d)
+theta = np.mean(r_d * r_y) / alpha
+influence = r_d * (r_y - theta * r_d) / alpha
+se = np.std(influence, ddof=1) / np.sqrt(n)
+print(f"Estimated effect: {theta:.3f}; 95% CI: ({theta - 1.96*se:.3f}, {theta + 1.96*se:.3f})")
+```
+
+The true effect in the simulation is 2.0. Expect estimates near that value with sampling variation and model error. The naive regression of $Y$ on $D$ alone mixes the effect with confounding from $X$. This i.i.d. example is **not** a complete production estimator: check identification, nuisance diagnostics, cluster dependence, alternative model specifications, and uncertainty assumptions before using it on real data.
+
+:::
+
+
+### Q23. What are the three biggest ways an applied DML project can go wrong?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Incorrect identification, invalid out-of-fold nuisance estimation, and poor overlap/weak residual treatment variation are common failure modes.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+**1. Identification:** An unobserved driver of treatment and outcome violates conditional exchangeability or PLR exogeneity. Prediction cannot fix it. **2. Leakage:** Features constructed after treatment or the outcome itself enter nuisance training; even cross-fitting cannot fix temporal leakage. **3. Positivity/weak variation:** If treatment is nearly determined by features, residualized $D$ is tiny, so the denominator $E[(D-m(X))^2]$ is small and uncertainty explodes.
+
+**Practical checklist:** Define outcome horizon and treatment timing; freeze pre-treatment covariates; test overlap or the residual-treatment distribution; use genuine held-out nuisance predictions; report target population and cluster-aware SEs; conduct sensitivity and placebo checks. If the score is unstable, fix the design instead of tuning until a significant coefficient appears.
+
+:::
+
+
+## Interview Case Studies & Traps
+
+**21 questions** · Easy → Medium → Hard
+
+
+### Q1. What is a counterfactual in a policy or business case?
+
+**Difficulty:** Easy · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A counterfactual is the outcome the same unit would have experienced under a different treatment or policy. Causal inference estimates differences between actual and counterfactual outcomes.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a city introduces a bus-lane policy and travel time drops from 40 to 34 minutes. The **observed outcome** is 34 minutes with the policy. The counterfactual is the travel time that same city would have had at the same time **without** the policy. It might also have been 34 minutes because fuel prices or traffic volumes changed, or it could have been 42 minutes.
+
+We cannot observe both outcomes for the same city and time. Good designs use randomized controls, well-matched comparison areas, policy cutoffs, or credible time trends to reconstruct an appropriate counterfactual. This is the first concept to explain in almost any causal interview case.
+
+:::
+
+
+### Q2. Why is a simple before-and-after comparison usually insufficient to estimate an intervention effect?
+
+**Difficulty:** Easy · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Time changes outcomes for reasons unrelated to the intervention. Without a credible counterfactual, the observed pre/post difference mixes treatment with other trends and shocks.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A retailer runs an advertising campaign in December. December revenue is 30% higher than November. That does not mean the advertising caused a 30% increase: holiday buying, promotions, competition, and inventory can all change sales.
+
+**Better design:** Randomize ad exposure where feasible, compare similar untreated regions with parallel pre-period trends, or use a credible synthetic control. Specify the *same* time horizon and target population in treated and comparison outcomes. A large sample makes the before/after estimate more precise, but it cannot cure a biased comparison.
+
+:::
+
+
+### Q3. When would you use a switchback experiment?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A switchback experiment randomizes treatment across time windows in shared operational environments, often when unit-level randomization creates interference.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A ride-hailing marketplace cannot easily randomize discounts by rider without affecting shared driver availability. Instead, randomize a city's pricing policy by hour or day, switching between baseline and treatment.
+
+Design concerns include carryover after each switch, traffic cycles, time-of-day balance, operational shocks, and serial dependence. Use enough independent time blocks, prespecified washout rules if needed, and analysis that reflects the assignment unit. If nearby cities influence one another, interference can still occur.
+
+:::
+
+
+### Q4. How would you estimate the effect of providing free shipping on long-term profit?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Define a policy-level treatment, an outcome horizon, and eligible units; use randomization where feasible, or a defensible panel or regional quasi-experiment with explicit assumptions.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Define profit net of shipping subsidy and fulfillment costs—not simply purchase count. Consider repeat purchase, retention, returns, cannibalization, and capacity effects over 6–12 months or longer.
+
+If users can be randomized, assign eligible customers to a free-shipping policy and monitor long-run outcomes, with persistent assignment and suitable guardrails. If a region launches the policy, consider DiD or synthetic control using unaffected comparable regions and sufficient pre-policy history. Cross-user spillovers and market-level budget effects may make user-level tests understate or misrepresent full rollout impact.
+
+:::
+
+
+### Q5. How would you measure the causal effect of seller training on seller profit?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Prefer random access or encouragement; if sellers self-select into training, use a comparison strategy based on credible assignment mechanisms and pre-treatment information.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Outcome: net seller profit over a defined horizon, not just gross sales. If training slots are scarce, randomize invitations and estimate ITT. With incomplete take-up, discuss IV/LATE only if the offer affects profit through training alone.
+
+If using observational data, compare pre-training sales trends, seller size, region, product category, and experience. Matching or DiD may be used under conditional exchangeability or parallel trends, respectively. Inspect the timing of enrollment, because sellers may join precisely when profit is already changing.
+
+:::
+
+
+### Q6. How would you estimate whether transferring employees improves productivity?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Clarify who requested transfers, how approvals were decided, and whether productivity can be measured comparably before and after the move.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Comparing transferred employees with everyone else is confounded by motivation and managerial selection. A stronger comparison may be approved versus rejected transfer applicants with similar pre-treatment trajectories, though approval may still depend on hidden performance information.
+
+Look for randomized transfer slots, manager rotation, eligibility rules near a cutoff, or phased rollouts. If relying on DiD, verify pre-move trends and consider role changes that alter how productivity is measured. Define whether the target is the effect of **offering transfer** or the effect of **actually moving roles**.
+
+:::
+
+
+### Q7. How would you estimate the effect of sending an email when not every recipient opens it?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Randomize assignment to the email, estimate the ITT effect of sending it, and separately analyze noncompliance without conditioning on opens.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+People who open emails are systematically different from people who do not. Comparing openers with non-openers confounds engagement and often introduces post-treatment selection bias.
+
+If sending email is randomized, the primary policy question “Should we send this email?” is answered by the assignment ITT. If you want the effect of **opening**, email assignment may serve as an IV only if it changes outcomes exclusively through opening. That exclusion restriction is often debatable because merely receiving or viewing a subject line may change behavior.
+
+:::
+
+
+### Q8. Why is the naive result from analyzing only purchasers after a promotion misleading?
+
+**Difficulty:** Medium
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Purchase status may be caused by the promotion, so analyzing only purchasers selects different post-treatment subpopulations.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine a coupon generates first-time purchases from budget-conscious customers. Among treated purchasers, average spending per purchaser could actually fall because many new buyers make small purchases. Yet total revenue per eligible customer can rise.
+
+Compare **all assigned customers**, including those who purchase nothing, for the total effect on revenue. If you want to separate conversion and order value, report both as descriptive mechanisms while recognizing that the treated-purchaser and control-purchaser groups are not interchangeable causal populations.
+
+:::
+
+
+### Q9. How would you assess a marketing campaign launched in only one region?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use a credible untreated regional counterfactual, often synthetic control, DiD, or a randomized geographic experiment, while accounting for spillovers and local shocks.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Start with whether campaign geography was selected for expected growth. If one city was chosen because demand was rising, a simple before–after sales increase cannot be attributed to the campaign.
+
+Choose donor regions with similar pre-campaign outcomes and no exposure spillovers. A synthetic-control design may be attractive with long pre-period histories; DiD may work if untreated trends are comparable. Validate pre-fit, reporting changes, contemporaneous promotions, and sensitivity to the donor pool. If future campaigns can be randomized geographically, geo-experiments offer stronger identification.
+
+:::
+
+
+### Q10. How would you evaluate a new marketplace feature with spillovers between buyers and sellers?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Identify the side of the marketplace being treated, how shared capacity connects participants, and whether a direct user-level A/B test has interference.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A shipping-matching feature may give treated shippers better access to carriers, leaving fewer carriers for controls. A simple shipper-level A/B contrast measures effects under that saturation level, not necessarily the effect when every shipper receives the feature.
+
+Consider randomizing at market or lane level, switchbacks, or a saturation experiment. Define outcomes for both sides: shipper cost, acceptance rates, carrier earnings, and delivery reliability. Use assignment-based analysis when exposure and actual feature use differ. This question is as much about the market mechanism as choosing a formula.
+
+:::
+
+
+### Q11. What is a negative control, and how can it strengthen causal analysis?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+A negative-control outcome or exposure should not be causally affected by the treatment mechanism; unexpected associations can reveal confounding or measurement problems.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a price promotion should change future demand but cannot affect purchases made **before** the promotion. If your estimated model finds that the promotion “caused” large differences in prior purchases, your control selection or outcome logging is likely flawed.
+
+Negative controls cannot by themselves establish a valid causal effect; they test specific failure modes. They are especially useful with nonrandomized treatment, when direct exchangeability tests are impossible.
+
+:::
+
+
+### Q12. How would you choose a causal method when you have only cross-sectional data?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Start with assignment rules and assumptions, not data shape; matching/IPW may be possible with measured confounders, while IV or RDD can be stronger when credible instruments or cutoffs exist.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If customers receive gift cards through a risk-score threshold, investigate an RDD. If invitations are randomized but not everyone redeems the offer, use ITT and possibly IV. If employees self-select into training and only cross-sectional outcomes are observed, matching may require a strong and unverifiable no-unmeasured-confounding assumption.
+
+Explain the intended population effect, available baseline variables, overlap, sensitivity analysis, and alternatives for collecting better data. Saying “cross-sectional → matching” is not a complete causal identification strategy.
+
+:::
+
+
+### Q13. A DiD estimate is positive, but treated units already had faster pre-trends. What do you do?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Treat the violation seriously; investigate why counterfactual trends differ before relying on the estimate, and consider redesigning controls or identifying variation.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If treated regions grew 5% per year before the policy and untreated regions grew 1%, standard parallel trends is questionable. A post-policy 6% relative advantage could reflect continued pre-existing growth, not treatment.
+
+Explore donor groups with more similar pre-trends, synthetic control, conditional trend assumptions, or a different identification approach. These options introduce their own assumptions. Do not simply add a linear trend until the coefficient looks significant; justify any trend model and report sensitivity.
+
+:::
+
+
+### Q14. How would you evaluate a dynamic treatment whose impact persists after discontinuation?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Define effects by treatment history and horizon; account for carryover and time-varying confounding instead of assuming outcomes depend only on current treatment.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A free-shipping membership might increase habit formation even after eligibility ends. A model using only current membership may misclassify post-membership benefits as baseline outcomes. Define histories such as never treated, recently treated, and continuously treated, with a policy-relevant horizon.
+
+Consider randomized long-term holdouts, staggered dynamic effects, or longitudinal g-methods where assumptions are plausible. Ordinary fixed effects with one contemporaneous treatment indicator are not guaranteed to identify the effect of sustained treatment versus stopping.
+
+:::
+
+
+### Q15. What checklist would you use to defend a causal result in a senior DS or Economist interview?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+State the estimand, assignment mechanism, identifying assumptions, overlap/interference, estimator, uncertainty method, falsification checks, and external validity.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A practical response follows seven questions: **(1)** What action or policy changes? **(2)** Whose outcomes and over what horizon? **(3)** Why are treated and comparison units credible counterfactuals? **(4)** What confounding, selection, anticipation, or interference could remain? **(5)** Why does the chosen estimator target the stated effect? **(6)** Are uncertainty estimates correct for the assignment structure? **(7)** Will the effect carry over to a full rollout?
+
+End with effect size and units, a confidence interval, business costs and guardrails, and a clear decision. More sophisticated math cannot compensate for an invalid design.
+
+:::
+
+
+### Q16. Explain Simpson’s paradox and its relevance to causal inference.
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+An aggregate association can reverse after stratifying because groups differ in composition; the correct causal interpretation depends on the causal structure.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a training program attracts many workers from hard-to-place industries. Participants' overall employment rate may be lower than nonparticipants' even if, within comparable industries, trained workers have higher employment. The aggregate comparison reflects differences in industry mix.
+
+Do not automatically adjust for every variable to “fix” Simpson's paradox: whether industry is a pre-treatment confounder, mediator, or collider determines which contrast answers the causal question. DAG reasoning and a clearly defined target population guide adjustment.
+
+:::
+
+
+### Q17. How do placebo dates and placebo groups support a causal design?
+
+**Difficulty:** Hard
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+They probe whether the method detects an effect where no causal effect is expected, helping uncover spurious trends, confounding, or model specification problems.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a retail chain launches an inventory tool in July. Re-estimate the DiD pretending the policy started in March, when it had not yet begun. A large pre-period “effect” would raise concern about trend differences or anticipation.
+
+You can also test outcomes or regions plausibly unaffected by the policy. A placebo that passes is reassuring but not conclusive: unobserved biases can still appear only in the true post-treatment period. State why each placebo is expected to be null.
+
+:::
+
+
+### Q18. What should you do when the available sample is small?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Simplify the design, prioritize credible assignment variation, quantify minimum detectable effects and uncertainty, and avoid overclaiming from flexible adjustment models.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose only eight stores are treated. Matching dozens of covariates or running a large CATE model will be unstable. Explore randomization where feasible, pair comparable stores in advance, collect more pre-period outcomes, or use carefully justified aggregate designs.
+
+With few treatment clusters, ordinary cluster-robust large-sample inference can be unreliable. Use methods matched to the actual assignment process and show uncertainty honestly. A confidence interval that includes important benefit and harm means the decision remains uncertain; it does not imply the effect is zero.
+
+:::
+
+
+### Q19. How would you estimate the effect of a nationwide policy implemented on the same day?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+With no untreated contemporaneous comparison, a simple before/after change does not identify the policy effect. Consider credible external controls, discontinuities, varying exposure, structural models, or clearly qualified interrupted time series.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a tax policy applies to every US state at once. Sales fall 4% after implementation. A before/after analysis cannot separate the tax effect from macroeconomic changes, holidays, changes in prices, or consumer trends.
+
+Look for unaffected foreign markets or related products, different exposure intensities with plausible exogeneity, structural variation, or staggered enforcement if available. If using interrupted time series, model pre-policy dynamics, seasonal patterns, autocorrelation, and coincident events—and acknowledge its identifying assumptions. An artificial “RDD in time” around the implementation date is vulnerable to simultaneous shocks and anticipation.
+
+:::
+
+
+### Q20. Your propensity score model has AUC = 0.95. Is that good for causal matching?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Not necessarily. High ability to predict treatment can indicate poor overlap and unstable weights; propensity models should be assessed for covariate balance and support, not prediction AUC alone.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose all high-income customers receive a coupon and almost no low-income customers do. A propensity classifier can identify assignments almost perfectly, with AUC near 1. But it may be impossible to compare treated and untreated people at the same income values; there are no meaningful counterfactual observations for parts of the population.
+
+Inspect the distribution of $\hat e(X)$ separately by treatment group, weighted standardized mean differences, effective sample size, and extreme inverse weights. Consider trimming or redefining the estimand to the overlapping population, reporting the change transparently. Do not optimize causal propensity models only for predictive AUC.
+
+:::
+
+
+### Q21. A policy shows a statistically significant result with only five treated clusters. How would you assess inference?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+::: {.callout-note collapse="true" title="Reference Answer"}
+
+Conventional cluster-robust asymptotic inference may be unreliable with few treated or total clusters; inspect assignment structure and use suitable small-sample or randomization-based methods where valid.
+
+:::
+
+
+::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine five states adopt a policy and 45 do not. Running a state-clustered regression on millions of individuals does not create millions of independent treatment assignments: much of the identifying variation lives at the state level.
+
+Depending on the design, examine randomization/permutation inference, wild-cluster bootstrap with caveats, few-treated-cluster corrections, or honest sensitivity intervals. Test robustness to dropping one treated state. Report the number of independent treated units, not only the total number of individual records. The right inference procedure depends on how treatment was assigned and on cross-state dependence.
+
+:::
+
+
+::::::
+
+
+## Interview checklist
+
+For every study, state (a) **target estimand and population**, (b) **treatment assignment mechanism**, (c) **identifying assumptions**, (d) **overlap and interference**, (e) **estimation method and why it targets the estimand**, (f) **correct uncertainty / clustering**, and (g) **placebo checks, sensitivity, external validity, and decision implications**.
+
+## References and editorial notes
+
+The main topic organization comes from the uploaded notes. New sections on orthogonal-score Double ML, influence-based inference, modern DiD, Bartik IV and specialized interview traps are editorial additions. Original overstatements were corrected: residualizing on observables cannot eliminate hidden confounding; fixed effects cannot automatically remove time-varying confounding or reverse causality; LATE is not necessarily larger than ITT; controlling for post-treatment selection can invalidate a total effect; modern staggered DiD needs care under heterogeneous effects.
+
+For additional DML methodology (external technical references):
+
+- Chernozhukov et al. (2018), [Double/debiased machine learning for treatment and structural parameters](https://academic.oup.com/ectj/article/21/1/C1/5056401).
+- [DoubleML documentation: getting started](https://docs.doubleml.org/stable/intro/intro.html) and [model user guide](https://docs.doubleml.org/stable/guide/guide.html).
+
+**Software note:** This is a static Quarto source document. Python examples use fenced `python` code blocks for display and will not execute during `quarto render` unless you deliberately convert them into executable Quarto code cells.

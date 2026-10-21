@@ -15,27 +15,29 @@ Probability · Hypothesis Testing · Experimental A/B Test
 :::
 
 ::: {.qb-category-card}
-### [Causal Inference](knowledge/question-bank/statistics.qmd)
+### [Causal Inference](knowledge/question-bank/causal_inference_interview_question_bank_double_ml.qmd)
 Matching · DID · Regressional Discontinuity · Double ML
 :::
 
 ::: {.qb-category-card}
-### [Time Series](knowledge/question-bank/statistics.qmd)
-:::
-
-::: {.qb-category-card}
-### [Marketing Mix Modeling](knowledge/question-bank/statistics.qmd)
+### [Time Series](knowledge/question-bank/time_series_interview_question_bank.qmd)
 :::
 
 
+
+
 ::: {.qb-category-card}
-### [Machine Learning](knowledge/question-bank/machine-learning.qmd)
+### [Machine Learning](knowledge/question-bank/machine_learning_interview_question_bank.qmd)
 Logistic Regression · Decision Trees · Model Evaluation
 :::
 
 ::: {.qb-category-card}
 ### [Search & Ranking](knowledge/question-bank/ranking.qmd)
 BM25 · Recall@K · NDCG · MRR
+:::
+
+::: {.qb-category-card}
+### [Marketing Mix Modeling](knowledge/question-bank/statistics.qmd)
 :::
 
 ::: {.qb-category-card}
@@ -48,7 +50,9 @@ Backpropagation · BatchNorm · LayerNorm
 Self-Attention · Transformers · Tokenization
 :::
 
-
+::: {.qb-category-card}
+### [Python & SQl](knowledge/question-bank/)
+:::
 
 
 ::::

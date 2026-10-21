@@ -1,0 +1,2454 @@
+---
+title: "Time Series Forecasting — Interview Questions"
+subtitle: "Data Scientist & Economists · From Easy to Hard"
+toc: false
+page-layout: full
+format:
+  html:
+    code-copy: true
+    html-math-method: mathjax
+---
+
+# Time Series Forecasting — Interview Question Bank
+
+
+::: {.callout-important collapse="true" title="Important notes from common mistakes"}
+- **ADF vs KPSS:** ADF commonly tests a unit-root null; KPSS tests a level- or trend-stationarity null. A failure to reject either null does not prove it.
+- **Ljung–Box:** There is no universal requirement that p > 0.10; interpret the selected lag, null, power, and residual plots.
+- **Dynamic regression:** Not all nonstationary variables must automatically be differenced; cointegration and valid long-run relationships matter.
+- **ECM:** The coefficient on the equilibrium error is **not always negative**; sign depends on the residual convention and which variable adjusts.
+- **Weekly yearly seasonality:** One calendar year contains approximately **52.18 weeks**, not exactly 52.
+- **Quarterly-to-monthly interpolation:** Interpolation creates an assumed path, **not newly observed monthly data**.
+- **Forecasting vs causation:** Granger causality is predictive content, not identification of a structural intervention effect.
+- **Forecast evaluation:** Training residuals and forecasts evaluated with realized future predictor values are **not** substitutes for honest ex-ante backtests.
+:::
+
+
+:::::: {.panel-tabset}
+
+
+## Time Series Foundations & Diagnostics
+
+**21 questions** · Easy → Medium → Hard
+
+
+### Easy (8)
+
+
+#### Q01. What makes time series data different from ordinary tabular data?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Time series observations have an order and often depend on earlier observations. Trends, seasonality, and changing data-generating processes mean that ordinary i.i.d. assumptions and random train/test splits can fail.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A table of 1,000 independent customer profiles can often be randomly split into training and test sets. A table of 1,000 consecutive daily sales observations cannot: yesterday's sales affect today's sales, and December demand differs from July demand. If we randomly mix dates, the training set may contain information from the future relative to some test observations. That makes the reported accuracy overly optimistic.
+
+**Interview example:** For next month's home-price appreciation, you must specify the forecast origin (the date you issue the prediction), the target month, and which economic indicators were actually published at the origin. Time order is part of the problem definition, not just a sorting preference.
+
+::::
+
+
+#### Q02. What is the difference between a time series forecasting model, an explanatory model, and a hybrid model?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A pure time series model predicts from the history of the target; an explanatory model uses predictors such as income or interest rates; a hybrid or dynamic regression model combines explanatory variables with time-dependent errors or lagged outcomes.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+To forecast retail sales, a seasonal ARIMA model may use only past sales. A regression model may include advertising, prices, holidays, and store openings. A hybrid model can include those predictors *and* ARIMA errors to capture temporal patterns left in the residuals.
+
+The tradeoff is availability: future values of advertising expenditure can be planned, but future unemployment might itself need a forecast. Explanatory variables can improve both interpretation and accuracy, yet a model with theoretically meaningful covariates is not automatically causal or more accurate.
+
+::::
+
+
+#### Q03. What are trend, seasonality, cycle, and irregular variation?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Trend is a long-run direction; seasonality repeats at a fairly regular calendar frequency; cycles fluctuate without a fixed period; irregular variation is what remains unexplained by those patterns.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Monthly airline passengers might grow over several years (**trend**), peak every summer (**seasonality**), decline during an uncertain-length recession (**cycle**), and experience a one-day flight disruption (**irregular shock**). Trend need not be linear, and a cycle need not last exactly one year.
+
+Confusing trend with seasonality leads to poor model choice. Repeated December spikes suggest seasonal structure, while a multi-year upswing and downturn might reflect business-cycle forces whose timing is not fixed.
+
+::::
+
+
+#### Q04. What is a seasonal period, and how do you choose it for daily, weekly, or monthly data?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+The seasonal period is the approximate number of observations per repeating cycle: 7 for weekly seasonality in daily data, 12 for annual seasonality in monthly data, and about 52.18 for annual seasonality in weekly data.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For monthly data, a recurring December effect appears roughly every 12 observations. For daily data, both weekly seasonality (7) and annual calendar patterns can matter. Weekly data have about 365.25/7 = 52.18 weeks per year, not exactly 52; daily yearly patterns also do not fit a fixed 365-day period perfectly because of leap years.
+
+Some models require an integer seasonal period; others use Fourier terms or calendar indicators for long or non-integer periodicities. Model the actual business calendar rather than mechanically setting every annual seasonal period to 52 or 365.
+
+::::
+
+
+#### Q05. What is an autocorrelation function (ACF)?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+The ACF at lag k measures the linear correlation between a series and its value k periods earlier, under a suitable stationary setting.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If high sales tend to follow high sales, the lag-1 ACF is positive. If demand alternates up and down, some lags can have negative correlations. An ACF plot shows estimated correlations across lag lengths.
+
+For monthly sales, large spikes around lags 12 and 24 can suggest yearly seasonality. A slowly declining ACF can suggest a persistent trend or unit root, but is not proof of one. Interpretation requires considering uncertainty bands, sample size, and the effects of preprocessing.
+
+::::
+
+
+#### Q06. What is the difference between residuals and out-of-sample forecast errors?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A residual compares an observed value with the model's in-sample fitted value; an out-of-sample forecast error compares a realized future outcome with a forecast made before that outcome was known.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a model fitted using data through December predicts December sales as 105 when actual December sales were 110. That is a fitted residual of +5. If the same model, fitted *only through November*, predicted December sales as 101, the genuine one-step-ahead error would be +9.
+
+Training residuals can be small even for an overfit model. Forecast accuracy must be measured with data unavailable at the time each prediction was issued. This is why time-series backtesting is central to model selection.
+
+::::
+
+
+#### Q07. What is a naïve forecast, and why is it an important baseline?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A naïve forecast uses the latest observation as the next forecast; a seasonal naïve forecast uses the value from the same season in the previous cycle. Strong models should outperform sensible baselines.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If this month's home-price index is 250, a naïve forecast for next month is 250. If last December's sales were 1,200 units, a seasonal naïve forecast for the coming December may be 1,200 units.
+
+A sophisticated neural network that underperforms these baselines provides little business value. Baselines also identify whether the problem is intrinsically difficult or whether the model is failing to capture obvious persistence and seasonality.
+
+::::
+
+
+#### Q08. What are white noise and independent identically distributed (i.i.d.) noise?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+White noise has zero mean, constant finite variance, and zero autocovariance across distinct times; it need not be independent or normally distributed. I.i.d. noise additionally requires independence and identical distributions.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A model can have residuals with no detectable linear autocorrelation but still have volatility clustering: very large errors tend to be followed by large errors. Squared residuals may be correlated even when residual levels are not. Such a sequence is not necessarily i.i.d.
+
+For forecast evaluation, the aim is to leave no predictable *conditional mean* signal in the residuals. A white-noise diagnostic is useful, but it does not guarantee the prediction distribution is correct.
+
+::::
+
+
+### Medium (9)
+
+
+#### Q09. How do log, Box–Cox, and calendar adjustments help a time series model?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Transformations can stabilize the scale or variance; calendar adjustments remove predictable variation due to month length, holidays, working days, or population exposure.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A shop selling 3,000 units in a 30-day month and 3,100 in a 31-day month may have nearly identical average daily sales. Comparing raw monthly totals can manufacture apparent growth. Daily sales per working day may be the more useful target.
+
+For positive data, logs compress large values and may make multiplicative seasonal swings more stable. The Box–Cox family includes log as the limit near lambda = 0. A transformation is not a guarantee of stationarity, and the transformed forecasts must be mapped back to the original units carefully.
+
+::::
+
+
+#### Q10. What is time-series decomposition, and when is an additive versus multiplicative model appropriate?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Additive decomposition writes observed values as trend plus seasonal plus remainder. Multiplicative decomposition represents the observed value as their product, often useful when seasonal amplitude grows with the level.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+With an additive model, December sales may be consistently about 200 above an annual trend. With a multiplicative model, December sales may be consistently 20% above trend—so the absolute seasonal swing grows as the business grows.
+
+The log of a positive multiplicative series converts products to sums and often makes additive-style decomposition convenient. Inspect actual plots before choosing a representation; not every series supports a meaningful multiplicative decomposition (particularly around zero or with negative values).
+
+$$y_t=T_t+S_t+R_t,\qquad y_t=T_tS_tR_t$$
+
+::::
+
+
+#### Q11. What is STL decomposition, and how does it improve on classical decomposition?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+STL uses locally weighted regression to estimate trend and seasonal components flexibly. Compared with classical fixed-seasonal decomposition, it can accommodate seasonal patterns that change gradually over time and offers robust fitting options.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine a shopping website whose holiday peak has grown from 10% above normal demand to 25% above normal demand over five years. Classical decomposition may treat December's effect as constant. STL can estimate an evolving seasonal component from local neighborhoods of observations.
+
+STL itself is primarily a decomposition technique, not automatically a complete forecasting model. You can forecast the seasonally adjusted remainder/trend using another method, then reconstruct forecasts. With multiple seasonalities (for example hourly plus weekly), consider suitable multi-seasonal approaches.
+
+::::
+
+
+#### Q12. What is a centered moving average, and why do you use 2×12 moving averages for monthly data?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A centered moving average smooths short-term variation symmetrically around a time point. For an even seasonal period such as 12, applying a two-term moving average to a 12-term moving average centers the estimate.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A 12-month average spans an even number of observations, so its center falls *between* two months. Averaging adjacent 12-month averages produces a 2×12 moving average centered on an actual month.
+
+This helps estimate a trend-cycle for decomposition. However, centered moving averages use future observations relative to the central month; they are fine for retrospective analysis but cause leakage if used as features for real-time forecasting at that same month. Do not confuse a smoothing moving average with the MA(q) stochastic model in ARIMA.
+
+::::
+
+
+#### Q13. How do you distinguish stationary from nonstationary processes?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A weakly stationary process has a constant mean, finite time-invariant variance, and autocovariance that depends only on lag. A nonstationary process violates at least one of these conditions.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A stable AR(1) process fluctuating around a fixed level can be stationary. A random walk usually is not: a shock has a permanent effect, and uncertainty about its level grows over time. A series with deterministic upward trend is also nonstationary in levels, although detrending may create a stationary residual.
+
+Many forecasting approaches can handle nonstationarity directly, including models with explicit trends, differencing, and state-space components. Therefore, stationarity is not a universal prerequisite for forecasting; it is an assumption required for particular modeling and inference tools.
+
+::::
+
+
+#### Q14. What is the difference between stochastic trend and deterministic trend?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A deterministic trend is a predictable function of time around which disturbances may be stationary. A stochastic trend contains accumulating random shocks, such as a unit root, so simple detrending does not remove it.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Consider series A: $y_t=100+2t+u_t$ with stationary noise $u_t$. Removing the deterministic line leaves stable fluctuations. Series B: $y_t=y_{t-1}+\varepsilon_t$ is a random walk. Subtracting a straight line does not remove the accumulation of past shocks.
+
+Using the wrong treatment can distort long-term forecasts. Trend-stationary series may return toward a fixed trajectory after a shock, while a unit-root series can experience a lasting level change.
+
+::::
+
+
+#### Q15. What do the ADF and KPSS tests actually test?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+ADF typically tests the null of a unit root. KPSS tests the null of level or trend stationarity, depending on the specification. Neither test alone proves stationarity or nonstationarity.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For ADF, a sufficiently small p-value supports rejecting a unit-root null *for the specified deterministic terms and lag structure*. KPSS works in the opposite direction: a small p-value challenges the stationarity null. ADF may have low power against near-unit-root behavior; KPSS may reject because of breaks or model misspecification.
+
+**Example:** If ADF fails to reject while KPSS rejects level stationarity, differencing deserves investigation. But do not automatically difference: first inspect plots, possible deterministic trends, seasonality, structural breaks, and the stationarity assumptions implied by the question.
+
+**Python illustration — the null hypotheses go in opposite directions:**
+
+```python
+import numpy as np
+from statsmodels.tsa.stattools import adfuller, kpss
+
+rng = np.random.default_rng(42)
+shocks = rng.normal(size=300)
+random_walk = np.cumsum(shocks)  # Typically I(1)
+
+adf_p = adfuller(random_walk, regression="c")[1]
+kpss_p = kpss(random_walk, regression="c", nlags="auto")[1]
+print(f"ADF p-value: {adf_p:.3f}")
+print(f"KPSS p-value: {kpss_p:.3f}")
+```
+
+ADF asks whether a **unit root** can be rejected; KPSS asks whether **level stationarity** can be rejected. A p-value is not the probability the null hypothesis is true. `statsmodels` may warn that an extreme test statistic lies outside its tabulated p-value range; in that case, the printed p-value is a bound rather than an exact tail probability. Interpretation still depends on the regression specification, sample length, and possible breaks.
+
+
+::::
+
+
+#### Q16. What is the Ljung–Box test and how should you interpret it?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+The Ljung–Box test evaluates whether a group of autocorrelations up to a chosen lag is jointly zero. A small p-value suggests residual serial correlation; a large p-value means the test did not find sufficient evidence against that null.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a monthly model leaves visible spikes at lags 1 and 12. A Ljung–Box test at a relevant set of lags may identify systematic residual dependence. The lag choice matters, as does accounting for fitted ARMA parameters where appropriate.
+
+There is no universal rule that a p-value *must* exceed 0.10. Failing to reject does not prove residuals are independent or Gaussian. Examine residual ACF plots, time plots, squared residuals, and forecast errors alongside the test.
+
+::::
+
+
+#### Q17. Why can two unrelated trending series have a misleading regression relationship?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Common stochastic or deterministic trends can generate high R-squared and apparently significant coefficients even when the variables have no meaningful causal relationship. This is known as spurious regression.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose two independent random walks both drift upward over ten years. Regressing one on the other may show a large t-statistic and a high R-squared. Ordinary regression standard errors assume conditions that the nonstationary residuals may violate.
+
+A sensible workflow tests the integration properties, checks domain theory, and distinguishes relationships in levels from relationships in changes. If the variables share a valid cointegrating relationship, a levels term may be meaningful; if not, use appropriate transformations or dynamic models rather than trusting the levels regression.
+
+::::
+
+
+### Hard (4)
+
+
+#### Q18. What is the difference between a structural break, a regime switch, and ordinary random noise?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A structural break is a persistent change in model parameters; a regime-switching process moves between distinct states; ordinary noise creates temporary deviations without changing the underlying relationship.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A housing-market model trained during years of low mortgage rates may behave differently after a sharp policy-rate increase. A single month's unusual sales is noise; a long-lasting change in the relationship between rates and purchases is a structural break. A market alternating between high- and low-volatility states may be modeled with regimes.
+
+Diagnostics include rolling coefficients, residual monitoring, breakpoint tests, and out-of-time validation. Reacting to every surprising observation as a structural break leads to overfitting; ignoring durable changes leads to stale forecasts.
+
+::::
+
+
+#### Q19. What is conditional heteroskedasticity and when might ARCH/GARCH help?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Conditional heteroskedasticity means the conditional variance changes over time. ARCH/GARCH models describe that changing volatility, often useful for financial returns or other volatility-clustered data.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Daily financial returns may have almost no autocorrelation in their mean, yet large moves cluster together. An AR model for the mean does not explain this. A simple GARCH model makes today's conditional volatility depend on past squared shocks and past volatility.
+
+The key distinction is between predicting the **level/mean** and predicting the **uncertainty/variance**. A good mean forecast can still yield poorly calibrated risk intervals if volatility dynamics are ignored.
+
+::::
+
+
+#### Q20. Can a series have multiple seasonal periods and why is ordinary SARIMA sometimes insufficient?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Yes. Hourly demand can have daily and weekly patterns simultaneously. A single SARIMA seasonal period may not capture multiple long seasonalities efficiently.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Electricity demand at 6 p.m. differs from 3 a.m. and also differs between weekdays and weekends. In hourly data, seasonal periods 24 and 168 both matter. One ordinary SARIMA seasonal component may capture only one of them directly, and high-order seasonal lags can be expensive or unstable.
+
+Alternatives include Fourier features for each relevant period, dynamic harmonic regression, TBATS-like multi-seasonal models, or ML models with carefully engineered calendar features. Evaluate each approach in genuine temporal backtests.
+
+::::
+
+
+#### Q21. Why can aggregation change autocorrelation and apparent predictability?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Aggregation changes the scale, signal-to-noise ratio, and dependence structure; monthly averages or totals can behave very differently from the underlying daily series.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose daily housing transactions are erratic due to individual closings. Monthly totals smooth some variation, making trends appear stronger; however, fewer time points remain for estimation. Monthly *sums* also vary with the number of days, while monthly *averages* do not in the same way.
+
+For multilevel data, aggregation can conceal regional differences or create Simpson's paradox. Define the forecasting target at the level where the decision is made, and do not assume a model validated at the national level is accurate for individual cities.
+
+::::
+
+
+## Forecasting & Model Evaluation
+
+**20 questions** · Easy → Medium → Hard
+
+
+### Easy (5)
+
+
+#### Q01. How do MAE, MSE, and RMSE compare?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+MAE averages absolute errors, MSE averages squared errors, and RMSE is the square root of MSE. Squaring penalizes large mistakes more heavily, while MAE is often easier to interpret.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose three weekly forecasts have errors of +1, -2, and +9. MAE is $(1+2+9)/3=4$ units. MSE is $(1+4+81)/3\approx 28.7$ squared units, and RMSE is about 5.35 units.
+
+For a point forecast under squared-error loss, the conditional mean is optimal. Under absolute-error loss, the conditional median is optimal. Therefore, the business cost of a large miss determines whether MAE or RMSE is the more useful headline metric; neither is universally best.
+
+::::
+
+
+#### Q02. What is a prediction interval, and how does it differ from a confidence interval?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A prediction interval describes uncertainty about a future observation; a confidence interval describes uncertainty about an estimated parameter or conditional mean. Prediction intervals usually must account for future noise as well as estimation uncertainty.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose we estimate average next-month appreciation to be 0.3%. A confidence interval might quantify uncertainty about the true expected rate. A 95% prediction interval might instead cover a much wider range, such as -1.2% to +1.8%, because future housing prices can move unpredictably even if the mean is estimated precisely.
+
+Prediction intervals should be evaluated by their *coverage*: among many comparable forecasts, about 95% of future realizations should land inside nominal 95% intervals, subject to the stated assumptions.
+
+::::
+
+
+#### Q03. Why should you not use a random 80/20 split in most forecasting problems?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A random split mixes past and future and can leak future information into model training. Use chronologically ordered holdouts and rolling-origin backtesting instead.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If your model is supposed to forecast January 2027 using information available in December 2026, it is not valid to train on February 2027 rows while evaluating January 2027. Random k-fold cross-validation frequently does exactly this.
+
+A simple chronological split keeps earlier data for training and later data for testing. Multiple rolling-origin splits are better when you need a robust assessment across different market conditions. Some specialist methods allow other split schemes under strong assumptions, but random k-fold should not be the default for temporal forecasting.
+
+::::
+
+
+#### Q04. What is the difference between one-step-ahead and multi-step-ahead forecasting?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A one-step forecast predicts the next observation. An h-step forecast predicts h periods into the future; it often faces greater uncertainty and may require forecasting intervening variables.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Forecasting next month's HPA is different from forecasting the next 12 monthly HPA observations. The 12-step forecast may accumulate uncertainty and rely on future paths of interest rates and economic conditions.
+
+A model can score well on one-step-ahead predictions while performing poorly at twelve months. Always align evaluation with the operational horizon, and report errors by horizon rather than treating every prediction as interchangeable.
+
+::::
+
+
+#### Q05. What is the difference between ex-ante and ex-post forecasts?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+An ex-ante forecast uses only information genuinely available at the forecast origin. An ex-post forecast may use later-realized predictor values and is useful for conditional analysis, not an honest real-time performance claim.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose you predict next-quarter home prices using next-quarter mortgage rates. In January, you do not know the realized March rate. A forecast using the realized March rate is **ex post** unless the March value had actually been fixed and known beforehand.
+
+Such a forecast might show how the price model would have performed with perfect rate information, but it overstates a deployed system's accuracy. For ex-ante testing, forecast the rate separately or specify a rate scenario. This distinction is especially important in economic forecasting.
+
+::::
+
+
+### Medium (8)
+
+
+#### Q06. What is expanding-window versus rolling-window cross-validation?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Expanding-window validation retains all available past history at each origin. Rolling-window validation keeps a fixed-length recent history and discards older observations.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For monthly data: the first expanding split might train on 2015–2020 and validate on 2021; the next trains on 2015–2021 and validates on 2022. A five-year rolling window would instead train on 2017–2021 for the 2022 test.
+
+An expanding window uses more data and can reduce estimation noise. A rolling window may respond better to changes in market structure. Set the origin spacing and window length to mimic how often the model is actually refit in production.
+
+::::
+
+
+#### Q07. What is a forecast horizon, and why should the score be reported separately by horizon?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+The horizon is how far into the future the target lies relative to the information cutoff. The forecast error distribution and the ranking of models can differ by horizon.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+An AR model may predict the next month's sales very well from recent observations. A model with economic indicators might be better for twelve-month forecasts. Pooling all errors into one RMSE can hide this difference.
+
+For backtesting, construct a table with forecast origins as rows and horizons as columns. Compare $h=1$, $h=3$, $h=6$, and $h=12$ separately, then apply business-relevant weighting if a combined metric is required.
+
+::::
+
+
+#### Q08. What are MAPE, sMAPE, and MASE, and when can they mislead?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+MAPE divides absolute error by actual magnitude and is unstable near zero. sMAPE is a modified relative error with its own weaknesses. MASE scales MAE by the in-sample error of a naïve benchmark, enabling comparisons across series.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If actual sales are 1 and you forecast 3, the absolute percentage error is 200%. If actual sales are zero, MAPE is undefined. Negative or near-zero targets such as monthly appreciation make MAPE especially troublesome.
+
+MASE uses a training-sample benchmark scale rather than dividing by each realized outcome. It can be more reliable for comparing different markets, although it still requires a sensible denominator and correct seasonal benchmark. For house-price appreciation, MAE in percentage points is often the clearest business metric.
+
+::::
+
+
+#### Q09. How do you select the best model when AIC prefers one model but backtest RMSE prefers another?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Choose according to the stated goal. AIC estimates relative information loss within a likelihood-based candidate family, whereas out-of-sample RMSE measures actual forecasting performance under squared-error loss.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a SARIMA model has lower AIC on the training data, but an ETS model has consistently lower six-month forecast RMSE across several validation origins. If six-month accuracy is the business objective, the ETS model is the stronger choice.
+
+AIC, AICc, and BIC can narrow candidate specifications without costly full backtests. They are not substitutes for honest external validation, and should not be compared mechanically across models fit to incomparable transformed targets or data windows.
+
+::::
+
+
+#### Q10. Why are AICc and BIC used, and how do they differ from AIC?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+AIC penalizes model complexity; AICc adds a finite-sample correction; BIC generally penalizes additional parameters more heavily as sample size grows.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+ARIMA(2,1,2) can fit training data better than ARIMA(1,1,0), but its extra parameters risk fitting noise. Information criteria trade off fit and complexity. AICc is often preferred when the sample is small relative to the number of fitted parameters.
+
+BIC may select a simpler model, especially with many observations. None guarantees the best forecast under the target horizon and loss. Use comparable likelihoods and appropriate sample definitions, then backtest the shortlisted models.
+
+::::
+
+
+#### Q11. How do you inspect whether a forecasting model has left useful signal in its residuals?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Check residuals over time, their mean and spread, the ACF, and relevant portmanteau tests such as Ljung–Box. Also examine large errors by season and forecast horizon.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If residual ACF spikes at lag 12 in monthly data, the model probably missed annual seasonality. A persistent positive residual mean means the model tends to underpredict. Outliers confined to recession months suggest structural instability.
+
+The ideal mean-model residual is unpredictable, not necessarily perfectly Gaussian. Normality and constant variance can be useful for simple analytic intervals, but well-calibrated intervals may require modeling conditional volatility, bootstrap procedures, or robust methods.
+
+::::
+
+
+#### Q12. How do residual bootstrap prediction intervals work?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Draw shocks from appropriately diagnosed historical residuals, simulate future paths recursively, and take quantiles of the simulated outcomes at each horizon.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine forecasting twelve months of sales. First fit the model on historical data and obtain residuals. For each simulated future, randomly sample plausible future shocks and feed them through the model's recursion. Repeat this many times, then take, for example, the 2.5th and 97.5th percentiles at each horizon.
+
+This method assumes sampled historical residuals represent future shocks sufficiently well. If residuals are autocorrelated, heteroskedastic, or structurally changing, naïve independent residual sampling can be wrong. Use a bootstrap design that respects the model and temporal dependence when needed.
+
+::::
+
+
+#### Q13. Why is taking the exponential of a log forecast not always an unbiased level forecast?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Exponentiating an estimate of the conditional mean of log Y typically gives a conditional median or geometric-mean-type prediction, not the arithmetic conditional mean of Y. A retransformation adjustment may be needed.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If $Z=\log Y$ is normally distributed with conditional mean $\mu$ and variance $\sigma^2$, then $\exp(\mu)$ is the conditional median of $Y$, while $E[Y]=\exp(\mu+\sigma^2/2)$. With variance 0.04, the arithmetic mean is about 2% above the naïve exponentiated log mean.
+
+For house-price forecasts, be explicit whether your target is the mean index level, median scenario, or a quantile. Bias corrections must match the assumed error distribution; smearing estimators are another option.
+
+::::
+
+
+### Hard (7)
+
+
+#### Q14. What are probabilistic calibration, interval coverage, and sharpness?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Calibration asks whether forecasted probabilities match realized frequencies; coverage asks how often realized values fall inside intervals; sharpness rewards intervals that are narrow *subject to* adequate calibration.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If you issue 100 nominal 90% prediction intervals, around 90 future outcomes should be covered in the long run. An interval from negative infinity to positive infinity has excellent coverage but zero usefulness. That is why coverage must be assessed alongside average interval width.
+
+Plot empirical coverage by horizon and region. A model can be well calibrated for one-month forecasts but severely overconfident at twelve months, especially during recessions or housing-market reversals.
+
+::::
+
+
+#### Q15. What are quantile forecasts and pinball loss?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A quantile forecast targets a specified conditional percentile. Pinball loss evaluates quantile forecasts by asymmetrically penalizing errors above and below the predicted quantile.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For risk management, the 10th percentile of next year's housing-price growth may matter more than the average. Pinball loss for quantile level $\tau$ is $\rho_\tau(e)=e(\tau-\mathbf{1}\{e<0\})$, where $e=y-\hat q_\tau$.
+
+At $\tau=0.9$, underpredicting the realized outcome gets more weight than overpredicting. Different quantile targets serve different decisions. When forecasting multiple percentiles, also check that lower forecast quantiles never exceed higher forecast quantiles.
+
+::::
+
+
+#### Q16. What is the Diebold–Mariano test, and when would you use it?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+The Diebold–Mariano test compares expected predictive loss between two forecast methods using a sequence of paired forecast loss differences, with dependence-aware variance estimation.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose ARIMA and XGBoost each forecast the same 60 months. Compute monthly differences in squared errors, such as $d_t=e^2_{ARIMA,t}-e^2_{XGB,t}$. The null is that the mean loss difference is zero under appropriate regularity conditions.
+
+The loss differential can be serially correlated, especially with overlapping multi-step forecasts, so a plain independent-sample t-test is often inappropriate. A statistically significant result is not automatically economically important. Check whether one model's gain justifies extra complexity and maintenance.
+
+::::
+
+
+#### Q17. How should you construct prediction intervals with a known lower bound such as zero?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use a modeling strategy consistent with the support of the target: log or other appropriate transforms, count distributions, constrained forecasts, or simulation models. Do not rely solely on clipping negative predictions to zero.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Sales and mortgage prepayments cannot be negative. A normal interval around a low mean might extend below zero. A log-scale model can enforce positive predictions, but cannot represent true zeros without an additional strategy. Count models such as Poisson or negative binomial may be appropriate for counts, while zero-inflated or hurdle models can handle excess zeros.
+
+Clipping intervals post hoc may destroy nominal coverage. Evaluate realistic constraints and calibration after any transformation or correction.
+
+::::
+
+
+#### Q18. How do model combination and forecast ensembles improve robustness?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Combining forecasts can reduce dependence on any single model's errors, especially when constituent models make different mistakes. Simple averages are strong baselines but improvement is not guaranteed.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A seasonal naïve model may respond quickly to recent movements; a dynamic regression may respond to macroeconomic scenarios; a gradient-boosted model may capture nonlinearities. An average can be more stable than any individual forecast if their errors are sufficiently different.
+
+A common mistake is optimizing ensemble weights on the final test period. Tune weights on earlier rolling-origin validation, then assess the locked combination on a genuinely later holdout. Track interval calibration too: combining point forecasts does not automatically produce valid predictive intervals.
+
+::::
+
+
+#### Q19. What are conformal prediction intervals for time series, and what is the main challenge?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Conformal prediction calibrates intervals using empirical forecast errors. Standard exchangeability-based finite-sample guarantees do not directly hold for serially dependent and nonstationary time series.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+You can train a model on older data, collect absolute errors on a later calibration window, then add a suitable high quantile of those errors around new predictions. This is intuitive and model-agnostic.
+
+However, forecasting errors may change across seasons, horizons, and volatility regimes. Methods for time series may use rolling calibration, horizon-specific scores, or dependence-aware assumptions. Do not claim an exact 90% finite-sample marginal guarantee merely because you used ordinary conformal prediction on dependent observations.
+
+::::
+
+
+#### Q20. What is a Fourier term, and how can it model long seasonal patterns?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Fourier terms are sine and cosine functions with specified periods and frequencies. They approximate smooth repeating seasonal patterns without requiring many seasonal dummy or autoregressive coefficients.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For daily demand with annual seasonality, terms such as $\sin(2\pi t/365.25)$ and $\cos(2\pi t/365.25)$ model a smooth yearly cycle. Additional harmonics allow more complicated seasonal shapes. Include weekly Fourier terms if weekly effects also matter.
+
+You can place Fourier features in a regression or dynamic regression with ARIMA errors. Higher harmonic counts fit more detail but may overfit. Model holidays separately when the timing or shape is not well represented by smooth periodic functions.
+
+::::
+
+
+## ARIMA, SARIMA & Dynamic Regression
+
+**21 questions** · Easy → Medium → Hard
+
+
+### Easy (6)
+
+
+#### Q01. What is an autoregressive AR(p) model?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+An AR(p) model predicts the current value using p lagged values of the same series and a new disturbance. For stationarity, the autoregressive parameters must satisfy appropriate root conditions.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+The simplest example is $y_t=c+\phi y_{t-1}+\varepsilon_t$. If $\phi=0.7$, a value that is temporarily high tends to remain partly high next period, but the deviation decays over time. If $\phi=1$, the model is a random walk rather than a stable mean-reverting AR(1).
+
+In an AR(p), p counts the number of autoregressive lags, not the number of fitted parameters overall. The order can be suggested by PACF patterns and compared using likelihood-based criteria and time-ordered validation.
+
+::::
+
+
+#### Q02. What is an MA(q) model, and how is it different from moving-average smoothing?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+An MA(q) stochastic model expresses the current value as a mean plus current and q past random shocks. Moving-average smoothing instead averages observed data points to reveal a trend.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+An MA(1) can be written $y_t=\mu+\varepsilon_t+\theta\varepsilon_{t-1}$. Last month's unexpected shock still affects this month's outcome, but older shocks do not enter directly. In a 12-month moving-average smoother, we average observations from a 12-month window.
+
+The two techniques share a name but model different objects: one uses unobserved innovations, the other observed values. This is among the most frequent ARIMA interview traps.
+
+::::
+
+
+#### Q03. What do the three numbers in ARIMA(p,d,q) mean?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+p is the autoregressive order, d is the number of ordinary differences, and q is the moving-average innovation order. ARMA dynamics are modeled for the differenced series.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For ARIMA(1,1,1), first calculate $\Delta y_t=y_t-y_{t-1}$. Then model that differenced series using one autoregressive lag and one moving-average lag of innovations.
+
+Differencing targets stochastic trends; it does not automatically remove changing seasonality or variance instability. Values of d above 1 are sometimes appropriate, but excess differencing usually harms interpretability and forecasting accuracy.
+
+::::
+
+
+#### Q04. How do ordinary differencing and seasonal differencing differ?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Ordinary differencing subtracts the previous observation: $\Delta y_t=y_t-y_{t-1}$. Seasonal differencing subtracts the observation one seasonal period earlier: $\Delta_m y_t=y_t-y_{t-m}$.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If monthly December sales repeatedly exceed November sales, ordinary differencing may still preserve much of the annual seasonal dependence. Seasonal differencing with $m=12$ compares this December directly with last December.
+
+For a series with both a stochastic trend and seasonal unit roots, you may need both types. But automatic repeated differencing is dangerous: diagnose whether remaining patterns are stochastic seasonality, deterministic calendar effects, or breaks.
+
+::::
+
+
+#### Q05. What does SARIMA(p,d,q)(P,D,Q)m mean?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+SARIMA extends ARIMA with seasonal autoregressive order P, seasonal differencing D, seasonal moving-average order Q, and seasonal period m.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A monthly model $SARIMA(0,1,1)(0,1,1)_{12}$ has one nonseasonal difference, one annual seasonal difference, one ordinary MA term, and one seasonal MA term. This is a useful starting model for some monthly economic series—not a universal choice.
+
+The uppercase seasonal terms operate at multiples of the seasonal lag. For example, a seasonal MA(1) at $m=12$ incorporates the innovation from twelve months earlier.
+
+::::
+
+
+#### Q06. What is a random walk, and what forecast does it imply?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A random walk satisfies $y_t=y_{t-1}+\varepsilon_t$; with zero-mean shocks, its conditional point forecast is the latest observed value for every future horizon.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine an index currently at 240. If shocks average zero and there is no drift, the best mean forecast of the level for next month or six months later is 240. That does *not* mean six-month outcomes are tightly concentrated around 240—uncertainty typically grows with the horizon.
+
+A random walk with drift, $y_t=c+y_{t-1}+\varepsilon_t$, instead forecasts $y_{T+h}$ as $y_T+hc$. The drift must be estimated carefully and can be unstable under structural changes.
+
+::::
+
+
+### Medium (9)
+
+
+#### Q07. How are the ACF and PACF used to select candidate AR and MA orders?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+For ideal stationary AR(p), the PACF may cut off after lag p while the ACF tails off. For ideal MA(q), the ACF may cut off after lag q while the PACF tails off. These are heuristics, not guarantees.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If a detrended, stationary series shows a sharp PACF spike at lag 1 and a smoothly decaying ACF, try AR(1). If the ACF has a sharp cutoff near lag 2 and the PACF decays, try MA(2).
+
+Finite-sample noise, seasonal patterns, measurement error, and mixed ARMA processes often make plots ambiguous. Use these diagnostics to propose candidates, then check AICc/BIC, parameter stability, residual behavior, and rolling-origin forecast accuracy.
+
+::::
+
+
+#### Q08. Why do ARIMA forecasts set unknown future innovations to zero?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+For a mean forecast, unknown future innovations are replaced by their conditional expectation, which is zero under the correctly specified innovation model.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+At time T you know past observations and estimated past innovations. You do not know next month's random shock. Under a zero-mean white-noise assumption, the expected future shock is zero. This permits recursive multi-step forecasts.
+
+For prediction intervals or scenario simulation, however, you should *not* set shocks to zero. Instead, represent their uncertainty and propagate it through the model. Point forecasting and uncertainty forecasting answer different questions.
+
+::::
+
+
+#### Q09. What are invertibility and stationarity in ARMA models?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Stationarity controls the long-run behavior of the autoregressive component. Invertibility ensures the moving-average innovations can be recovered consistently from the observed process; both involve polynomial root conditions.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For AR(1), $|\phi|<1$ ensures weak stationarity under standard conditions. For MA(1), $|\theta|<1$ is an invertibility condition under the common $1+\theta B$ convention. A noninvertible MA representation can describe the same autocovariances as an invertible counterpart, making parameters difficult to identify uniquely.
+
+In higher-order models, examine roots of the AR and MA lag polynomials rather than checking that every individual coefficient lies below one in magnitude.
+
+::::
+
+
+#### Q10. How do you choose p, d, and q systematically?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+First diagnose trend, integration order, and seasonality; choose a defensible differencing order; use ACF/PACF to propose p and q; compare candidate fits; then validate residuals and future forecast performance.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A practical sequence is: (1) plot the series, (2) consider transformations or calendar adjustments, (3) choose d using plots, domain knowledge, and tests such as ADF/KPSS, (4) propose candidate orders via ACF/PACF, (5) use AICc for comparable candidates, and (6) run rolling-origin backtests.
+
+Do not choose d solely by minimizing AIC across improperly comparable transformations or by repeatedly running KPSS until it becomes nonsignificant. You want the simplest model whose residual and forecast behavior satisfy the application.
+
+::::
+
+
+#### Q11. How do you choose P, D, and Q in seasonal ARIMA?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Inspect seasonal structure at multiples of m, consider whether seasonal differencing is justified, then compare plausible seasonal AR and MA terms using information criteria, residual diagnostics, and forecast backtests.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For monthly data, a seasonal PACF spike at lag 12 can suggest a seasonal AR term; a seasonal ACF spike at 12 can suggest a seasonal MA term. But these signatures are clearest for simple theoretical processes, not every real-world series.
+
+**Example:** If the differenced monthly series still has annual dependence, try several parsimonious configurations such as SARIMA(0,1,1)(0,1,1,12) and SARIMA(1,1,0)(1,0,0,12). Favor the model that remains stable and forecasts better, not simply the one whose ACF plot looks most familiar.
+
+::::
+
+
+#### Q12. What is dynamic regression with ARIMA errors?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Dynamic regression models $y_t$ using explanatory variables, with the remaining error term following an ARIMA-type process. This captures both covariate effects and residual serial dependence.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For monthly home-price appreciation, a regression might use past mortgage-rate changes, unemployment, and seasonality. Yet residuals may still be correlated month to month. Modeling the error term with ARMA or ARIMA dynamics can improve efficiency and forecasts if correctly specified.
+
+One representation is $y_t=\beta_0+\beta'X_t+\eta_t$, where $\eta_t$ follows an ARIMA process. Do not automatically difference every predictor whenever one variable is nonstationary; think about integration order, cointegration, and the economic relationship before choosing a specification.
+
+::::
+
+
+#### Q13. How are intervention variables and distributed lags used in time-series regression?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A pulse indicator represents a temporary event; a step indicator represents a lasting shift; distributed lags allow a predictor's effect to occur gradually over several periods.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A one-week system outage is a pulse shock. A permanent tax policy change can be modeled with a step starting at the implementation date. An advertising campaign may affect purchases today and next month, so include current and lagged advertising or use a constrained lag response.
+
+If you use an intervention dummy to explain historical outcomes, label the analysis descriptive unless a valid causal identification design supports a treatment interpretation. An intervention is not automatically exogenous merely because it starts on a known date.
+
+::::
+
+
+#### Q14. What is an ARIMAX or SARIMAX model, and what is the practical challenge with future X variables?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+ARIMAX/SARIMAX adds exogenous regressors to ARIMA/SARIMA dynamics. Forecasts require future values of the regressors or explicit scenarios for them.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+To forecast home prices for the next six months, SARIMAX might include mortgage rates and unemployment. If those future rates are unknown, you must forecast them, condition on scenarios, or restrict the model to predictors available at the decision time.
+
+A common data leakage error is to use *realized* future unemployment in backtests, while claiming the forecast was issued six months earlier. Store predictor vintages or reconstruct the data that existed at each forecast origin.
+
+**Python example — supplying future exogenous values:**
+
+```python
+import numpy as np
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+
+rng = np.random.default_rng(7)
+months = np.arange(144)
+rate = 4.0 + 0.5 * np.sin(months / 9)
+sales = (100 + 2 * rate + 8 * np.sin(2 * np.pi * months / 12)
+         + rng.normal(0, 3, size=144))
+
+model = SARIMAX(sales, exog=rate[:, None],
+                order=(1, 0, 0), seasonal_order=(1, 0, 0, 12),
+                trend="c", enforce_stationarity=False,
+                enforce_invertibility=False)
+fit = model.fit(disp=False, maxiter=250)
+future_rate_scenario = np.array([[4.1], [4.0], [3.9]])
+forecast = fit.get_forecast(steps=3, exog=future_rate_scenario)
+print(forecast.predicted_mean)
+```
+
+The rate values here are **assumed scenarios**, not known future observations. In a historical backtest, replace them with scenarios or forecasts that really existed at that historical origin.
+
+
+::::
+
+
+#### Q15. What does forecast uncertainty look like for a random walk?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+With independent innovations of variance $\sigma^2$, the h-step forecast error variance of a random walk is $h\sigma^2$, so the forecast standard deviation grows as $\sqrt{h}$.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If the innovation SD is 2 index points per month, the one-month forecast SD is 2, while the nine-month forecast SD is $2\sqrt{9}=6$. A Gaussian approximation gives corresponding 95% intervals of about ±3.92 and ±11.76 points.
+
+This illustrates why long-horizon prediction intervals tend to widen. For a stationary AR(1), by contrast, the forecast variance converges to a finite value rather than growing indefinitely.
+
+$$\operatorname{Var}(y_{T+h}-\hat y_{T+h|T})=h\sigma^2$$
+
+::::
+
+
+### Hard (6)
+
+
+#### Q16. Why is it incorrect to assert that every variable in a dynamic regression must be stationary?
+
+**Difficulty:** Hard · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Regression with nonstationary variables can be meaningful when the variables are cointegrated or when the model correctly represents integration and deterministic trends. Unrelated I(1) variables in levels can instead produce spurious relationships.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose a housing-price index and household income each trend over decades. A regression in levels may be valid if their long-run residual combination is stationary, representing a stable economic relationship. If not, ordinary levels regression t-statistics may be misleading.
+
+Blindly first-differencing *all* variables removes potential long-run equilibrium information. An error-correction or cointegrated system is often more appropriate when long-run relations are credible and supported by evidence.
+
+::::
+
+
+#### Q17. How can over-differencing harm ARIMA forecasts?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Over-differencing can inject unnecessary moving-average structure, increase forecast uncertainty, and discard informative level relationships.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If a series fluctuates around a stable mean but you first-difference it, the resulting changes may exhibit artificial negative lag-1 correlation. Model estimation becomes noisier, while long-term forecasts can drift inappropriately.
+
+Diagnostic clues include a strong negative lag-1 ACF in the differenced series, increased forecast variance, and poor out-of-sample behavior. Differencing should be justified by the stochastic properties of the data, not merely by a preference for visually flat series.
+
+::::
+
+
+#### Q18. How do ARIMA and exponential smoothing (ETS) compare?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+ARIMA describes dependence through autoregressive, differencing, and moving-average operators. ETS describes level, trend, and seasonal states updated through exponential smoothing. Either can outperform the other depending on the series.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A stable sales series with evolving level and seasonality may forecast well using an ETS state-space formulation. ARIMA may be attractive when serial dependence has a clear form or when differencing yields a parsimonious stationary process.
+
+Some simple ETS and ARIMA methods produce equivalent point forecasts under certain assumptions, but the frameworks differ in general. Compare meaningful naïve baselines, then ETS and ARIMA through time-aware evaluation instead of picking a method by popularity.
+
+::::
+
+
+#### Q19. What is a state-space model, and why is the Kalman filter useful?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A state-space model represents observations through latent evolving states and a measurement equation. The Kalman filter recursively estimates those states for linear Gaussian systems.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Imagine a monthly economic series with an underlying trend that changes slowly. The true latent trend is not observed directly; each published value is noisy. A local-level state-space model lets the trend evolve through a state innovation while connecting observed values through a measurement error.
+
+The Kalman filter sequentially combines last period's state prediction with the new observation. Extensions can handle missing observations, irregular measurements, and uncertainty propagation. Many ARIMA and exponential smoothing models have state-space representations.
+
+::::
+
+
+#### Q20. When would you use direct versus recursive multi-step forecasting?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Recursive forecasting repeatedly uses a one-step model and feeds its predictions forward. Direct forecasting trains separate models for particular horizons. Each trades data efficiency against error accumulation and flexibility.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For twelve-month HPA, a recursive model predicts month 1, then uses that prediction to predict month 2, continuing to month 12. Errors can compound. A direct $h=12$ model predicts month 12 directly from information available now, but may need more parameters and data.
+
+A multi-output model predicts several horizons jointly. Choose based on the exact prediction target and backtest all strategies at the intended horizons. Do not accidentally use realized intermediary months in a recursive backtest.
+
+::::
+
+
+#### Q21. What is the difference between ARIMA innovations and parameter uncertainty?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Innovations are unforeseeable future shocks under the model; parameter uncertainty comes from estimating unknown model coefficients from finite data. Both can influence forecast uncertainty.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Even if you knew AR(1) coefficient $\phi$ exactly, next month's random shock would create predictive spread. If you estimated $\phi$ from just 24 months of data, different plausible values of $\phi$ would yield different long-term forecasts.
+
+Standard textbook ARIMA intervals sometimes condition on estimated parameters and ignore part of model-selection or parameter uncertainty, leading to overly narrow intervals. Simulation or bootstrap approaches can propagate additional uncertainty, provided their assumptions are defensible.
+
+::::
+
+
+## Econometrics: Cointegration & ECM
+
+**23 questions** · Easy → Medium → Hard
+
+
+### Easy (4)
+
+
+#### Q01. What is a unit root and why does it matter in economic time series?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A unit root is an autoregressive root on the unit circle, typically yielding a stochastic trend. Shocks can have persistent effects, and standard stationary-model inference may be invalid in levels.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For $y_t=\phi y_{t-1}+\varepsilon_t$, $\phi=1$ produces a random walk: a one-time positive shock shifts the entire future path. With $|\phi|<1$, the effect dies out over time under standard assumptions. With $|\phi|>1$, the simple AR(1) is explosive.
+
+Do not confuse a unit root with an unusually high but stationary persistence such as $\phi=0.98$. Distinguishing them can be difficult in short macroeconomic samples, and the forecast implications are very different.
+
+::::
+
+
+#### Q02. What does I(1) mean, and how is it different from I(0)?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+An I(0) series is stationary under the relevant assumptions; an I(1) series is nonstationary in levels but becomes I(0) after first differencing.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+The log of a house-price index might be approximately I(1) over some period, while its monthly log growth can be closer to I(0). This is an empirical approximation, not a universal law: structural breaks and evolving volatility complicate the classification.
+
+Economists distinguish these orders because combining unrelated I(1) series in an ordinary levels regression can produce spurious correlations, while combining cointegrated I(1) variables may reveal meaningful long-run relations.
+
+::::
+
+
+#### Q03. What is cointegration?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Two or more nonstationary variables are cointegrated if some nontrivial linear combination of them is stationary, indicating a stable long-run relationship under suitable assumptions.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose log house prices and log household income both contain stochastic trends. If $u_t=\log(HPI_t)-\beta\log(Income_t)$ is stationary, their relative long-run deviation tends to revert, even though the levels themselves may not.
+
+Cointegration is stronger than correlation and weaker than causation. It can motivate an error-correction model, but it does not establish that income causally drives home prices or identify the direction of adjustment without further assumptions.
+
+::::
+
+
+#### Q04. What is an error-correction model (ECM)?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+An ECM models short-run changes in a variable while including a lagged deviation from a long-run equilibrium. The error-correction term links temporary movements with longer-run adjustment.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose long-run house prices depend on income and mortgage rates. If prices are temporarily above the fitted equilibrium, next month's price growth may be lower as the gap closes. A typical ECM includes lagged growth, changes in economic indicators, and the previous period's equilibrium residual.
+
+In a common sign convention, a negative adjustment coefficient indicates correction when prices are above equilibrium. Its sign is not a mathematical law; it depends on how you define the gap, which variable adjusts, and whether the relationship is stable.
+
+::::
+
+
+### Medium (11)
+
+
+#### Q05. What is the Engle–Granger two-step approach?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+First estimate a candidate long-run relationship among I(1) series; then test whether the fitted residual is stationary using a cointegration-appropriate test. If cointegration is supported, fit an ECM for short-run adjustment.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Estimate $\log(HPI_t)=c+\beta\log(Income_t)+u_t$. Test whether $\hat u_t$ appears stationary. Because $\hat u_t$ is an **estimated residual**, the unit-root test's null distribution differs from an ordinary ADF test on a directly observed series: use Engle–Granger critical values or a dedicated cointegration-test routine.
+
+The procedure has limitations, including sensitivity to which variable is the dependent variable and inability to represent several cointegrating vectors in a larger system. Johansen methods or VECMs can be more useful with multiple interdependent economic variables.
+
+::::
+
+
+#### Q06. Write an ECM for house-price growth and explain every term.
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A basic specification is $\Delta p_t=\alpha(p_{t-1}-\beta'x_{t-1}-c)+\sum_i\phi_i\Delta p_{t-i}+\sum_j\gamma_j'\Delta x_{t-j}+\varepsilon_t$, where the level gap captures long-run disequilibrium and differenced terms capture short-run effects.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Let $p_t=\log(HPI_t)$ and $x_t$ include log income and an appropriately modeled rate variable. The expression $p_{t-1}-\beta'x_{t-1}-c$ measures how far prices were above or below the estimated long-run relation last month. The coefficient $\alpha$ measures subsequent adjustment in *log-price changes*.
+
+If prices are 2% above the equilibrium log level, and $\alpha=-0.2$, the correction contribution to the next log-price change is approximately -0.4 percentage points, holding other regressors fixed. Whether this interpretation is economically credible depends on stable cointegration, exogeneity assumptions, and model diagnostics.
+
+::::
+
+
+#### Q07. Is the error-correction coefficient always negative?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+No. A negative coefficient is commonly expected when the dependent variable corrects a gap defined as its own level minus equilibrium, but the sign depends on the gap convention and on which variable adjusts.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose $EC_{t-1}=p_{t-1}-\hat p_{t-1}$ and the outcome is $\Delta p_t$. If $EC>0$ means prices are too high, a negative adjustment coefficient pushes growth down. If you instead define $EC=\hat p-p$, the same stabilizing behavior appears with a *positive* coefficient.
+
+A positive coefficient under the first convention may indicate instability, a misspecified system, or a relationship in which another variable—not prices—carries the adjustment. Never memorize a sign without writing down the actual error-correction variable.
+
+::::
+
+
+#### Q08. How do you distinguish the long-run relation from the short-run response in an ECM?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+The cointegrating coefficients describe how the long-run equilibrium level relates to economic variables. Lagged differences and contemporaneous predetermined changes describe shorter-run responses around that equilibrium.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A long-run coefficient might imply that a sustained 1% rise in income corresponds to an estimated 0.8% rise in the equilibrium house-price level, assuming the log-log form and valid relationship. A short-run coefficient could indicate that a 1% income increase this month is associated with only a 0.1% immediate price move.
+
+Long-run and short-run coefficients do not have to match. Housing supply adjusts slowly, credit conditions change, and transactions occur with delays. Avoid interpreting these coefficients causally without a credible identification strategy.
+
+::::
+
+
+#### Q09. What is Granger causality, and what does it not establish?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+X Granger-causes Y if past values of X contain incremental predictive information about Y after conditioning on Y's past and other modeled information. This is predictive precedence, not necessarily causal intervention effect.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose mortgage rates today help predict home sales next month after controlling for past sales. That is evidence of Granger predictive content. But the central bank and markets may respond to the same macroeconomic conditions that affect home sales; the relationship can reflect confounding.
+
+Lag selection, stationarity/cointegration, omitted variables, and structural change matter. An intervention changing mortgage rates need not have the same effect as the Granger regression coefficient.
+
+::::
+
+
+#### Q10. What is a VAR model, and when would an economist use it?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A vector autoregression jointly models several time series as functions of their own lags and the lags of the other variables, often for macroeconomic forecasting and dynamic analysis.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A small VAR could contain inflation, unemployment, and a policy rate. Each variable is predicted from lagged inflation, unemployment, and rates. This captures feedback across variables without asserting which variable is the fundamental cause.
+
+A reduced-form VAR does not by itself identify causal policy shocks. Structural identification—such as credible restrictions, instruments, or research designs—is required to interpret impulse responses as causal effects.
+
+::::
+
+
+#### Q11. How does a VECM differ from a VAR in differences?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A VECM is a constrained VAR representation for cointegrated I(1) variables. It includes lagged equilibrium errors so that changes respond to deviations from the long-run relation.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If house prices and income are cointegrated, a VAR of only their differences discards the stationary long-run combination. A VECM preserves that information by adding error-correction terms.
+
+In a bivariate system, both log HPI growth and log income growth may respond to an equilibrium gap, potentially with different adjustment coefficients. With multiple variables, the rank of the cointegration matrix determines the number of independent long-run relations.
+
+::::
+
+
+#### Q12. What is the difference between Johansen testing and Engle–Granger testing?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Engle–Granger is a residual-based two-step approach for a candidate cointegration relation. Johansen methods estimate and test the rank of the cointegration matrix in a multivariate VAR framework.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For house prices and income, an Engle–Granger test may be sufficient as an initial check. For house prices, income, mortgage rates, and construction supply, there could be multiple independent equilibrium relations; Johansen methods are designed for this multivariate setting.
+
+Both methods require careful deterministic-term specification, lag selection, and integration assumptions. A statistically detected cointegrating vector is not automatically a stable structural relationship or a causal equation.
+
+::::
+
+
+#### Q13. How do you select lags for Granger causality, VAR, and ECM models?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Combine domain knowledge, the forecast horizon, residual tests, and criteria such as AIC or BIC while respecting sample size and the model's integration properties.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For monthly data, responses can plausibly unfold over several months. Fit a small set of candidate lags, inspect residual autocorrelation, and test predictive performance using expanding or rolling windows.
+
+Selecting the lag that produces the smallest p-value in a Granger test after trying many lags is data snooping and inflates false positives. Prespecification, validation, or multiple-testing safeguards are needed for credible inference.
+
+::::
+
+
+#### Q14. Why can quarterly-to-monthly linear interpolation create false precision?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Interpolation produces an assumed smooth monthly path; it does not reveal actual unobserved monthly economic outcomes. Treating interpolated observations as real data can distort growth rates and standard errors.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose quarterly HPI is 100 and then 106. Linear interpolation might assign intermediate values 102 and 104, suggesting steady 2-point monthly gains. But prices may actually have fallen and then surged. The invented smooth path conceals true within-quarter volatility.
+
+Use temporal disaggregation methods with explicit constraints and relevant high-frequency indicators when monthly estimates are required. Clearly label imputed series and propagate their uncertainty. Avoid evaluating a model as if all interpolated points were independent observed data.
+
+::::
+
+
+#### Q15. How do you convert quarterly compounded growth into an equivalent constant monthly growth rate?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+If the same monthly compounded rate applies for all three months, $g_m=(1+g_q)^{1/3}-1$. This is an implied constant monthly rate, not evidence of the actual monthly path.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If a price index grew 6% over a quarter, the equivalent monthly rate is $(1.06)^{1/3}-1\approx1.96\%$. Multiplying 1.0196 by itself three times gives approximately 1.06.
+
+The monthly rates could in reality be -1%, +2%, and about +5%, with the same total quarterly growth. Converting frequency is an *assumption about within-period movements*, not a discovery of higher-frequency observations.
+
+::::
+
+
+### Hard (8)
+
+
+#### Q16. How can you simulate future paths of home-price appreciation from an ECM?
+
+**Difficulty:** Hard · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Specify future covariate scenarios, initialize the last observed level and growth states, recursively update the ECM using simulated shocks, and calculate percentiles across many simulated paths.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Start from the latest log HPI and HPA, plus a scenario for mortgage rates, income, or supply. For each Monte Carlo path, (1) compute the equilibrium gap, (2) draw a residual shock, (3) forecast the next log change, and (4) update the log index. Feed the updated level back into the error-correction term for the next month.
+
+Repeat thousands of times; summarize each horizon by mean, median, and lower and upper quantiles. If macroeconomic predictors are themselves uncertain, simulate joint predictor paths as well. Merely adding independent shocks around a fixed mean trajectory misses uncertainty that propagates through the dynamic system.
+
+::::
+
+
+#### Q17. What is the difference between a structural VAR and a reduced-form VAR?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A reduced-form VAR models statistical innovations, which can be contemporaneously correlated. A structural VAR imposes identifying restrictions to interpret particular innovations as economically meaningful shocks.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose the inflation and policy-rate equations both react to unexpected news at the same time. The residuals from the reduced-form VAR mix several underlying economic disturbances. To speak of a *monetary-policy shock*, researchers may impose ordering restrictions, sign restrictions, external instruments, or other identifying assumptions.
+
+Changing these assumptions can change impulse responses substantially. Predictive usefulness of the VAR is separate from identification of a causal shock.
+
+::::
+
+
+#### Q18. What are impulse responses and forecast error variance decomposition?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+An impulse response traces a variable's dynamic reaction to a specified innovation in a VAR or related model. Forecast error variance decomposition attributes portions of forecast uncertainty to different identified shocks.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+An impulse response might show how log house prices respond over 24 months to a one-unit policy-rate innovation. The shape depends on model parameters *and* shock identification. A reduced-form residual shock is not automatically a clean policy intervention.
+
+Variance decomposition may indicate, under a particular identification, that interest-rate shocks explain 20% of one-year forecast variation. This is a model-dependent statistical allocation, not a universal causal fact.
+
+::::
+
+
+#### Q19. Why can cointegration fail during a structural break, and what should you do?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A previously stable long-run combination can change after structural shifts in policy, technology, demographics, or market institutions. Standard constant-parameter tests may be misleading around breaks.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A house-price/income relation estimated before a large shift in mortgage underwriting may not apply afterward. Residuals may look mean-reverting in the historical estimation period but behave persistently after the policy change.
+
+Inspect rolling residuals and parameter stability, test for breaks where appropriate, and backtest across distinct regimes. A regime-sensitive model, a revised equilibrium relation, or scenario-specific forecasts may be better than mechanically extrapolating a decades-old cointegration vector.
+
+::::
+
+
+#### Q20. How do panel time-series forecasts differ from one national aggregate series?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Panel forecasting involves multiple entities observed over time. Shared factors, local heterogeneity, cross-sectional dependence, and hierarchical aggregation matter in addition to temporal dynamics.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If you forecast HPA for 50 states, their errors may be correlated because all respond to national mortgage-rate shocks. Treating each state as independent understates uncertainty. State-specific price growth can also behave differently from the national aggregate because populations, housing supply, and weights differ.
+
+A panel or hierarchical model may share strength across regions while allowing local coefficients. If national forecasts must equal a weighted aggregate of state forecasts, forecast reconciliation should be part of evaluation.
+
+::::
+
+
+#### Q21. Why are standard OLS t-tests sometimes invalid in macroeconomic time-series regressions?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Serially correlated errors, heteroskedasticity, nonstationary regressors, cointegration issues, and model-selection uncertainty can invalidate ordinary iid standard errors and conventional asymptotics.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Regressing quarterly output growth on policy rates with autocorrelated disturbances can produce underestimated standard errors if you treat each quarter as independent. HAC/Newey–West standard errors can address suitable heteroskedasticity and autocorrelation conditions in stationary regression settings.
+
+HAC adjustment cannot rescue a spurious regression of unrelated I(1) levels, identify a causal policy effect, or fix serious omitted-variable bias. Diagnose the stochastic specification first, then choose inference appropriate to the actual estimator.
+
+::::
+
+
+#### Q22. What is nowcasting, and how do you combine data observed at different frequencies?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Nowcasting estimates the current or very recent state before official data are published. Mixed-frequency models use higher-frequency indicators such as weekly claims or monthly employment to estimate quarterly outcomes.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Quarterly GDP becomes available with a lag, but monthly industrial production and weekly unemployment claims arrive sooner. A nowcast can update the current-quarter GDP estimate whenever new information is released.
+
+Methods include mixed-frequency dynamic factor models, MIDAS regressions, bridge equations, and state-space filtering. Unlike converting quarterly GDP to monthly values by simple interpolation, these methods exploit observed higher-frequency indicators and explicitly model information timing. Real-time vintage evaluation is essential: the biggest mistake is to nowcast using revised or unpublished data.
+
+::::
+
+
+#### Q23. What are local projections, and how do they differ from VAR impulse responses?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Local projections estimate a separate regression for each future horizon to trace a response to an identified shock. VAR impulse responses derive horizon paths recursively from a joint dynamic model.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose an instrument identifies an exogenous monetary-policy shock at time t. A local projection can regress GDP growth from t to t+h on the shock plus lagged controls separately for h = 0, 1, ..., 12. The resulting coefficients trace the estimated dynamic response.
+
+Local projections can be flexible and robust to some forms of dynamic misspecification but may be noisier at long horizons. Neither method creates causal identification on its own: credible shock identification and appropriate controls remain essential.
+
+::::
+
+
+## Machine Learning & Interview Cases
+
+**23 questions** · Easy → Medium → Hard
+
+
+### Easy (4)
+
+
+#### Q01. How can XGBoost or random forests be used for time-series forecasting?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Convert time series into a supervised-learning table using lagged targets, lagged predictors, calendar features, and other information known at each forecast origin. Fit the model using strictly time-ordered training and validation.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+To predict next month's sales, make features such as sales one, two, and twelve months ago; last month's advertising; the target month's known calendar month; and economic forecasts available today. A gradient-boosted tree can learn nonlinear interactions, such as strong holiday effects for certain stores.
+
+The algorithm itself does not enforce chronology. A carefully constructed feature table, realistic backtesting, and timestamp-aware preprocessing are essential. Tree models also do not necessarily extrapolate sustained growth trends well outside the training target range.
+
+::::
+
+
+#### Q02. What is a neural-network autoregression (NNAR)?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+An NNAR uses lagged observations, and sometimes seasonal lags, as inputs to a neural network that forecasts future values.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+An NNAR with inputs from $y_{t-1}$, $y_{t-2}$, $y_{t-3}$, and $y_{t-12}$ can learn nonlinear relationships involving recent movements and the same month last year. The hidden layers transform those lagged inputs before outputting a forecast.
+
+Unlike linear AR models, the response need not be a fixed linear weighted sum. This flexibility can help when patterns are nonlinear, but also increases the need for data, regularization, and honest validation. Neural networks are not automatically superior to seasonal naïve or ARIMA baselines.
+
+::::
+
+
+#### Q03. Why are holidays and known calendar variables useful forecast features?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+They represent predictable changes in demand that can be known before the forecast is issued, without guessing future observations of other economic variables.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A hotel can know that Thanksgiving will occur within a forecast horizon, even though it does not know future hotel bookings. Calendar features can encode weekends, holidays, payday timing, month-end, trading days, and school calendars.
+
+Holiday effects can shift between dates or differ by region. A simple fixed-month dummy may miss those changes. Make sure the production forecasting horizon actually includes known values of the calendar variable.
+
+::::
+
+
+#### Q04. What is the distinction between missing data and a genuine zero in a time series?
+
+**Difficulty:** Easy · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A zero is an observed numeric outcome; missing means no reliable observation is available. They should be handled differently, especially for sales and transaction series.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If a store is open and sells nothing, sales equal zero. If the payment system fails and sales are unrecorded, the value is missing. Filling missing with zero creates a false collapse; interpolating a genuine zero removes a real event.
+
+Check logging uptime, holiday closures, unit definitions, late-arriving data, and publication revisions before imputation. Some time-series state-space models can treat missing observations explicitly without filling them with invented values.
+
+::::
+
+
+### Medium (10)
+
+
+#### Q05. How does recursive forecasting differ from a lagged-feature ML model evaluated with actual future lag values?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+A valid recursive forecast uses earlier *predicted* values once future lags are no longer observed. Evaluating with realized future target lags answers an easier, different one-step problem.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Suppose you need a six-month forecast on January 1. For February, January's actual outcome is not yet known, so you cannot insert it as a feature if the entire path is issued on January 1. You must use your prediction of January, along with other known information, to forecast February.
+
+A backtest that refreshes with each newly observed monthly value is a rolling one-step forecast, not a fixed-origin six-month projection. Both are valid tasks, but they must be labeled correctly.
+
+::::
+
+
+#### Q06. What kinds of data leakage are especially dangerous in time-series machine learning?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Common leaks include centered rolling averages, future-looking target encodings, scalers fit on all dates, revised economic data, future covariate realizations, and overlapping target windows across train and test.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If you use a 3-month centered moving average for March, that calculation includes April data and is unavailable when predicting March in real time. Similarly, a 2025 mortgage-rate series downloaded today may include later revisions that were not public in 2025.
+
+Build features relative to each cutoff using publication timestamps, not merely observation dates. In each validation fold, fit imputers, transforms, selectors, and model hyperparameters using only the training period. If labels overlap in time, add an appropriate embargo or gap when justified.
+
+::::
+
+
+#### Q07. What is the difference between target date, feature date, and publication date?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+The target date is when the outcome occurs; the feature observation date is what period an input describes; publication date is when that input actually became available to forecasters.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+An unemployment statistic describing March might be published in early April and revised later. An economic forecast made on March 31 cannot use the initially published April value, even though the feature is labeled March.
+
+In production macroeconomic forecasting, maintain data vintages as of each forecast origin. Revision-aware backtests are often materially worse but more honest than backtests built from finalized historical datasets.
+
+::::
+
+
+#### Q08. How should you monitor a deployed time-series forecast model?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Monitor forecast accuracy by origin and horizon, missingness and data timeliness, feature drift, interval calibration, residual autocorrelation, and degradation across markets or regimes.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For monthly housing forecasts, log the prediction before the future month is observed. Later compare actual appreciation to the stored forecast and record MAE by horizon and MSA. Track whether confidence or prediction intervals cover the realized values and whether large failures cluster around interest-rate changes.
+
+A production system also needs logging, reproducible model versions, input checks, safe retraining procedures, and rollback criteria. Tracking only training RMSE can miss a complete production failure.
+
+::::
+
+
+#### Q09. Interview case: How would you forecast monthly home-price appreciation (HPA)?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Define target and horizon, benchmark naïve forecasts, inspect history and publication lags, model house-price dynamics alongside macroeconomic predictors, compare ARIMA/ECM and ML candidates, and backtest at realistic forecast origins.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+First define $HPA_t=\log(HPI_t)-\log(HPI_{t-1})$ or simple percentage growth and document which one the model predicts. Next inspect seasonality, trends, revisions, missing months, and regional heterogeneity. Fit seasonal naïve and ARIMA baselines. Consider dynamic regression or ECM using mortgage rates, income, employment, supply, and prices when theory and data justify them.
+
+Backtest one-, three-, six-, and twelve-month forecasts using only available predictor vintages. Evaluate MAE, bias, interval coverage, and performance during rate shocks. If modeling nationally and by MSA, assess hierarchical coherence and whether market-specific models improve outcomes.
+
+::::
+
+
+#### Q10. Interview case: How would you forecast the distribution of future house prices rather than only the expected HPA?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Model the conditional outcome distribution or simulate paths using dynamic equations, innovation shocks, and uncertain macroeconomic scenarios; summarize path quantiles and validate predictive coverage.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Start from a known $HPI_T$. For each month draw a growth shock from a specified model and update $HPI_{T+h}=HPI_{T+h-1}\exp(HPA_{T+h})$ when HPA is log growth. Continue through the horizon for each simulated path.
+
+If unemployment and mortgage rates are uncertain, draw plausible **joint** scenarios too; otherwise your house-price fan chart understates macro uncertainty. Evaluate whether simulated 10th, 50th, and 90th percentiles agree with subsequently realized outcomes across many historical backtests.
+
+::::
+
+
+#### Q11. Interview case: Your ADF test fails to reject a unit root, but KPSS also fails to reject stationarity. What does that imply?
+
+**Difficulty:** Medium · **Based on source notes**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+The evidence is inconclusive, not proof of both competing claims. The tests have different nulls, power, and sensitivities. Inspect plots, sample length, deterministic trends, seasonal structure, and potential breaks.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+An ADF p-value of 0.20 means the sample is insufficient to reject its specified unit-root null. A KPSS p-value of 0.12 means insufficient evidence to reject its specified stationarity null. Both results can occur with a short, highly persistent series.
+
+Next compare forecasts under plausible level-stationary, trend-stationary, and integrated specifications. Avoid choosing a model solely by a rigid decision tree of p-values.
+
+::::
+
+
+#### Q12. Interview case: An ARIMA model has lower AIC than XGBoost but worse 12-month RMSE. Which model should you deploy?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+If the business decision genuinely uses twelve-month forecasts and the validation design is reliable, prioritize the model with better twelve-month out-of-sample performance, subject to stability, uncertainty, latency, and maintainability.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+AIC is not a universal head-to-head score for unrelated model classes, especially when objective functions differ. XGBoost might capture changing macroeconomic nonlinearities but can also be more fragile under structural breaks.
+
+Check whether the RMSE gain repeats across origins and regions, and whether XGBoost was given future information accidentally. A two-model ensemble or simpler ARIMA may still be preferable if the accuracy gain is small and deployment complexity is high.
+
+::::
+
+
+#### Q13. Interview case: How do you forecast thousands of related series with little data in each one?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Use shared models or hierarchical methods that pool information across series, while retaining local identifiers, seasonal patterns, and reconciliation where aggregate consistency matters.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Thousands of ZIP-code house-price series may each have only a few years of reliable monthly data. Fitting a large ARIMA separately to each can overfit. A global gradient-boosted model can learn shared effects from interest rates and seasonality with ZIP-level or region-level features.
+
+But shared models may wash out local shocks. Backtest separately for high- and low-volume markets, cold-start regions, and volatile regions. If state forecasts are required to sum coherently to a national forecast, use explicit reconciliation rather than assuming it will happen automatically.
+
+::::
+
+
+#### Q14. Interview case: A forecasting model suddenly becomes biased after a large interest-rate shock. What would you do?
+
+**Difficulty:** Medium · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+First verify the data pipeline and target revisions; then assess structural break, changing covariate effects, and forecast horizon. Consider updating model parameters, adding scenarios, or deploying a fallback baseline.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A mortgage shock can change housing affordability and transaction volume faster than an old model expects. A persistent positive residual means actual outcomes exceed forecasts, but the cause could be a new economic regime or simply a broken data feed.
+
+Separate pipeline failure from model misspecification. Compare performance of a refit model, rolling-window model, and simple baseline on dates after the shock. Document why and when the new method should replace the old one; do not silently retrain on the same final test window you use for evaluation.
+
+::::
+
+
+### Hard (9)
+
+
+#### Q15. What are intermittent-demand forecasting methods and why may ordinary ARIMA struggle?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Intermittent demand has many zero periods interrupted by positive events. Methods such as Croston-family approaches, hurdle models, or count models can be more appropriate than a smooth Gaussian ARIMA.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A rare spare part may sell 0 units most days and 5 units on a few days. A standard ARIMA can yield negative forecasts or a smoothed fractional mean that poorly represents inventory risk. Croston-type methods separately smooth demand size and the interval between nonzero demand events.
+
+The relevant decision may be a stockout probability or required inventory quantile rather than the next point forecast. Evaluate demand during stockout periods carefully: observed zero sales can reflect unavailable inventory, not lack of customer demand.
+
+::::
+
+
+#### Q16. How would you use backtesting to evaluate a recession stress scenario?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Distinguish conditional stress projections from unconditional forecasts. Assess how the model maps economically plausible recession paths into outcomes, while evaluating predictive calibration and sensitivity to historical regimes.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For a stress test, the unemployment and rates path may be *imposed*, not forecast as the most likely future. The goal is to compute a conditional outcome under that path, such as expected loan losses or home-price declines.
+
+You can compare model responses during previous downturns, examine whether effects are monotonic where theory suggests, and test alternative scenario severities. Do not report a stress-test error as if the model was given real-time ex-ante inputs: it is conditional on assumptions that can be very different from reality.
+
+::::
+
+
+#### Q17. Why is cointegration not enough to justify a causal policy simulation?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Cointegration describes a stable long-run statistical combination, not identification of what happens under an intervention. Causal claims require additional assumptions about simultaneous equations, exogeneity, and policy responses.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+House prices and mortgage rates could be statistically related in the long run, while both react to inflation expectations and monetary policy. If you change rates exogenously, house prices may react differently than they do following ordinary historical rate movements.
+
+For policy scenarios, clearly state whether the model is predictive/conditional, or identify the relevant structural response with an instrument, natural experiment, or structural macroeconomic assumptions. Economists particularly value this distinction in interviews.
+
+::::
+
+
+#### Q18. Can gradient-boosted trees extrapolate an upward economic trend beyond the training period?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Many standard tree ensembles make piecewise-constant predictions over feature regions and do not naturally extrapolate a linear trend beyond observed target ranges. Explicit trend modeling or alternative architectures may be needed.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+If house prices have increased steadily beyond any levels present in training data, a tree model fed only a time index may keep forecasting approximately the largest historical region's average rather than continuing the slope. An ARIMA with drift or regression with a specified trend can extrapolate, although that extrapolation may itself be wrong after a regime change.
+
+A common hybrid strategy forecasts a trend with a parametric component and lets the tree model predict residual patterns. Validate on later dates where extrapolation genuinely occurs.
+
+::::
+
+
+#### Q19. How would you implement rolling-origin validation in Python without leaking future observations?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+For each cutoff, fit the model and all training-dependent preprocessing on earlier observations only, predict the designated future horizon, and compare the predictions to later realized values.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+For monthly data, choose origins such as January, April, July, and October. At each origin, create lagged features from information available *by that date*, fit the estimator on historical target/feature pairs, and predict the horizon. Keep a record of origin, target date, horizon, and model version.
+
+In scikit-learn, `TimeSeriesSplit` can create ordered splits for approximately equally spaced samples. It does not automatically prevent leakage from precomputed centered rolling features or vintage revisions; feature construction and preprocessing must be handled carefully inside the evaluation design.
+
+**Python example — genuine one-step rolling-origin evaluation:**
+
+```python
+import numpy as np
+from sklearn.linear_model import Ridge
+from sklearn.metrics import mean_absolute_error
+
+rng = np.random.default_rng(1)
+y = 50 + np.linspace(0, 5, 80) + 4 * np.sin(np.arange(80) / 6)
+y = y + rng.normal(scale=0.8, size=80)
+predictions, actuals = [], []
+
+for origin in range(35, len(y) - 1):
+    # All historical targets are known through 'origin'.
+    train_t = np.arange(12, origin + 1)
+    X_train = np.column_stack([y[train_t - 1], y[train_t - 12]])
+    model = Ridge(alpha=1.0).fit(X_train, y[train_t])
+    x_next = np.array([[y[origin], y[origin - 11]]])
+    predictions.append(model.predict(x_next)[0])
+    actuals.append(y[origin + 1])
+
+print('Rolling one-step MAE:', mean_absolute_error(actuals, predictions))
+```
+
+This evaluates an **updating one-step forecast**: once each new outcome arrives, it may be used at the next origin. Do not reuse the same code to claim you evaluated an h-step forecast issued all at once from a single origin.
+
+
+::::
+
+
+#### Q20. Interview case: How would you reconcile national, state, and metropolitan area housing forecasts?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Specify an economically meaningful aggregation relationship, construct base forecasts at each level, and reconcile them so required geographic totals are coherent under chosen weights.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+State-level price indices may not combine linearly into a national index using fixed unit weights: index definitions, sampling, geography, weighting schemes, and methodological revisions matter. Start by inspecting the actual published aggregation methodology.
+
+If the quantities are genuinely additive, hierarchical forecasting reconciliation can ensure lower-level predictions sum to higher-level predictions. For index numbers, use a transformation or model consistent with the data provider's construction rather than blindly adding index levels.
+
+::::
+
+
+#### Q21. Interview trap: Does a small Granger-causality p-value prove an economic intervention will change the outcome?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+No. It indicates lagged predictive content in a specified model, not an identified causal treatment effect. Common shocks, feedback, and omitted predictors can generate Granger relationships.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+Oil prices may Granger-predict inflation, but forecasting success does not identify the effect of an exogenous oil-price intervention. Inflation expectations, demand, policy responses, and supply shocks may jointly drive both series.
+
+If asked whether a policy change causes a response, discuss structural identification using valid instruments, natural experiments, or defensible restrictions. Keep predictive and causal interpretations separate.
+
+::::
+
+
+#### Q22. Interview trap: Should a model with smaller residual standard deviation always have tighter and better prediction intervals?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+No. Interval quality depends on innovation dynamics, the horizon, parameter and model uncertainty, non-Gaussian tails, covariate scenarios, and the calibration method.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A highly flexible model can fit the training data almost perfectly and have tiny in-sample residuals, yet fail after a structural break. Its narrow Gaussian intervals might cover only 60% of future observations despite claiming 95% coverage.
+
+Evaluate empirical interval coverage and width across rolling-origin backtests. Propagate parameter, covariate, and shock uncertainty as appropriate; do not equate a good in-sample fit with a useful probability forecast.
+
+::::
+
+
+#### Q23. How would you explain a forecast failure to a nontechnical stakeholder?
+
+**Difficulty:** Hard · **Added for interview prep**
+
+
+:::: {.callout-note collapse="true" title="Reference Answer"}
+
+Separate the forecast target, known information at issuance, error size, uncertainty band, and plausible failure mechanisms. Explain which changes will be tested and what baseline protects decisions while the model is improved.
+
+::::
+
+
+:::: {.callout-tip collapse="true" title="Detailed Explanation"}
+
+A useful statement is: “We predicted quarterly HPA of +0.5% with a 90% interval from -1% to +2%; actual appreciation was -2%. We were outside the interval. We are investigating whether the sudden mortgage-rate shock, delayed employment data, or a model shift explains the miss.”
+
+Avoid saying “the model was 90% certain” about a single prediction. Instead, discuss calibration across repeated forecasts. Follow with a measurable recovery plan: diagnostics, genuine backtests, and performance thresholds for retraining or fallback.
+
+::::
+
+
+::::::
+
+
+## Further Reading
+
+These materials supplement the supplied notes and are not a substitute for the assumptions stated in each answer.
+
+- Hyndman & Athanasopoulos, *Forecasting: Principles and Practice* (3rd ed.): <https://otexts.com/fpp3/>
+- statsmodels Time Series Analysis API (ADF, KPSS, ARIMA, cointegration, VECM): <https://www.statsmodels.org/stable/tsa.html>
+- scikit-learn, lagged-feature time-series forecasting and time-aware validation: <https://scikit-learn.org/stable/auto_examples/applications/plot_time_series_lagged_features.html>
+
+**Editorial note:** The source included questions and draft summaries, not complete proofs for every advanced method. Explanations of nowcasting, VAR/SVAR, local projections, conformal prediction, hierarchical forecasting, and modern ML practice are **added interview preparation material**, not quotes from the source.
