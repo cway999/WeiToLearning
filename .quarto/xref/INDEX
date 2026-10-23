@@ -82,5 +82,14 @@
   },
   "knowledge/question-bank/causal_inference_double_ml_6tabs_package/README_causal_inference_double_ml.md": {
     "README_causal_inference_double_ml.html": "870602e5"
+  },
+  "blog/technical_blog_quarto_3columns/blog/index.qmd": {
+    "index.html": "68e9183d"
+  },
+  "blog/technical_blog_quarto_fixed/README_修复说明.md": {
+    "README_修复说明.html": "3f20b641"
+  },
+  "blog/technical_blog_quarto_fixed/blog/index.qmd": {
+    "index.html": "4bea992d"
   }
 }

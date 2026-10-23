@@ -1,18 +1,1127 @@
 ---
-title: "Technical Blog"
+title: "Technical Blog & Learning Library"
+subtitle: "Open resources from fundamentals to interview mastery"
 toc: false
+page-layout: full
+format:
+  html:
+    code-copy: true
 ---
 
-# Technical Blog
 
-Articles about Data Science, Machine
-Learning, and my technical experiments.
+<style>
+/* Scoped to WeiToLearning Technical Blog. No external dependencies. */
+/* Keep a generous reading canvas for the three-column resource cards. */
+#quarto-content.page-layout-full #quarto-document-content {width:100%;max-width:1510px;margin-inline:auto;}
+#quarto-content.page-layout-full main.content {width:100%;max-width:1510px;margin-inline:auto;}
+.wtl-blog-header {margin-bottom: 1.6rem;}
+.wtl-blog-header .wtl-eyebrow {text-transform:uppercase; letter-spacing:.13em;color:#117d71;font-weight:750;font-size:.75rem;}
+.wtl-blog-header h1 {margin:.35rem 0 .65rem;letter-spacing:-.035em;line-height:1.1;font-size:clamp(2rem,4vw,2.9rem);}
+.wtl-blog-header p {max-width:800px;color:var(--bs-secondary-color,#667a87);font-size:1.01rem;}
+.wtl-controls {display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:1.3rem 0 1rem;}
+.wtl-controls input {width:min(100%,390px);min-width:220px;flex:1;border:1px solid #cbd7dc;border-radius:9px;padding:.7rem .85rem;background:var(--bs-body-bg,#fff);color:var(--bs-body-color,#223343);}
+.wtl-filters {display:flex;gap:.4rem;flex-wrap:wrap;}
+.wtl-filters button {background:transparent;color:var(--bs-body-color,#334155);border:1px solid #cbd7dc;border-radius:7px;padding:.55rem .8rem;cursor:pointer;font-size:.85rem;}
+.wtl-filters button.active,.wtl-filters button[aria-pressed=true] {background:#ddf4ef;color:#096458;border-color:#8acdc1;font-weight:750;}
+.wtl-result-count {margin:.35rem 0 1.2rem;color:var(--bs-secondary-color,#6b7d89);font-size:.85rem;}
+.wtl-guide {background:rgba(17,125,113,.06);border-left:3px solid #198778;border-radius:8px;padding:1rem 1.15rem;margin:.75rem 0 1.2rem;}
+.wtl-tab-intro {color:var(--bs-secondary-color,#64748b);font-size:.95rem;margin-top:.8rem;margin-bottom:1.3rem;}
+.wtl-card-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem;margin:.8rem 0 1.5rem;}
+.wtl-card {display:flex;flex-direction:column;border:1px solid var(--bs-border-color,#dee4e8);border-radius:10px;background:var(--bs-body-bg,#fff);padding:.82rem .95rem;box-shadow:0 2px 8px rgba(18,42,52,.025);min-width:0;}
+.wtl-card[hidden],.wtl-no-results[hidden]{display:none!important;}
+.wtl-card:hover {border-color:#8bc6bd;box-shadow:0 7px 23px rgba(12,76,75,.085);}
+.wtl-card h3 {font-size:1.00rem;font-weight:720;line-height:1.33;margin:.4rem 0 .28rem;letter-spacing:-.01em;}
+.wtl-card h3 a {color:var(--bs-heading-color,#1e3649);text-decoration:none;border-bottom:1px solid transparent;}
+.wtl-card h3 a:hover,.wtl-card h3 a:focus {color:#0b8476;border-bottom-color:#0b8476;}
+.wtl-card h3 a::after {content:' ↗';font-size:.77em;color:#0b8476;}
+.wtl-card .wtl-meta {display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;color:var(--bs-secondary-color,#64748b);font-size:.76rem;}
+.wtl-card .wtl-pill {padding:.13rem .42rem;border-radius:5px;font-weight:720;color:#276448;background:#e3f4e9;}
+.wtl-card[data-level="Intermediate"] .wtl-pill {color:#315a91;background:#e5edfe;}
+.wtl-card[data-level="Advanced"] .wtl-pill {color:#995f23;background:#fdf0dd;}
+.wtl-card .wtl-source {font-size:.77rem;color:var(--bs-secondary-color,#6b8190);}
+.wtl-card .wtl-why {font-size:.85rem;line-height:1.42;margin:.35rem 0 .1rem;color:var(--bs-body-color,#344759);}
+.wtl-no-results {color:#7c8891;font-size:.9rem;padding:.6rem 0;}
+.wtl-note {font-size:.83rem;color:var(--bs-secondary-color,#657685);margin:1.4rem 0;}
+/* Three columns on desktop, two on tablets, one on phones. */
+@media(max-width:1080px){.wtl-card-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:680px){.wtl-card-grid{grid-template-columns:1fr}.wtl-controls input{min-width:100%;max-width:100%}.wtl-card{padding:.85rem .95rem}}
+@media(prefers-color-scheme:dark){.wtl-card h3 a{color:inherit}.wtl-card h3 a:hover{color:#47c8b5}}
+</style>
 
-## Planned Articles
 
-- Building a Transformer from Scratch
-- Understanding Batch Normalization
-- Comparing Ranking Algorithms
-- Lessons from Machine Learning Projects
+<div class="wtl-blog-header">
+  <div class="wtl-eyebrow">curated open learning paths / Build deep intuition. Master the interview.</div>
+  <p>80 carefully selected, freely readable tutorials, open course notes, research papers, and practical engineering guides. Four tracks, progressing from foundational intuition to advanced interview discussions.</p>
+</div>
 
-More articles will be added soon.
+
+```{=html}
+<div class="wtl-controls">
+  <input id="wtl-search" type="search" placeholder="Search: CUPED, Double ML, BM25, DPO…" aria-label="Search resources" />
+  <div class="wtl-filters" role="group" aria-label="Filter difficulty">
+    <button type="button" data-wtl-filter="All" class="active" aria-pressed="true">All</button>
+    <button type="button" data-wtl-filter="Beginner" aria-pressed="false">Beginner</button>
+    <button type="button" data-wtl-filter="Intermediate" aria-pressed="false">Intermediate</button>
+    <button type="button" data-wtl-filter="Advanced" aria-pressed="false">Advanced</button>
+  </div>
+</div>
+```
+
+<p id="wtl-result-count" class="wtl-result-count">20 articles in this topic</p>
+
+::::: {.panel-tabset}
+
+
+## Experimental A/B Test
+
+<p class="wtl-tab-intro">Learn to design powered experiments, detect logging and randomization problems, reduce variance, and make launch decisions.</p>
+
+:::: {.wtl-card-grid}
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Guide</span><span>· 25 min</span></div>
+
+### [Experiments Overview](https://docs.statsig.com/experiments/overview){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Statsig · 01 · Fundamentals</div>
+
+<p class="wtl-why">Plain-language introduction to controlled experiments, assignment and statistical lift.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Official tutorial</span><span>· 30 min</span></div>
+
+### [Experiment Process Overview](https://docs.statsig.com/experiments/process-overview){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Statsig · 01 · Fundamentals</div>
+
+<p class="wtl-why">A practical, end-to-end checklist: power analysis, setup, launch, monitoring and decision.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Free PDF chapter</span><span>· 40 min</span></div>
+
+### [Trustworthy Online Controlled Experiments — Free Chapter 1](https://experimentguide.com/wp-content/uploads/TrustworthyOnlineControlledExperiments_PracticalGuideToABTesting_Chapter1.pdf){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Kohavi, Tang &amp; Xu · 01 · Fundamentals</div>
+
+<p class="wtl-why">Official free introductory chapter; the full book is not free.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Blog</span><span>· 30 min</span></div>
+
+### [How Not to Run an A/B Test](https://www.evanmiller.org/how-not-to-run-an-ab-test.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Evan Miller · 01 · Fundamentals</div>
+
+<p class="wtl-why">Why repeatedly checking ordinary p-values and stopping early inflates false positives.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Blog</span><span>· 30 min</span></div>
+
+### [A/B Testing and Beyond at Netflix](https://netflixtechblog.com/a-b-testing-and-beyond-improving-the-netflix-streaming-experience-with-experimentation-and-data-5b0ae9295bdf){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Netflix Technology Blog · 02 · Product cases</div>
+
+<p class="wtl-why">Real company example showing objectives, system metrics and product consequences.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Research article</span><span>· 35 min</span></div>
+
+### [Online Experimentation at Microsoft](https://www.microsoft.com/en-us/research/publication/online-experimentation-at-microsoft/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Microsoft Research · 02 · Product cases</div>
+
+<p class="wtl-why">What production experimentation platforms must get right.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Interactive tutorial</span><span>· 25 min</span></div>
+
+### [Sample Size Calculator and Explanation](https://www.evanmiller.org/ab-testing/sample-size.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Evan Miller · 03 · Statistical power</div>
+
+<p class="wtl-why">Make power, alpha, baseline conversion and MDE tangible.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Blog</span><span>· 25 min</span></div>
+
+### [CUPED on Statsig](https://www.statsig.com/blog/cuped-on-statsig){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Statsig · 03 · Statistical power</div>
+
+<p class="wtl-why">Approachable variance-reduction explanation with prerequisites and practical limits.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Blog</span><span>· 30 min</span></div>
+
+### [Diagnosing Sample Ratio Mismatch](https://www.microsoft.com/en-us/research/articles/diagnosing-sample-ratio-mismatch-in-a-b-testing/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Microsoft Research · 04 · Trustworthiness</div>
+
+<p class="wtl-why">One of the most common online-experiment interview traps.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Blog</span><span>· 20 min</span></div>
+
+### [Reimagining Experimentation Analysis at Netflix](https://netflixtechblog.com/reimagining-experimentation-analysis-at-netflix-71356393af21){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Netflix Technology Blog · 04 · Trustworthiness</div>
+
+<p class="wtl-why">Shows how mean, median and distributional effects can disagree.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Blog / tutorial</span><span>· 35 min</span></div>
+
+### [Simple Sequential A/B Testing](https://www.evanmiller.org/sequential-ab-testing.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Evan Miller · 05 · Advanced design</div>
+
+<p class="wtl-why">Introduces a sequential design that avoids the repeated-peeking problem in fixed-horizon tests.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Blog</span><span>· 30 min</span></div>
+
+### [Switchback Experiments: Overview & Considerations](https://www.statsig.com/blog/switchback-experiments){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Statsig · 05 · Advanced design</div>
+
+<p class="wtl-why">Clear marketplace example of treatment interference and switching exposure over time.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Blog</span><span>· 30 min</span></div>
+
+### [It’s All A/Bout Testing: Netflix Platform](https://netflixtechblog.com/its-all-a-bout-testing-the-netflix-experimentation-platform-4e1ca458c15){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Netflix Technology Blog · 04 · Trustworthiness</div>
+
+<p class="wtl-why">System-design view of traffic assignment and experiment infrastructure.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Deep dive</span><span>· 50 min</span></div>
+
+### [Sequential A/B Testing — Continuous Data](https://netflixtechblog.com/sequential-a-b-testing-keeps-the-world-streaming-netflix-part-1-continuous-data-cba6c7ed49df){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Netflix Technology Blog · 05 · Advanced design</div>
+
+<p class="wtl-why">Technical version of anytime-valid experiments for noisy continuous data.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Blog</span><span>· 30 min</span></div>
+
+### [Quasi Experimentation at Netflix](https://netflixtechblog.com/quasi-experimentation-at-netflix-566b57d2e362){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Netflix Technology Blog · 05 · Advanced design</div>
+
+<p class="wtl-why">Understand what to do when individual randomization is infeasible.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Blog</span><span>· 35 min</span></div>
+
+### [Beyond the A/B Test: Experiment Designs for Tough Questions](https://www.statsig.com/blog/beyond-the-a-b-test-blog-version){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Statsig · 05 · Advanced design</div>
+
+<p class="wtl-why">Useful taxonomy of holdouts, geo tests, non-inferiority and sequential designs.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Blog</span><span>· 25 min</span></div>
+
+### [Alerting in Microsoft’s Experimentation Platform](https://www.microsoft.com/en-us/research/articles/alerting-in-microsofts-experimentation-platform-exp/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Microsoft Research · 04 · Trustworthiness</div>
+
+<p class="wtl-why">Real-world example of automated invariant and metric anomaly checks.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Blog</span><span>· 25 min</span></div>
+
+### [CURE: Regression Adjustment Beyond CUPED](https://statsig.com/blog/announcing-cure){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Statsig · 03 · Statistical power</div>
+
+<p class="wtl-why">Extends variance reduction to flexible covariate sets and new-user scenarios.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Guide</span><span>· 45 min</span></div>
+
+### [Switchback Test Methodology](https://docs.statsig.com/experiments/types/switchback-tests){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Statsig Docs · 05 · Advanced design</div>
+
+<p class="wtl-why">Analysis unit, buckets and uncertainty for marketplace experiments.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Open research collection</span><span>· 45 min</span></div>
+
+### [Introduction to Experimentation Pitfalls](https://exp-platform.com/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">ExP Platform · 06 · Interview review</div>
+
+<p class="wtl-why">Collection of free papers on online experimentation and hard-to-detect pitfalls.</p>
+
+:::
+
+
+<div class="wtl-no-results" hidden>No matching articles in this topic. Try another search or difficulty.</div>
+
+::::
+
+
+## Causal Inference
+
+<p class="wtl-tab-intro">Start with identification and DAGs, move through quasi-experiments, and master Double/Debiased ML and heterogeneous effects.</p>
+
+:::: {.wtl-card-grid}
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Online textbook</span><span>· 60 min</span></div>
+
+### [The Effect — Free Online Book](https://theeffectbook.net/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Nick Huntington-Klein · 01 · Causal thinking</div>
+
+<p class="wtl-why">Visual explanations of identification, DAGs and research designs.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Online textbook</span><span>· 60 min</span></div>
+
+### [Causal Inference for the Brave and True](https://matheusfacure.github.io/python-causality-handbook/landing-page.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Matheus Facure · 01 · Causal thinking</div>
+
+<p class="wtl-why">Python-first practical introduction, with rich examples and accessible explanations.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Online textbook</span><span>· 90 min</span></div>
+
+### [Causal Inference: The Mixtape (Free Online 1st Edition)](https://mixtape-1ed.netlify.app/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Scott Cunningham · 01 · Causal thinking</div>
+
+<p class="wtl-why">Classic open econometrics treatment of experimental and observational designs.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Online handbook</span><span>· 40 min</span></div>
+
+### [Causal Inference for Intervention Evaluations](https://nhsengland.github.io/causal-handbook/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">NHS England · 01 · Causal thinking</div>
+
+<p class="wtl-why">Practical public-sector handbook for designing evaluation studies.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Tutorial</span><span>· 40 min</span></div>
+
+### [Graphical Causal Models with Python Examples](https://matheusfacure.github.io/python-causality-handbook/04-Graphical-Causal-Models.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Matheus Facure · 02 · Identification</div>
+
+<p class="wtl-why">DAG-based rules for confounders, colliders and mediators.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Free online book</span><span>· 90 min</span></div>
+
+### [What If — Causal Inference (Free Textbook)](https://miguelhernan.org/whatifbook){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Hernán &amp; Robins · 02 · Identification</div>
+
+<p class="wtl-why">Rigorous potential-outcome treatment of observational causal questions.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Open documentation</span><span>· 45 min</span></div>
+
+### [DoWhy: Causal Inference Tutorial](https://www.pywhy.org/dowhy/v0.13/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">PyWhy · 02 · Identification</div>
+
+<p class="wtl-why">Connect DAG assumptions to identification, estimation and refutation.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Tutorial</span><span>· 60 min</span></div>
+
+### [Difference-in-Differences with Multiple Periods](https://bcallaway11.github.io/did/articles/multi-period-did.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Callaway &amp; Sant’Anna · 03 · Quasi-experiments</div>
+
+<p class="wtl-why">Modern staggered-adoption DiD framework with intuitive notation.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Hands-on tutorial</span><span>· 60 min</span></div>
+
+### [Getting Started with did](https://bcallaway11.github.io/did/articles/did-basics.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Callaway &amp; Sant’Anna · 03 · Quasi-experiments</div>
+
+<p class="wtl-why">Concrete code and event-study outputs for modern DiD.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Tutorial</span><span>· 45 min</span></div>
+
+### [Instrumental Variables — Brave and True](https://matheusfacure.github.io/python-causality-handbook/08-Instrumental-Variables.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Matheus Facure · 03 · Quasi-experiments</div>
+
+<p class="wtl-why">Accessible economic intuition for an instrument and LATE.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Tutorial</span><span>· 45 min</span></div>
+
+### [Regression Discontinuity — Brave and True](https://matheusfacure.github.io/python-causality-handbook/16-Regression-Discontinuity-Design.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Matheus Facure · 03 · Quasi-experiments</div>
+
+<p class="wtl-why">Practical cutoff-based causal identification with visual intuition.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Open online chapter</span><span>· 65 min</span></div>
+
+### [Doubly Robust Estimation: Step-by-Step](https://matheusfacure.github.io/python-causality-handbook/12-Doubly-Robust-Estimation.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Matheus Facure · 04 · Causal ML</div>
+
+<p class="wtl-why">Builds intuition for combining propensity and outcome models to estimate causal effects.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Official guide</span><span>· 90 min</span></div>
+
+### [The Basics of Double Machine Learning](https://docs.doubleml.org/stable/guide/guide.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">DoubleML · 04 · Double ML</div>
+
+<p class="wtl-why">Orthogonalization, sample splitting, nuisance models and inference explained together.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Free lectures</span><span>· 50 min</span></div>
+
+### [Introduction to Double Machine Learning](https://docs.doubleml.org/tutorial/stable/lectures/L1/introduction_part1.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">DoubleML · 04 · Double ML</div>
+
+<p class="wtl-why">Slides that bridge ML prediction and target-parameter inference.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Open paper</span><span>· 90 min</span></div>
+
+### [Double/Debiased Machine Learning (Original Paper)](https://arxiv.org/abs/1608.00060){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Chernozhukov et al. · 04 · Double ML</div>
+
+<p class="wtl-why">The formal theory behind orthogonal scores and cross-fitting.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Hands-on examples</span><span>· 75 min</span></div>
+
+### [DoubleML: Python Examples Gallery](https://docs.doubleml.org/dev/examples/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">DoubleML · 04 · Double ML</div>
+
+<p class="wtl-why">Includes PLR, IRM, sensitivity analysis, IV and complex designs.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Open-source guide</span><span>· 60 min</span></div>
+
+### [CausalML — Uplift and Heterogeneous Effects](https://causalml.readthedocs.io/en/stable/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Uber · 05 · Causal ML</div>
+
+<p class="wtl-why">Tools and tutorials for CATE and uplift targeting.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Technical guide</span><span>· 60 min</span></div>
+
+### [Causal Forests in GRF](https://grf-labs.github.io/grf/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">GRF authors · 05 · Causal ML</div>
+
+<p class="wtl-why">Research-grade tutorials for heterogeneous treatment effects and honest forests.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Technical tutorial</span><span>· 50 min</span></div>
+
+### [Problems with TWFE Event Study Regressions](https://bcallaway11.github.io/did/articles/TWFE.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Callaway &amp; Sant’Anna · 03 · Quasi-experiments</div>
+
+<p class="wtl-why">Concrete demonstration of contaminated leads/lags under staggered timing.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Tutorial</span><span>· 50 min</span></div>
+
+### [Evaluating Causal Models in Practice](https://matheusfacure.github.io/python-causality-handbook/19-Evaluating-Causal-Models.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Matheus Facure · 05 · Causal ML</div>
+
+<p class="wtl-why">Explains the hard problem of validating CATE models without individual ground truth.</p>
+
+:::
+
+
+<div class="wtl-no-results" hidden>No matching articles in this topic. Try another search or difficulty.</div>
+
+::::
+
+
+## Machine Learning
+
+<p class="wtl-tab-intro">Build rigorous ML foundations, learn deep-learning internals, and practice modern retrieval and learning-to-rank systems.</p>
+
+:::: {.wtl-card-grid}
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Free course</span><span>· 50 min</span></div>
+
+### [Machine Learning Crash Course](https://developers.google.com/machine-learning/crash-course/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Google · 01 · ML core</div>
+
+<p class="wtl-why">Interactive grounding in loss, gradient descent, classification and generalization.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Free PDF/book</span><span>· 90 min</span></div>
+
+### [An Introduction to Statistical Learning (Python)](https://www.statlearning.com/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">James, Witten, Hastie, Tibshirani &amp; Taylor · 01 · ML core</div>
+
+<p class="wtl-why">Best structured path through regression, trees, CV and regularization.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Documentation</span><span>· 50 min</span></div>
+
+### [Scikit-learn User Guide](https://scikit-learn.org/stable/user_guide.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">scikit-learn · 01 · ML core</div>
+
+<p class="wtl-why">Clear explanations with implementation guidance for classical ML.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Free video course</span><span>· 60 min</span></div>
+
+### [Practical Deep Learning for Coders](https://course.fast.ai/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">fast.ai · 02 · Deep learning</div>
+
+<p class="wtl-why">Hands-on deep-learning workflow with runnable notebooks.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Engineering guide</span><span>· 45 min</span></div>
+
+### [Rules of Machine Learning](https://developers.google.com/machine-learning/guides/rules-of-ml){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Google Developers · 02 · Applied ML</div>
+
+<p class="wtl-why">Influential practical guidance on simple baselines, feature engineering and production ML pitfalls.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Free textbook</span><span>· 90 min</span></div>
+
+### [Dive into Deep Learning](https://en.d2l.ai/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Zhang, Lipton, Li &amp; Smola · 02 · Deep learning</div>
+
+<p class="wtl-why">Math, code and diagrams for backprop, CNNs, attention and optimizers.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Code tutorial</span><span>· 60 min</span></div>
+
+### [micrograd: Autograd from Scratch](https://github.com/karpathy/micrograd){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Andrej Karpathy · 02 · Deep learning</div>
+
+<p class="wtl-why">Tiny but rigorous automatic-differentiation engine.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Free lecture notes</span><span>· 60 min</span></div>
+
+### [CS231n Convolutional Neural Networks](https://cs231n.github.io/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Stanford · 02 · Deep learning</div>
+
+<p class="wtl-why">Clear neural network foundations, activation, optimization and CNN design.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Documentation</span><span>· 45 min</span></div>
+
+### [XGBoost Official Tutorials](https://xgboost.readthedocs.io/en/stable/tutorials/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">XGBoost · 01 · ML core</div>
+
+<p class="wtl-why">Practical gradient boosting and custom objectives.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Documentation</span><span>· 40 min</span></div>
+
+### [Feature Engineering & Pipelines](https://scikit-learn.org/stable/modules/compose.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">scikit-learn · 03 · Production ML</div>
+
+<p class="wtl-why">ColumnTransformer and Pipeline prevent preprocessing leakage.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Official guide</span><span>· 40 min</span></div>
+
+### [BM25 Similarity and Search Scoring](https://www.elastic.co/docs/reference/elasticsearch/index-settings/similarity){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Elastic · 03 · Search &amp; retrieval</div>
+
+<p class="wtl-why">Explains BM25 as a lexical retrieval baseline and the roles of term saturation and length normalization.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Open course materials</span><span>· 70 min</span></div>
+
+### [CS276: Information Retrieval and Web Search](https://web.stanford.edu/class/cs276/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Stanford · 04 · Search &amp; ranking</div>
+
+<p class="wtl-why">Search architecture, inverted indexes, relevance and learning to rank.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Official tutorials</span><span>· 60 min</span></div>
+
+### [TensorFlow Recommenders Overview](https://www.tensorflow.org/recommenders){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">TensorFlow · 04 · Search &amp; ranking</div>
+
+<p class="wtl-why">Two-stage candidate retrieval and ranking, with training code.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Code tutorial</span><span>· 45 min</span></div>
+
+### [Basic Retrieval Tutorial](https://www.tensorflow.org/recommenders/examples/basic_retrieval){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">TensorFlow Recommenders · 04 · Search &amp; ranking</div>
+
+<p class="wtl-why">Embeddings, negative examples, top-K candidate retrieval and evaluation.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Code tutorial</span><span>· 45 min</span></div>
+
+### [Basic Ranking Tutorial](https://www.tensorflow.org/recommenders/examples/basic_ranking){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">TensorFlow Recommenders · 04 · Search &amp; ranking</div>
+
+<p class="wtl-why">Convert candidate sets to ranking scores and task losses.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Official guide</span><span>· 70 min</span></div>
+
+### [Learning to Rank with XGBoost / LambdaMART](https://xgboost.readthedocs.io/en/stable/tutorials/learning_to_rank.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">XGBoost · 04 · Search &amp; ranking</div>
+
+<p class="wtl-why">Ranking objectives, grouped queries, NDCG and position bias.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Code tutorial</span><span>· 55 min</span></div>
+
+### [XGBoost Learning to Rank: Runnable Example](https://xgboost.readthedocs.io/en/latest/python/examples/learning_to_rank.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">XGBoost · 04 · Search &amp; ranking</div>
+
+<p class="wtl-why">MSLR dataset, query groups and debiasing examples.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Code archive</span><span>· 50 min</span></div>
+
+### [TensorFlow Ranking (Archived Educational Repository)](https://github.com/tensorflow/ranking){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">TensorFlow · 04 · Search &amp; ranking</div>
+
+<p class="wtl-why">Learning-to-rank losses and NDCG examples; repo archived in May 2025.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>API reference</span><span>· 45 min</span></div>
+
+### [Recommender Systems Retrieval / Ranking Architecture](https://www.tensorflow.org/recommenders/api_docs/python/tfrs/tasks){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">TensorFlow Recommenders · 04 · Search &amp; ranking</div>
+
+<p class="wtl-why">Separate retrieval objectives from top-result scoring objectives.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Documentation</span><span>· 50 min</span></div>
+
+### [Model Evaluation and Metrics](https://scikit-learn.org/stable/modules/model_evaluation.html){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">scikit-learn · 03 · Production ML</div>
+
+<p class="wtl-why">Calibration, ROC/PR, scoring objectives and CV pitfalls.</p>
+
+:::
+
+
+<div class="wtl-no-results" hidden>No matching articles in this topic. Try another search or difficulty.</div>
+
+::::
+
+
+## LLM & Transformers
+
+<p class="wtl-tab-intro">Understand attention, decoder-only modeling, training, alignment, RAG, evaluation, and production inference.</p>
+
+:::: {.wtl-card-grid}
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Visual blog</span><span>· 45 min</span></div>
+
+### [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Jay Alammar · 01 · Architecture</div>
+
+<p class="wtl-why">The most approachable visual explanation of Q/K/V, multi-head attention and encoder–decoder.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Free course</span><span>· 60 min</span></div>
+
+### [LLM Course](https://huggingface.co/learn/llm-course/en/chapter1/1){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Hugging Face · 01 · Architecture</div>
+
+<p class="wtl-why">Tokenizers, transformer models, finetuning and the HF ecosystem.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Open paper</span><span>· 60 min</span></div>
+
+### [Attention Is All You Need](https://arxiv.org/abs/1706.03762){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Vaswani et al. · 01 · Architecture</div>
+
+<p class="wtl-why">The foundational Transformer paper, available free.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Open source / code walkthrough</span><span>· 70 min</span></div>
+
+### [The Annotated Transformer — Open Implementation](https://github.com/harvardnlp/annotated-transformer){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Harvard NLP · 01 · Architecture</div>
+
+<p class="wtl-why">Annotated implementation of the original Transformer architecture, with code to inspect each component.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Beginner"}
+<div class="wtl-meta"><span class="wtl-pill">Beginner</span><span>Free videos/code</span><span>· 75 min</span></div>
+
+### [Neural Networks: Zero to Hero](https://github.com/karpathy/nn-zero-to-hero){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Andrej Karpathy · 02 · From scratch</div>
+
+<p class="wtl-why">Detailed build-up from MLP/autograd to GPT.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Code repository</span><span>· 75 min</span></div>
+
+### [nanoGPT](https://github.com/karpathy/nanoGPT){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Andrej Karpathy · 02 · From scratch</div>
+
+<p class="wtl-why">Compact GPT pretraining/fine-tuning codebase.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Free code/tutorials</span><span>· 75 min</span></div>
+
+### [Build a Large Language Model from Scratch — Free Code](https://github.com/rasbt/LLMs-from-scratch){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Sebastian Raschka · 02 · From scratch</div>
+
+<p class="wtl-why">Complete code and notebooks; the companion prose book is paid.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Open lecture materials</span><span>· 90 min</span></div>
+
+### [CS336: Language Modeling from Scratch](https://cs336.stanford.edu/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Stanford · 02 · From scratch</div>
+
+<p class="wtl-why">Comprehensive model development: data, architecture, kernels, training and evaluation.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Visual blog</span><span>· 35 min</span></div>
+
+### [The Illustrated GPT-2](https://jalammar.github.io/illustrated-gpt2/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Jay Alammar · 01 · Architecture</div>
+
+<p class="wtl-why">Intuitive decoder-only generation and masked self-attention.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Official guide</span><span>· 60 min</span></div>
+
+### [Hugging Face Transformers Documentation](https://huggingface.co/docs/transformers/index){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Hugging Face · 03 · Fine-tuning</div>
+
+<p class="wtl-why">Practical model loading, generation, training and inference.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Open paper</span><span>· 60 min</span></div>
+
+### [LoRA: Low-Rank Adaptation](https://arxiv.org/abs/2106.09685){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Hu et al. · 03 · Fine-tuning</div>
+
+<p class="wtl-why">Parameter-efficient fine-tuning through low-rank weight updates.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Intermediate"}
+<div class="wtl-meta"><span class="wtl-pill">Intermediate</span><span>Open paper</span><span>· 60 min</span></div>
+
+### [QLoRA: Efficient Finetuning](https://arxiv.org/abs/2305.14314){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Dettmers et al. · 03 · Fine-tuning</div>
+
+<p class="wtl-why">4-bit quantization plus low-rank adapters for memory-efficient training.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Open paper</span><span>· 70 min</span></div>
+
+### [Direct Preference Optimization (DPO)](https://arxiv.org/abs/2305.18290){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Rafailov et al. · 03 · Fine-tuning</div>
+
+<p class="wtl-why">Preference learning without the standard PPO-style RLHF training loop.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Open paper</span><span>· 70 min</span></div>
+
+### [Training Language Models to Follow Instructions](https://arxiv.org/abs/2203.02155){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Ouyang et al. (InstructGPT) · 03 · Fine-tuning</div>
+
+<p class="wtl-why">Canonical supervised fine-tuning and RLHF pipeline.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Engineering blog</span><span>· 45 min</span></div>
+
+### [Contextual Retrieval](https://www.anthropic.com/research/contextual-retrieval){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Anthropic · 04 · Retrieval &amp; agents</div>
+
+<p class="wtl-why">RAG, hybrid BM25/vector retrieval and reranking with practical context issues.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Research blog</span><span>· 60 min</span></div>
+
+### [LLM-Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Lilian Weng · 04 · Retrieval &amp; agents</div>
+
+<p class="wtl-why">Long-form overview of planning, memory, tool use and agent evaluation.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Open paper</span><span>· 60 min</span></div>
+
+### [Retrieval Augmented Generation for Knowledge Intensive NLP](https://arxiv.org/abs/2005.11401){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Lewis et al. · 04 · Retrieval &amp; agents</div>
+
+<p class="wtl-why">The foundational RAG formulation and its limitations.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Official tutorials</span><span>· 55 min</span></div>
+
+### [Hugging Face TRL: Alignment Tutorials](https://huggingface.co/docs/trl/index){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Hugging Face · 03 · Fine-tuning</div>
+
+<p class="wtl-why">Hands-on SFT, preference tuning and alignment workflows.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Open source / evaluation guide</span><span>· 50 min</span></div>
+
+### [Holistic Evaluation of Language Models (HELM)](https://github.com/stanford-crfm/helm){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">Stanford CRFM · 05 · Evaluation</div>
+
+<p class="wtl-why">Shows how to evaluate models across capabilities, robustness and efficiency rather than one scalar score.</p>
+
+:::
+
+
+::: {.wtl-card data-level="Advanced"}
+<div class="wtl-meta"><span class="wtl-pill">Advanced</span><span>Official docs</span><span>· 60 min</span></div>
+
+### [LLM Systems and Inference (vLLM)](https://docs.vllm.ai/en/latest/){target="_blank" rel="noopener noreferrer"}
+
+<div class="wtl-source">vLLM Project · 05 · Evaluation</div>
+
+<p class="wtl-why">Serving optimizations, PagedAttention, throughput and batching.</p>
+
+:::
+
+
+<div class="wtl-no-results" hidden>No matching articles in this topic. Try another search or difficulty.</div>
+
+::::
+
+
+:::::
+
+<p class="wtl-note">All materials link to their original publishers; a free PDF chapter is not the same as a freely available full book. Last link review: October 22, 2026. External websites may change accessibility without notice.</p>
+
+<script>
+(function () {
+  function initializeLibrary() {
+    const input=document.getElementById('wtl-search');
+    const count=document.getElementById('wtl-result-count');
+    if(!input || !count) return;
+    let level='All';
+    const buttons=[...document.querySelectorAll('[data-wtl-filter]')];
+    function activePane(){
+      return document.querySelector('.panel-tabset .tab-content .tab-pane.active') ||
+             document.querySelector('.panel-tabset .tab-content .tab-pane') ||
+             document.querySelector('.panel-tabset');
+    }
+    function update(){
+      const term=input.value.trim().toLowerCase();
+      const pane=activePane();
+      if(!pane) return;
+      let total=0,shown=0;
+      for(const card of document.querySelectorAll('.wtl-card')){
+        const text=card.textContent.toLowerCase();
+        const visible=(level==='All'||card.dataset.level===level)&&(!term||text.includes(term));
+        card.hidden=!visible;
+      }
+      for(const card of pane.querySelectorAll('.wtl-card')){
+        total++;if(!card.hidden)shown++;
+      }
+      count.textContent=shown+' articles shown in this topic';
+      const noResults=pane.querySelector('.wtl-no-results');
+      if(noResults)noResults.hidden=shown!==0;
+      buttons.forEach(b=>{const current=b.dataset.wtlFilter===level;b.classList.toggle('active',current);b.setAttribute('aria-pressed',String(current));});
+    }
+    input.addEventListener('input',update);
+    buttons.forEach(b=>b.addEventListener('click',()=>{level=b.dataset.wtlFilter;update();}));
+    document.addEventListener('shown.bs.tab',update);
+    document.querySelectorAll('.panel-tabset button, .panel-tabset a[role="tab"]').forEach(t=>t.addEventListener('click',()=>requestAnimationFrame(update)));
+    update();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initializeLibrary);
+  else initializeLibrary();
+})();
+</script>
