@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Technical Blog &amp; Learning Library – Wei to Learning</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-6a2b564723c042b0e428f357d9a015bd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Wei to Learning</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../blog/index.html"> 
+<span class="menu-text">Technical Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../projects/index.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Technical Blog &amp; Learning Library</h1>
+<p class="subtitle lead">Open resources from fundamentals to interview mastery</p>
+</div>
+
+
+
+<div class="quarto-title-meta column-page">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<style>
+/* Scoped to WeiToLearning Technical Blog. No external dependencies. */
+/* Keep a generous reading canvas for the three-column resource cards. */
+#quarto-content.page-layout-full #quarto-document-content {width:100%;max-width:1510px;margin-inline:auto;}
+#quarto-content.page-layout-full main.content {width:100%;max-width:1510px;margin-inline:auto;}
+.wtl-blog-header {margin-bottom: 1.6rem;}
+.wtl-blog-header .wtl-eyebrow {text-transform:uppercase; letter-spacing:.13em;color:#117d71;font-weight:750;font-size:.75rem;}
+.wtl-blog-header h1 {margin:.35rem 0 .65rem;letter-spacing:-.035em;line-height:1.1;font-size:clamp(2rem,4vw,2.9rem);}
+.wtl-blog-header p {max-width:800px;color:var(--bs-secondary-color,#667a87);font-size:1.01rem;}
+.wtl-controls {display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:1.3rem 0 1rem;}
+.wtl-controls input {width:min(100%,390px);min-width:220px;flex:1;border:1px solid #cbd7dc;border-radius:9px;padding:.7rem .85rem;background:var(--bs-body-bg,#fff);color:var(--bs-body-color,#223343);}
+.wtl-filters {display:flex;gap:.4rem;flex-wrap:wrap;}
+.wtl-filters button {background:transparent;color:var(--bs-body-color,#334155);border:1px solid #cbd7dc;border-radius:7px;padding:.55rem .8rem;cursor:pointer;font-size:.85rem;}
+.wtl-filters button.active,.wtl-filters button[aria-pressed=true] {background:#ddf4ef;color:#096458;border-color:#8acdc1;font-weight:750;}
+.wtl-result-count {margin:.35rem 0 1.2rem;color:var(--bs-secondary-color,#6b7d89);font-size:.85rem;}
+.wtl-guide {background:rgba(17,125,113,.06);border-left:3px solid #198778;border-radius:8px;padding:1rem 1.15rem;margin:.75rem 0 1.2rem;}
+.wtl-tab-intro {color:var(--bs-secondary-color,#64748b);font-size:.95rem;margin-top:.8rem;margin-bottom:1.3rem;}
+.wtl-card-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem;margin:.8rem 0 1.5rem;}
+.wtl-card {display:flex;flex-direction:column;border:1px solid var(--bs-border-color,#dee4e8);border-radius:10px;background:var(--bs-body-bg,#fff);padding:.82rem .95rem;box-shadow:0 2px 8px rgba(18,42,52,.025);min-width:0;}
+.wtl-card[hidden],.wtl-no-results[hidden]{display:none!important;}
+.wtl-card:hover {border-color:#8bc6bd;box-shadow:0 7px 23px rgba(12,76,75,.085);}
+.wtl-card h3 {font-size:1.00rem;font-weight:720;line-height:1.33;margin:.4rem 0 .28rem;letter-spacing:-.01em;}
+.wtl-card h3 a {color:var(--bs-heading-color,#1e3649);text-decoration:none;border-bottom:1px solid transparent;}
+.wtl-card h3 a:hover,.wtl-card h3 a:focus {color:#0b8476;border-bottom-color:#0b8476;}
+.wtl-card h3 a::after {content:' ↗';font-size:.77em;color:#0b8476;}
+.wtl-card .wtl-meta {display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;color:var(--bs-secondary-color,#64748b);font-size:.76rem;}
+.wtl-card .wtl-pill {padding:.13rem .42rem;border-radius:5px;font-weight:720;color:#276448;background:#e3f4e9;}
+.wtl-card[data-level="Intermediate"] .wtl-pill {color:#315a91;background:#e5edfe;}
+.wtl-card[data-level="Advanced"] .wtl-pill {color:#995f23;background:#fdf0dd;}
+.wtl-card .wtl-source {font-size:.77rem;color:var(--bs-secondary-color,#6b8190);}
+.wtl-card .wtl-why {font-size:.85rem;line-height:1.42;margin:.35rem 0 .1rem;color:var(--bs-body-color,#344759);}
+.wtl-no-results {color:#7c8891;font-size:.9rem;padding:.6rem 0;}
+.wtl-note {font-size:.83rem;color:var(--bs-secondary-color,#657685);margin:1.4rem 0;}
+/* Three columns on desktop, two on tablets, one on phones. */
+@media(max-width:1080px){.wtl-card-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:680px){.wtl-card-grid{grid-template-columns:1fr}.wtl-controls input{min-width:100%;max-width:100%}.wtl-card{padding:.85rem .95rem}}
+@media(prefers-color-scheme:dark){.wtl-card h3 a{color:inherit}.wtl-card h3 a:hover{color:#47c8b5}}
+</style>
+<div class="wtl-blog-header">
+<div class="wtl-eyebrow">
+WeiToLearning / curated open learning paths
+</div>
+<h1>
+Build deep intuition. Master the interview.
+</h1>
+<p>
+80 carefully selected, freely readable tutorials, open course notes, research papers, and practical engineering guides. Four tracks, progressing from foundational intuition to advanced interview discussions.
+</p>
+</div>
+<div class="wtl-guide">
+<p><strong>Suggested approach:</strong> Start with Beginner → build and explain one example → work through Intermediate implementations → finish Advanced topics. After each resource, try explaining its main ideas without referring back to the article.</p>
+</div>
+<div class="wtl-controls">
+<input id="wtl-search" type="search" placeholder="Search: CUPED, Double ML, BM25, DPO…" aria-label="Search resources">
+<div class="wtl-filters" role="group" aria-label="Filter difficulty">
+<pre><code>&lt;button type="button" data-wtl-filter="All" class="active" aria-pressed="true"&gt;All&lt;/button&gt;
+&lt;button type="button" data-wtl-filter="Beginner" aria-pressed="false"&gt;Beginner&lt;/button&gt;
+&lt;button type="button" data-wtl-filter="Intermediate" aria-pressed="false"&gt;Intermediate&lt;/button&gt;
+&lt;button type="button" data-wtl-filter="Advanced" aria-pressed="false"&gt;Advanced&lt;/button&gt;</code></pre>
+</div>
+</div>
+<p id="wtl-result-count" class="wtl-result-count">
+20 articles in this topic
+</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Experimental A/B Test</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Causal Inference</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Machine Learning</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">LLM &amp; Transformers</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p class="wtl-tab-intro">
+Learn to design powered experiments, detect logging and randomization problems, reduce variance, and make launch decisions.
+</p>
+<div class="wtl-card-grid">
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Guide</span><span>· 25 min</span>
+</div>
+<section id="experiments-overview" class="level3">
+<h3 class="anchored" data-anchor-id="experiments-overview"><a href="https://docs.statsig.com/experiments/overview" target="_blank" rel="noopener noreferrer">Experiments Overview</a></h3>
+<div class="wtl-source">
+Statsig · 01 · Fundamentals
+</div>
+<p class="wtl-why">
+Plain-language introduction to controlled experiments, assignment and statistical lift.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Official tutorial</span><span>· 30 min</span>
+</div>
+<section id="experiment-process-overview" class="level3">
+<h3 class="anchored" data-anchor-id="experiment-process-overview"><a href="https://docs.statsig.com/experiments/process-overview" target="_blank" rel="noopener noreferrer">Experiment Process Overview</a></h3>
+<div class="wtl-source">
+Statsig · 01 · Fundamentals
+</div>
+<p class="wtl-why">
+A practical, end-to-end checklist: power analysis, setup, launch, monitoring and decision.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Free PDF chapter</span><span>· 40 min</span>
+</div>
+<section id="trustworthy-online-controlled-experiments-free-chapter-1" class="level3">
+<h3 class="anchored" data-anchor-id="trustworthy-online-controlled-experiments-free-chapter-1"><a href="https://experimentguide.com/wp-content/uploads/TrustworthyOnlineControlledExperiments_PracticalGuideToABTesting_Chapter1.pdf" target="_blank" rel="noopener noreferrer">Trustworthy Online Controlled Experiments — Free Chapter 1</a></h3>
+<div class="wtl-source">
+Kohavi, Tang &amp; Xu · 01 · Fundamentals
+</div>
+<p class="wtl-why">
+Official free introductory chapter; the full book is not free.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Blog</span><span>· 30 min</span>
+</div>
+<section id="how-not-to-run-an-ab-test" class="level3">
+<h3 class="anchored" data-anchor-id="how-not-to-run-an-ab-test"><a href="https://www.evanmiller.org/how-not-to-run-an-ab-test.html" target="_blank" rel="noopener noreferrer">How Not to Run an A/B Test</a></h3>
+<div class="wtl-source">
+Evan Miller · 01 · Fundamentals
+</div>
+<p class="wtl-why">
+Why repeatedly checking ordinary p-values and stopping early inflates false positives.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Blog</span><span>· 30 min</span>
+</div>
+<section id="ab-testing-and-beyond-at-netflix" class="level3">
+<h3 class="anchored" data-anchor-id="ab-testing-and-beyond-at-netflix"><a href="https://netflixtechblog.com/a-b-testing-and-beyond-improving-the-netflix-streaming-experience-with-experimentation-and-data-5b0ae9295bdf" target="_blank" rel="noopener noreferrer">A/B Testing and Beyond at Netflix</a></h3>
+<div class="wtl-source">
+Netflix Technology Blog · 02 · Product cases
+</div>
+<p class="wtl-why">
+Real company example showing objectives, system metrics and product consequences.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Research article</span><span>· 35 min</span>
+</div>
+<section id="online-experimentation-at-microsoft" class="level3">
+<h3 class="anchored" data-anchor-id="online-experimentation-at-microsoft"><a href="https://www.microsoft.com/en-us/research/publication/online-experimentation-at-microsoft/" target="_blank" rel="noopener noreferrer">Online Experimentation at Microsoft</a></h3>
+<div class="wtl-source">
+Microsoft Research · 02 · Product cases
+</div>
+<p class="wtl-why">
+What production experimentation platforms must get right.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Interactive tutorial</span><span>· 25 min</span>
+</div>
+<section id="sample-size-calculator-and-explanation" class="level3">
+<h3 class="anchored" data-anchor-id="sample-size-calculator-and-explanation"><a href="https://www.evanmiller.org/ab-testing/sample-size.html" target="_blank" rel="noopener noreferrer">Sample Size Calculator and Explanation</a></h3>
+<div class="wtl-source">
+Evan Miller · 03 · Statistical power
+</div>
+<p class="wtl-why">
+Make power, alpha, baseline conversion and MDE tangible.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Blog</span><span>· 25 min</span>
+</div>
+<section id="cuped-on-statsig" class="level3">
+<h3 class="anchored" data-anchor-id="cuped-on-statsig"><a href="https://www.statsig.com/blog/cuped-on-statsig" target="_blank" rel="noopener noreferrer">CUPED on Statsig</a></h3>
+<div class="wtl-source">
+Statsig · 03 · Statistical power
+</div>
+<p class="wtl-why">
+Approachable variance-reduction explanation with prerequisites and practical limits.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Blog</span><span>· 30 min</span>
+</div>
+<section id="diagnosing-sample-ratio-mismatch" class="level3">
+<h3 class="anchored" data-anchor-id="diagnosing-sample-ratio-mismatch"><a href="https://www.microsoft.com/en-us/research/articles/diagnosing-sample-ratio-mismatch-in-a-b-testing/" target="_blank" rel="noopener noreferrer">Diagnosing Sample Ratio Mismatch</a></h3>
+<div class="wtl-source">
+Microsoft Research · 04 · Trustworthiness
+</div>
+<p class="wtl-why">
+One of the most common online-experiment interview traps.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Blog</span><span>· 20 min</span>
+</div>
+<section id="reimagining-experimentation-analysis-at-netflix" class="level3">
+<h3 class="anchored" data-anchor-id="reimagining-experimentation-analysis-at-netflix"><a href="https://netflixtechblog.com/reimagining-experimentation-analysis-at-netflix-71356393af21" target="_blank" rel="noopener noreferrer">Reimagining Experimentation Analysis at Netflix</a></h3>
+<div class="wtl-source">
+Netflix Technology Blog · 04 · Trustworthiness
+</div>
+<p class="wtl-why">
+Shows how mean, median and distributional effects can disagree.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Blog / tutorial</span><span>· 35 min</span>
+</div>
+<section id="simple-sequential-ab-testing" class="level3">
+<h3 class="anchored" data-anchor-id="simple-sequential-ab-testing"><a href="https://www.evanmiller.org/sequential-ab-testing.html" target="_blank" rel="noopener noreferrer">Simple Sequential A/B Testing</a></h3>
+<div class="wtl-source">
+Evan Miller · 05 · Advanced design
+</div>
+<p class="wtl-why">
+Introduces a sequential design that avoids the repeated-peeking problem in fixed-horizon tests.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Blog</span><span>· 30 min</span>
+</div>
+<section id="switchback-experiments-overview-considerations" class="level3">
+<h3 class="anchored" data-anchor-id="switchback-experiments-overview-considerations"><a href="https://www.statsig.com/blog/switchback-experiments" target="_blank" rel="noopener noreferrer">Switchback Experiments: Overview &amp; Considerations</a></h3>
+<div class="wtl-source">
+Statsig · 05 · Advanced design
+</div>
+<p class="wtl-why">
+Clear marketplace example of treatment interference and switching exposure over time.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Blog</span><span>· 30 min</span>
+</div>
+<section id="its-all-about-testing-netflix-platform" class="level3">
+<h3 class="anchored" data-anchor-id="its-all-about-testing-netflix-platform"><a href="https://netflixtechblog.com/its-all-a-bout-testing-the-netflix-experimentation-platform-4e1ca458c15" target="_blank" rel="noopener noreferrer">It’s All A/Bout Testing: Netflix Platform</a></h3>
+<div class="wtl-source">
+Netflix Technology Blog · 04 · Trustworthiness
+</div>
+<p class="wtl-why">
+System-design view of traffic assignment and experiment infrastructure.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Deep dive</span><span>· 50 min</span>
+</div>
+<section id="sequential-ab-testing-continuous-data" class="level3">
+<h3 class="anchored" data-anchor-id="sequential-ab-testing-continuous-data"><a href="https://netflixtechblog.com/sequential-a-b-testing-keeps-the-world-streaming-netflix-part-1-continuous-data-cba6c7ed49df" target="_blank" rel="noopener noreferrer">Sequential A/B Testing — Continuous Data</a></h3>
+<div class="wtl-source">
+Netflix Technology Blog · 05 · Advanced design
+</div>
+<p class="wtl-why">
+Technical version of anytime-valid experiments for noisy continuous data.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Blog</span><span>· 30 min</span>
+</div>
+<section id="quasi-experimentation-at-netflix" class="level3">
+<h3 class="anchored" data-anchor-id="quasi-experimentation-at-netflix"><a href="https://netflixtechblog.com/quasi-experimentation-at-netflix-566b57d2e362" target="_blank" rel="noopener noreferrer">Quasi Experimentation at Netflix</a></h3>
+<div class="wtl-source">
+Netflix Technology Blog · 05 · Advanced design
+</div>
+<p class="wtl-why">
+Understand what to do when individual randomization is infeasible.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Blog</span><span>· 35 min</span>
+</div>
+<section id="beyond-the-ab-test-experiment-designs-for-tough-questions" class="level3">
+<h3 class="anchored" data-anchor-id="beyond-the-ab-test-experiment-designs-for-tough-questions"><a href="https://www.statsig.com/blog/beyond-the-a-b-test-blog-version" target="_blank" rel="noopener noreferrer">Beyond the A/B Test: Experiment Designs for Tough Questions</a></h3>
+<div class="wtl-source">
+Statsig · 05 · Advanced design
+</div>
+<p class="wtl-why">
+Useful taxonomy of holdouts, geo tests, non-inferiority and sequential designs.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Blog</span><span>· 25 min</span>
+</div>
+<section id="alerting-in-microsofts-experimentation-platform" class="level3">
+<h3 class="anchored" data-anchor-id="alerting-in-microsofts-experimentation-platform"><a href="https://www.microsoft.com/en-us/research/articles/alerting-in-microsofts-experimentation-platform-exp/" target="_blank" rel="noopener noreferrer">Alerting in Microsoft’s Experimentation Platform</a></h3>
+<div class="wtl-source">
+Microsoft Research · 04 · Trustworthiness
+</div>
+<p class="wtl-why">
+Real-world example of automated invariant and metric anomaly checks.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Blog</span><span>· 25 min</span>
+</div>
+<section id="cure-regression-adjustment-beyond-cuped" class="level3">
+<h3 class="anchored" data-anchor-id="cure-regression-adjustment-beyond-cuped"><a href="https://statsig.com/blog/announcing-cure" target="_blank" rel="noopener noreferrer">CURE: Regression Adjustment Beyond CUPED</a></h3>
+<div class="wtl-source">
+Statsig · 03 · Statistical power
+</div>
+<p class="wtl-why">
+Extends variance reduction to flexible covariate sets and new-user scenarios.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Guide</span><span>· 45 min</span>
+</div>
+<section id="switchback-test-methodology" class="level3">
+<h3 class="anchored" data-anchor-id="switchback-test-methodology"><a href="https://docs.statsig.com/experiments/types/switchback-tests" target="_blank" rel="noopener noreferrer">Switchback Test Methodology</a></h3>
+<div class="wtl-source">
+Statsig Docs · 05 · Advanced design
+</div>
+<p class="wtl-why">
+Analysis unit, buckets and uncertainty for marketplace experiments.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Open research collection</span><span>· 45 min</span>
+</div>
+<section id="introduction-to-experimentation-pitfalls" class="level3">
+<h3 class="anchored" data-anchor-id="introduction-to-experimentation-pitfalls"><a href="https://exp-platform.com/" target="_blank" rel="noopener noreferrer">Introduction to Experimentation Pitfalls</a></h3>
+<div class="wtl-source">
+ExP Platform · 06 · Interview review
+</div>
+<p class="wtl-why">
+Collection of free papers on online experimentation and hard-to-detect pitfalls.
+</p>
+</section>
+</div>
+<div class="wtl-no-results" hidden="">
+No matching articles in this topic. Try another search or difficulty.
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p class="wtl-tab-intro">
+Start with identification and DAGs, move through quasi-experiments, and master Double/Debiased ML and heterogeneous effects.
+</p>
+<div class="wtl-card-grid">
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Online textbook</span><span>· 60 min</span>
+</div>
+<section id="the-effect-free-online-book" class="level3">
+<h3 class="anchored" data-anchor-id="the-effect-free-online-book"><a href="https://theeffectbook.net/" target="_blank" rel="noopener noreferrer">The Effect — Free Online Book</a></h3>
+<div class="wtl-source">
+Nick Huntington-Klein · 01 · Causal thinking
+</div>
+<p class="wtl-why">
+Visual explanations of identification, DAGs and research designs.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Online textbook</span><span>· 60 min</span>
+</div>
+<section id="causal-inference-for-the-brave-and-true" class="level3">
+<h3 class="anchored" data-anchor-id="causal-inference-for-the-brave-and-true"><a href="https://matheusfacure.github.io/python-causality-handbook/landing-page.html" target="_blank" rel="noopener noreferrer">Causal Inference for the Brave and True</a></h3>
+<div class="wtl-source">
+Matheus Facure · 01 · Causal thinking
+</div>
+<p class="wtl-why">
+Python-first practical introduction, with rich examples and accessible explanations.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Online textbook</span><span>· 90 min</span>
+</div>
+<section id="causal-inference-the-mixtape-free-online-1st-edition" class="level3">
+<h3 class="anchored" data-anchor-id="causal-inference-the-mixtape-free-online-1st-edition"><a href="https://mixtape-1ed.netlify.app/" target="_blank" rel="noopener noreferrer">Causal Inference: The Mixtape (Free Online 1st Edition)</a></h3>
+<div class="wtl-source">
+Scott Cunningham · 01 · Causal thinking
+</div>
+<p class="wtl-why">
+Classic open econometrics treatment of experimental and observational designs.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Online handbook</span><span>· 40 min</span>
+</div>
+<section id="causal-inference-for-intervention-evaluations" class="level3">
+<h3 class="anchored" data-anchor-id="causal-inference-for-intervention-evaluations"><a href="https://nhsengland.github.io/causal-handbook/" target="_blank" rel="noopener noreferrer">Causal Inference for Intervention Evaluations</a></h3>
+<div class="wtl-source">
+NHS England · 01 · Causal thinking
+</div>
+<p class="wtl-why">
+Practical public-sector handbook for designing evaluation studies.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Tutorial</span><span>· 40 min</span>
+</div>
+<section id="graphical-causal-models-with-python-examples" class="level3">
+<h3 class="anchored" data-anchor-id="graphical-causal-models-with-python-examples"><a href="https://matheusfacure.github.io/python-causality-handbook/04-Graphical-Causal-Models.html" target="_blank" rel="noopener noreferrer">Graphical Causal Models with Python Examples</a></h3>
+<div class="wtl-source">
+Matheus Facure · 02 · Identification
+</div>
+<p class="wtl-why">
+DAG-based rules for confounders, colliders and mediators.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Free online book</span><span>· 90 min</span>
+</div>
+<section id="what-if-causal-inference-free-textbook" class="level3">
+<h3 class="anchored" data-anchor-id="what-if-causal-inference-free-textbook"><a href="https://miguelhernan.org/whatifbook" target="_blank" rel="noopener noreferrer">What If — Causal Inference (Free Textbook)</a></h3>
+<div class="wtl-source">
+Hernán &amp; Robins · 02 · Identification
+</div>
+<p class="wtl-why">
+Rigorous potential-outcome treatment of observational causal questions.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Open documentation</span><span>· 45 min</span>
+</div>
+<section id="dowhy-causal-inference-tutorial" class="level3">
+<h3 class="anchored" data-anchor-id="dowhy-causal-inference-tutorial"><a href="https://www.pywhy.org/dowhy/v0.13/" target="_blank" rel="noopener noreferrer">DoWhy: Causal Inference Tutorial</a></h3>
+<div class="wtl-source">
+PyWhy · 02 · Identification
+</div>
+<p class="wtl-why">
+Connect DAG assumptions to identification, estimation and refutation.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Tutorial</span><span>· 60 min</span>
+</div>
+<section id="difference-in-differences-with-multiple-periods" class="level3">
+<h3 class="anchored" data-anchor-id="difference-in-differences-with-multiple-periods"><a href="https://bcallaway11.github.io/did/articles/multi-period-did.html" target="_blank" rel="noopener noreferrer">Difference-in-Differences with Multiple Periods</a></h3>
+<div class="wtl-source">
+Callaway &amp; Sant’Anna · 03 · Quasi-experiments
+</div>
+<p class="wtl-why">
+Modern staggered-adoption DiD framework with intuitive notation.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Hands-on tutorial</span><span>· 60 min</span>
+</div>
+<section id="getting-started-with-did" class="level3">
+<h3 class="anchored" data-anchor-id="getting-started-with-did"><a href="https://bcallaway11.github.io/did/articles/did-basics.html" target="_blank" rel="noopener noreferrer">Getting Started with did</a></h3>
+<div class="wtl-source">
+Callaway &amp; Sant’Anna · 03 · Quasi-experiments
+</div>
+<p class="wtl-why">
+Concrete code and event-study outputs for modern DiD.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Tutorial</span><span>· 45 min</span>
+</div>
+<section id="instrumental-variables-brave-and-true" class="level3">
+<h3 class="anchored" data-anchor-id="instrumental-variables-brave-and-true"><a href="https://matheusfacure.github.io/python-causality-handbook/08-Instrumental-Variables.html" target="_blank" rel="noopener noreferrer">Instrumental Variables — Brave and True</a></h3>
+<div class="wtl-source">
+Matheus Facure · 03 · Quasi-experiments
+</div>
+<p class="wtl-why">
+Accessible economic intuition for an instrument and LATE.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Tutorial</span><span>· 45 min</span>
+</div>
+<section id="regression-discontinuity-brave-and-true" class="level3">
+<h3 class="anchored" data-anchor-id="regression-discontinuity-brave-and-true"><a href="https://matheusfacure.github.io/python-causality-handbook/16-Regression-Discontinuity-Design.html" target="_blank" rel="noopener noreferrer">Regression Discontinuity — Brave and True</a></h3>
+<div class="wtl-source">
+Matheus Facure · 03 · Quasi-experiments
+</div>
+<p class="wtl-why">
+Practical cutoff-based causal identification with visual intuition.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Open online chapter</span><span>· 65 min</span>
+</div>
+<section id="doubly-robust-estimation-step-by-step" class="level3">
+<h3 class="anchored" data-anchor-id="doubly-robust-estimation-step-by-step"><a href="https://matheusfacure.github.io/python-causality-handbook/12-Doubly-Robust-Estimation.html" target="_blank" rel="noopener noreferrer">Doubly Robust Estimation: Step-by-Step</a></h3>
+<div class="wtl-source">
+Matheus Facure · 04 · Causal ML
+</div>
+<p class="wtl-why">
+Builds intuition for combining propensity and outcome models to estimate causal effects.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Official guide</span><span>· 90 min</span>
+</div>
+<section id="the-basics-of-double-machine-learning" class="level3">
+<h3 class="anchored" data-anchor-id="the-basics-of-double-machine-learning"><a href="https://docs.doubleml.org/stable/guide/guide.html" target="_blank" rel="noopener noreferrer">The Basics of Double Machine Learning</a></h3>
+<div class="wtl-source">
+DoubleML · 04 · Double ML
+</div>
+<p class="wtl-why">
+Orthogonalization, sample splitting, nuisance models and inference explained together.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Free lectures</span><span>· 50 min</span>
+</div>
+<section id="introduction-to-double-machine-learning" class="level3">
+<h3 class="anchored" data-anchor-id="introduction-to-double-machine-learning"><a href="https://docs.doubleml.org/tutorial/stable/lectures/L1/introduction_part1.html" target="_blank" rel="noopener noreferrer">Introduction to Double Machine Learning</a></h3>
+<div class="wtl-source">
+DoubleML · 04 · Double ML
+</div>
+<p class="wtl-why">
+Slides that bridge ML prediction and target-parameter inference.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Open paper</span><span>· 90 min</span>
+</div>
+<section id="doubledebiased-machine-learning-original-paper" class="level3">
+<h3 class="anchored" data-anchor-id="doubledebiased-machine-learning-original-paper"><a href="https://arxiv.org/abs/1608.00060" target="_blank" rel="noopener noreferrer">Double/Debiased Machine Learning (Original Paper)</a></h3>
+<div class="wtl-source">
+Chernozhukov et al.&nbsp;· 04 · Double ML
+</div>
+<p class="wtl-why">
+The formal theory behind orthogonal scores and cross-fitting.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Hands-on examples</span><span>· 75 min</span>
+</div>
+<section id="doubleml-python-examples-gallery" class="level3">
+<h3 class="anchored" data-anchor-id="doubleml-python-examples-gallery"><a href="https://docs.doubleml.org/dev/examples/" target="_blank" rel="noopener noreferrer">DoubleML: Python Examples Gallery</a></h3>
+<div class="wtl-source">
+DoubleML · 04 · Double ML
+</div>
+<p class="wtl-why">
+Includes PLR, IRM, sensitivity analysis, IV and complex designs.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Open-source guide</span><span>· 60 min</span>
+</div>
+<section id="causalml-uplift-and-heterogeneous-effects" class="level3">
+<h3 class="anchored" data-anchor-id="causalml-uplift-and-heterogeneous-effects"><a href="https://causalml.readthedocs.io/en/stable/" target="_blank" rel="noopener noreferrer">CausalML — Uplift and Heterogeneous Effects</a></h3>
+<div class="wtl-source">
+Uber · 05 · Causal ML
+</div>
+<p class="wtl-why">
+Tools and tutorials for CATE and uplift targeting.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Technical guide</span><span>· 60 min</span>
+</div>
+<section id="causal-forests-in-grf" class="level3">
+<h3 class="anchored" data-anchor-id="causal-forests-in-grf"><a href="https://grf-labs.github.io/grf/" target="_blank" rel="noopener noreferrer">Causal Forests in GRF</a></h3>
+<div class="wtl-source">
+GRF authors · 05 · Causal ML
+</div>
+<p class="wtl-why">
+Research-grade tutorials for heterogeneous treatment effects and honest forests.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Technical tutorial</span><span>· 50 min</span>
+</div>
+<section id="problems-with-twfe-event-study-regressions" class="level3">
+<h3 class="anchored" data-anchor-id="problems-with-twfe-event-study-regressions"><a href="https://bcallaway11.github.io/did/articles/TWFE.html" target="_blank" rel="noopener noreferrer">Problems with TWFE Event Study Regressions</a></h3>
+<div class="wtl-source">
+Callaway &amp; Sant’Anna · 03 · Quasi-experiments
+</div>
+<p class="wtl-why">
+Concrete demonstration of contaminated leads/lags under staggered timing.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Tutorial</span><span>· 50 min</span>
+</div>
+<section id="evaluating-causal-models-in-practice" class="level3">
+<h3 class="anchored" data-anchor-id="evaluating-causal-models-in-practice"><a href="https://matheusfacure.github.io/python-causality-handbook/19-Evaluating-Causal-Models.html" target="_blank" rel="noopener noreferrer">Evaluating Causal Models in Practice</a></h3>
+<div class="wtl-source">
+Matheus Facure · 05 · Causal ML
+</div>
+<p class="wtl-why">
+Explains the hard problem of validating CATE models without individual ground truth.
+</p>
+</section>
+</div>
+<div class="wtl-no-results" hidden="">
+No matching articles in this topic. Try another search or difficulty.
+</div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p class="wtl-tab-intro">
+Build rigorous ML foundations, learn deep-learning internals, and practice modern retrieval and learning-to-rank systems.
+</p>
+<div class="wtl-card-grid">
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Free course</span><span>· 50 min</span>
+</div>
+<section id="machine-learning-crash-course" class="level3">
+<h3 class="anchored" data-anchor-id="machine-learning-crash-course"><a href="https://developers.google.com/machine-learning/crash-course/" target="_blank" rel="noopener noreferrer">Machine Learning Crash Course</a></h3>
+<div class="wtl-source">
+Google · 01 · ML core
+</div>
+<p class="wtl-why">
+Interactive grounding in loss, gradient descent, classification and generalization.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Free PDF/book</span><span>· 90 min</span>
+</div>
+<section id="an-introduction-to-statistical-learning-python" class="level3">
+<h3 class="anchored" data-anchor-id="an-introduction-to-statistical-learning-python"><a href="https://www.statlearning.com/" target="_blank" rel="noopener noreferrer">An Introduction to Statistical Learning (Python)</a></h3>
+<div class="wtl-source">
+James, Witten, Hastie, Tibshirani &amp; Taylor · 01 · ML core
+</div>
+<p class="wtl-why">
+Best structured path through regression, trees, CV and regularization.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Documentation</span><span>· 50 min</span>
+</div>
+<section id="scikit-learn-user-guide" class="level3">
+<h3 class="anchored" data-anchor-id="scikit-learn-user-guide"><a href="https://scikit-learn.org/stable/user_guide.html" target="_blank" rel="noopener noreferrer">Scikit-learn User Guide</a></h3>
+<div class="wtl-source">
+scikit-learn · 01 · ML core
+</div>
+<p class="wtl-why">
+Clear explanations with implementation guidance for classical ML.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Free video course</span><span>· 60 min</span>
+</div>
+<section id="practical-deep-learning-for-coders" class="level3">
+<h3 class="anchored" data-anchor-id="practical-deep-learning-for-coders"><a href="https://course.fast.ai/" target="_blank" rel="noopener noreferrer">Practical Deep Learning for Coders</a></h3>
+<div class="wtl-source">
+fast.ai · 02 · Deep learning
+</div>
+<p class="wtl-why">
+Hands-on deep-learning workflow with runnable notebooks.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Engineering guide</span><span>· 45 min</span>
+</div>
+<section id="rules-of-machine-learning" class="level3">
+<h3 class="anchored" data-anchor-id="rules-of-machine-learning"><a href="https://developers.google.com/machine-learning/guides/rules-of-ml" target="_blank" rel="noopener noreferrer">Rules of Machine Learning</a></h3>
+<div class="wtl-source">
+Google Developers · 02 · Applied ML
+</div>
+<p class="wtl-why">
+Influential practical guidance on simple baselines, feature engineering and production ML pitfalls.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Free textbook</span><span>· 90 min</span>
+</div>
+<section id="dive-into-deep-learning" class="level3">
+<h3 class="anchored" data-anchor-id="dive-into-deep-learning"><a href="https://en.d2l.ai/" target="_blank" rel="noopener noreferrer">Dive into Deep Learning</a></h3>
+<div class="wtl-source">
+Zhang, Lipton, Li &amp; Smola · 02 · Deep learning
+</div>
+<p class="wtl-why">
+Math, code and diagrams for backprop, CNNs, attention and optimizers.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Code tutorial</span><span>· 60 min</span>
+</div>
+<section id="micrograd-autograd-from-scratch" class="level3">
+<h3 class="anchored" data-anchor-id="micrograd-autograd-from-scratch"><a href="https://github.com/karpathy/micrograd" target="_blank" rel="noopener noreferrer">micrograd: Autograd from Scratch</a></h3>
+<div class="wtl-source">
+Andrej Karpathy · 02 · Deep learning
+</div>
+<p class="wtl-why">
+Tiny but rigorous automatic-differentiation engine.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Free lecture notes</span><span>· 60 min</span>
+</div>
+<section id="cs231n-convolutional-neural-networks" class="level3">
+<h3 class="anchored" data-anchor-id="cs231n-convolutional-neural-networks"><a href="https://cs231n.github.io/" target="_blank" rel="noopener noreferrer">CS231n Convolutional Neural Networks</a></h3>
+<div class="wtl-source">
+Stanford · 02 · Deep learning
+</div>
+<p class="wtl-why">
+Clear neural network foundations, activation, optimization and CNN design.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Documentation</span><span>· 45 min</span>
+</div>
+<section id="xgboost-official-tutorials" class="level3">
+<h3 class="anchored" data-anchor-id="xgboost-official-tutorials"><a href="https://xgboost.readthedocs.io/en/stable/tutorials/" target="_blank" rel="noopener noreferrer">XGBoost Official Tutorials</a></h3>
+<div class="wtl-source">
+XGBoost · 01 · ML core
+</div>
+<p class="wtl-why">
+Practical gradient boosting and custom objectives.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Documentation</span><span>· 40 min</span>
+</div>
+<section id="feature-engineering-pipelines" class="level3">
+<h3 class="anchored" data-anchor-id="feature-engineering-pipelines"><a href="https://scikit-learn.org/stable/modules/compose.html" target="_blank" rel="noopener noreferrer">Feature Engineering &amp; Pipelines</a></h3>
+<div class="wtl-source">
+scikit-learn · 03 · Production ML
+</div>
+<p class="wtl-why">
+ColumnTransformer and Pipeline prevent preprocessing leakage.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Official guide</span><span>· 40 min</span>
+</div>
+<section id="bm25-similarity-and-search-scoring" class="level3">
+<h3 class="anchored" data-anchor-id="bm25-similarity-and-search-scoring"><a href="https://www.elastic.co/docs/reference/elasticsearch/index-settings/similarity" target="_blank" rel="noopener noreferrer">BM25 Similarity and Search Scoring</a></h3>
+<div class="wtl-source">
+Elastic · 03 · Search &amp; retrieval
+</div>
+<p class="wtl-why">
+Explains BM25 as a lexical retrieval baseline and the roles of term saturation and length normalization.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Open course materials</span><span>· 70 min</span>
+</div>
+<section id="cs276-information-retrieval-and-web-search" class="level3">
+<h3 class="anchored" data-anchor-id="cs276-information-retrieval-and-web-search"><a href="https://web.stanford.edu/class/cs276/" target="_blank" rel="noopener noreferrer">CS276: Information Retrieval and Web Search</a></h3>
+<div class="wtl-source">
+Stanford · 04 · Search &amp; ranking
+</div>
+<p class="wtl-why">
+Search architecture, inverted indexes, relevance and learning to rank.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Official tutorials</span><span>· 60 min</span>
+</div>
+<section id="tensorflow-recommenders-overview" class="level3">
+<h3 class="anchored" data-anchor-id="tensorflow-recommenders-overview"><a href="https://www.tensorflow.org/recommenders" target="_blank" rel="noopener noreferrer">TensorFlow Recommenders Overview</a></h3>
+<div class="wtl-source">
+TensorFlow · 04 · Search &amp; ranking
+</div>
+<p class="wtl-why">
+Two-stage candidate retrieval and ranking, with training code.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Code tutorial</span><span>· 45 min</span>
+</div>
+<section id="basic-retrieval-tutorial" class="level3">
+<h3 class="anchored" data-anchor-id="basic-retrieval-tutorial"><a href="https://www.tensorflow.org/recommenders/examples/basic_retrieval" target="_blank" rel="noopener noreferrer">Basic Retrieval Tutorial</a></h3>
+<div class="wtl-source">
+TensorFlow Recommenders · 04 · Search &amp; ranking
+</div>
+<p class="wtl-why">
+Embeddings, negative examples, top-K candidate retrieval and evaluation.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Code tutorial</span><span>· 45 min</span>
+</div>
+<section id="basic-ranking-tutorial" class="level3">
+<h3 class="anchored" data-anchor-id="basic-ranking-tutorial"><a href="https://www.tensorflow.org/recommenders/examples/basic_ranking" target="_blank" rel="noopener noreferrer">Basic Ranking Tutorial</a></h3>
+<div class="wtl-source">
+TensorFlow Recommenders · 04 · Search &amp; ranking
+</div>
+<p class="wtl-why">
+Convert candidate sets to ranking scores and task losses.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Official guide</span><span>· 70 min</span>
+</div>
+<section id="learning-to-rank-with-xgboost-lambdamart" class="level3">
+<h3 class="anchored" data-anchor-id="learning-to-rank-with-xgboost-lambdamart"><a href="https://xgboost.readthedocs.io/en/stable/tutorials/learning_to_rank.html" target="_blank" rel="noopener noreferrer">Learning to Rank with XGBoost / LambdaMART</a></h3>
+<div class="wtl-source">
+XGBoost · 04 · Search &amp; ranking
+</div>
+<p class="wtl-why">
+Ranking objectives, grouped queries, NDCG and position bias.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Code tutorial</span><span>· 55 min</span>
+</div>
+<section id="xgboost-learning-to-rank-runnable-example" class="level3">
+<h3 class="anchored" data-anchor-id="xgboost-learning-to-rank-runnable-example"><a href="https://xgboost.readthedocs.io/en/latest/python/examples/learning_to_rank.html" target="_blank" rel="noopener noreferrer">XGBoost Learning to Rank: Runnable Example</a></h3>
+<div class="wtl-source">
+XGBoost · 04 · Search &amp; ranking
+</div>
+<p class="wtl-why">
+MSLR dataset, query groups and debiasing examples.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Code archive</span><span>· 50 min</span>
+</div>
+<section id="tensorflow-ranking-archived-educational-repository" class="level3">
+<h3 class="anchored" data-anchor-id="tensorflow-ranking-archived-educational-repository"><a href="https://github.com/tensorflow/ranking" target="_blank" rel="noopener noreferrer">TensorFlow Ranking (Archived Educational Repository)</a></h3>
+<div class="wtl-source">
+TensorFlow · 04 · Search &amp; ranking
+</div>
+<p class="wtl-why">
+Learning-to-rank losses and NDCG examples; repo archived in May 2025.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>API reference</span><span>· 45 min</span>
+</div>
+<section id="recommender-systems-retrieval-ranking-architecture" class="level3">
+<h3 class="anchored" data-anchor-id="recommender-systems-retrieval-ranking-architecture"><a href="https://www.tensorflow.org/recommenders/api_docs/python/tfrs/tasks" target="_blank" rel="noopener noreferrer">Recommender Systems Retrieval / Ranking Architecture</a></h3>
+<div class="wtl-source">
+TensorFlow Recommenders · 04 · Search &amp; ranking
+</div>
+<p class="wtl-why">
+Separate retrieval objectives from top-result scoring objectives.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Documentation</span><span>· 50 min</span>
+</div>
+<section id="model-evaluation-and-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="model-evaluation-and-metrics"><a href="https://scikit-learn.org/stable/modules/model_evaluation.html" target="_blank" rel="noopener noreferrer">Model Evaluation and Metrics</a></h3>
+<div class="wtl-source">
+scikit-learn · 03 · Production ML
+</div>
+<p class="wtl-why">
+Calibration, ROC/PR, scoring objectives and CV pitfalls.
+</p>
+</section>
+</div>
+<div class="wtl-no-results" hidden="">
+No matching articles in this topic. Try another search or difficulty.
+</div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p class="wtl-tab-intro">
+Understand attention, decoder-only modeling, training, alignment, RAG, evaluation, and production inference.
+</p>
+<div class="wtl-card-grid">
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Visual blog</span><span>· 45 min</span>
+</div>
+<section id="the-illustrated-transformer" class="level3">
+<h3 class="anchored" data-anchor-id="the-illustrated-transformer"><a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener noreferrer">The Illustrated Transformer</a></h3>
+<div class="wtl-source">
+Jay Alammar · 01 · Architecture
+</div>
+<p class="wtl-why">
+The most approachable visual explanation of Q/K/V, multi-head attention and encoder–decoder.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Free course</span><span>· 60 min</span>
+</div>
+<section id="llm-course" class="level3">
+<h3 class="anchored" data-anchor-id="llm-course"><a href="https://huggingface.co/learn/llm-course/en/chapter1/1" target="_blank" rel="noopener noreferrer">LLM Course</a></h3>
+<div class="wtl-source">
+Hugging Face · 01 · Architecture
+</div>
+<p class="wtl-why">
+Tokenizers, transformer models, finetuning and the HF ecosystem.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Open paper</span><span>· 60 min</span>
+</div>
+<section id="attention-is-all-you-need" class="level3">
+<h3 class="anchored" data-anchor-id="attention-is-all-you-need"><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener noreferrer">Attention Is All You Need</a></h3>
+<div class="wtl-source">
+Vaswani et al.&nbsp;· 01 · Architecture
+</div>
+<p class="wtl-why">
+The foundational Transformer paper, available free.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Open source / code walkthrough</span><span>· 70 min</span>
+</div>
+<section id="the-annotated-transformer-open-implementation" class="level3">
+<h3 class="anchored" data-anchor-id="the-annotated-transformer-open-implementation"><a href="https://github.com/harvardnlp/annotated-transformer" target="_blank" rel="noopener noreferrer">The Annotated Transformer — Open Implementation</a></h3>
+<div class="wtl-source">
+Harvard NLP · 01 · Architecture
+</div>
+<p class="wtl-why">
+Annotated implementation of the original Transformer architecture, with code to inspect each component.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Beginner">
+<div class="wtl-meta">
+<span class="wtl-pill">Beginner</span><span>Free videos/code</span><span>· 75 min</span>
+</div>
+<section id="neural-networks-zero-to-hero" class="level3">
+<h3 class="anchored" data-anchor-id="neural-networks-zero-to-hero"><a href="https://github.com/karpathy/nn-zero-to-hero" target="_blank" rel="noopener noreferrer">Neural Networks: Zero to Hero</a></h3>
+<div class="wtl-source">
+Andrej Karpathy · 02 · From scratch
+</div>
+<p class="wtl-why">
+Detailed build-up from MLP/autograd to GPT.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Code repository</span><span>· 75 min</span>
+</div>
+<section id="nanogpt" class="level3">
+<h3 class="anchored" data-anchor-id="nanogpt"><a href="https://github.com/karpathy/nanoGPT" target="_blank" rel="noopener noreferrer">nanoGPT</a></h3>
+<div class="wtl-source">
+Andrej Karpathy · 02 · From scratch
+</div>
+<p class="wtl-why">
+Compact GPT pretraining/fine-tuning codebase.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Free code/tutorials</span><span>· 75 min</span>
+</div>
+<section id="build-a-large-language-model-from-scratch-free-code" class="level3">
+<h3 class="anchored" data-anchor-id="build-a-large-language-model-from-scratch-free-code"><a href="https://github.com/rasbt/LLMs-from-scratch" target="_blank" rel="noopener noreferrer">Build a Large Language Model from Scratch — Free Code</a></h3>
+<div class="wtl-source">
+Sebastian Raschka · 02 · From scratch
+</div>
+<p class="wtl-why">
+Complete code and notebooks; the companion prose book is paid.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Open lecture materials</span><span>· 90 min</span>
+</div>
+<section id="cs336-language-modeling-from-scratch" class="level3">
+<h3 class="anchored" data-anchor-id="cs336-language-modeling-from-scratch"><a href="https://cs336.stanford.edu/" target="_blank" rel="noopener noreferrer">CS336: Language Modeling from Scratch</a></h3>
+<div class="wtl-source">
+Stanford · 02 · From scratch
+</div>
+<p class="wtl-why">
+Comprehensive model development: data, architecture, kernels, training and evaluation.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Visual blog</span><span>· 35 min</span>
+</div>
+<section id="the-illustrated-gpt-2" class="level3">
+<h3 class="anchored" data-anchor-id="the-illustrated-gpt-2"><a href="https://jalammar.github.io/illustrated-gpt2/" target="_blank" rel="noopener noreferrer">The Illustrated GPT-2</a></h3>
+<div class="wtl-source">
+Jay Alammar · 01 · Architecture
+</div>
+<p class="wtl-why">
+Intuitive decoder-only generation and masked self-attention.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Official guide</span><span>· 60 min</span>
+</div>
+<section id="hugging-face-transformers-documentation" class="level3">
+<h3 class="anchored" data-anchor-id="hugging-face-transformers-documentation"><a href="https://huggingface.co/docs/transformers/index" target="_blank" rel="noopener noreferrer">Hugging Face Transformers Documentation</a></h3>
+<div class="wtl-source">
+Hugging Face · 03 · Fine-tuning
+</div>
+<p class="wtl-why">
+Practical model loading, generation, training and inference.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Open paper</span><span>· 60 min</span>
+</div>
+<section id="lora-low-rank-adaptation" class="level3">
+<h3 class="anchored" data-anchor-id="lora-low-rank-adaptation"><a href="https://arxiv.org/abs/2106.09685" target="_blank" rel="noopener noreferrer">LoRA: Low-Rank Adaptation</a></h3>
+<div class="wtl-source">
+Hu et al.&nbsp;· 03 · Fine-tuning
+</div>
+<p class="wtl-why">
+Parameter-efficient fine-tuning through low-rank weight updates.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Intermediate">
+<div class="wtl-meta">
+<span class="wtl-pill">Intermediate</span><span>Open paper</span><span>· 60 min</span>
+</div>
+<section id="qlora-efficient-finetuning" class="level3">
+<h3 class="anchored" data-anchor-id="qlora-efficient-finetuning"><a href="https://arxiv.org/abs/2305.14314" target="_blank" rel="noopener noreferrer">QLoRA: Efficient Finetuning</a></h3>
+<div class="wtl-source">
+Dettmers et al.&nbsp;· 03 · Fine-tuning
+</div>
+<p class="wtl-why">
+4-bit quantization plus low-rank adapters for memory-efficient training.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Open paper</span><span>· 70 min</span>
+</div>
+<section id="direct-preference-optimization-dpo" class="level3">
+<h3 class="anchored" data-anchor-id="direct-preference-optimization-dpo"><a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener noreferrer">Direct Preference Optimization (DPO)</a></h3>
+<div class="wtl-source">
+Rafailov et al.&nbsp;· 03 · Fine-tuning
+</div>
+<p class="wtl-why">
+Preference learning without the standard PPO-style RLHF training loop.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Open paper</span><span>· 70 min</span>
+</div>
+<section id="training-language-models-to-follow-instructions" class="level3">
+<h3 class="anchored" data-anchor-id="training-language-models-to-follow-instructions"><a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener noreferrer">Training Language Models to Follow Instructions</a></h3>
+<div class="wtl-source">
+Ouyang et al.&nbsp;(InstructGPT) · 03 · Fine-tuning
+</div>
+<p class="wtl-why">
+Canonical supervised fine-tuning and RLHF pipeline.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Engineering blog</span><span>· 45 min</span>
+</div>
+<section id="contextual-retrieval" class="level3">
+<h3 class="anchored" data-anchor-id="contextual-retrieval"><a href="https://www.anthropic.com/research/contextual-retrieval" target="_blank" rel="noopener noreferrer">Contextual Retrieval</a></h3>
+<div class="wtl-source">
+Anthropic · 04 · Retrieval &amp; agents
+</div>
+<p class="wtl-why">
+RAG, hybrid BM25/vector retrieval and reranking with practical context issues.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Research blog</span><span>· 60 min</span>
+</div>
+<section id="llm-powered-autonomous-agents" class="level3">
+<h3 class="anchored" data-anchor-id="llm-powered-autonomous-agents"><a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank" rel="noopener noreferrer">LLM-Powered Autonomous Agents</a></h3>
+<div class="wtl-source">
+Lilian Weng · 04 · Retrieval &amp; agents
+</div>
+<p class="wtl-why">
+Long-form overview of planning, memory, tool use and agent evaluation.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Open paper</span><span>· 60 min</span>
+</div>
+<section id="retrieval-augmented-generation-for-knowledge-intensive-nlp" class="level3">
+<h3 class="anchored" data-anchor-id="retrieval-augmented-generation-for-knowledge-intensive-nlp"><a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener noreferrer">Retrieval Augmented Generation for Knowledge Intensive NLP</a></h3>
+<div class="wtl-source">
+Lewis et al.&nbsp;· 04 · Retrieval &amp; agents
+</div>
+<p class="wtl-why">
+The foundational RAG formulation and its limitations.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Official tutorials</span><span>· 55 min</span>
+</div>
+<section id="hugging-face-trl-alignment-tutorials" class="level3">
+<h3 class="anchored" data-anchor-id="hugging-face-trl-alignment-tutorials"><a href="https://huggingface.co/docs/trl/index" target="_blank" rel="noopener noreferrer">Hugging Face TRL: Alignment Tutorials</a></h3>
+<div class="wtl-source">
+Hugging Face · 03 · Fine-tuning
+</div>
+<p class="wtl-why">
+Hands-on SFT, preference tuning and alignment workflows.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Open source / evaluation guide</span><span>· 50 min</span>
+</div>
+<section id="holistic-evaluation-of-language-models-helm" class="level3">
+<h3 class="anchored" data-anchor-id="holistic-evaluation-of-language-models-helm"><a href="https://github.com/stanford-crfm/helm" target="_blank" rel="noopener noreferrer">Holistic Evaluation of Language Models (HELM)</a></h3>
+<div class="wtl-source">
+Stanford CRFM · 05 · Evaluation
+</div>
+<p class="wtl-why">
+Shows how to evaluate models across capabilities, robustness and efficiency rather than one scalar score.
+</p>
+</section>
+</div>
+<div class="wtl-card" data-level="Advanced">
+<div class="wtl-meta">
+<span class="wtl-pill">Advanced</span><span>Official docs</span><span>· 60 min</span>
+</div>
+<section id="llm-systems-and-inference-vllm" class="level3">
+<h3 class="anchored" data-anchor-id="llm-systems-and-inference-vllm"><a href="https://docs.vllm.ai/en/latest/" target="_blank" rel="noopener noreferrer">LLM Systems and Inference (vLLM)</a></h3>
+<div class="wtl-source">
+vLLM Project · 05 · Evaluation
+</div>
+<p class="wtl-why">
+Serving optimizations, PagedAttention, throughput and batching.
+</p>
+</section>
+</div>
+<div class="wtl-no-results" hidden="">
+No matching articles in this topic. Try another search or difficulty.
+</div>
+</div>
+</div>
+</div>
+</div>
+<p class="wtl-note">
+All materials link to their original publishers; a free PDF chapter is not the same as a freely available full book. Last link review: October 22, 2026. External websites may change accessibility without notice.
+</p>
+<script>
+(function () {
+  function initializeLibrary() {
+    const input=document.getElementById('wtl-search');
+    const count=document.getElementById('wtl-result-count');
+    if(!input || !count) return;
+    let level='All';
+    const buttons=[...document.querySelectorAll('[data-wtl-filter]')];
+    function activePane(){
+      return document.querySelector('.panel-tabset .tab-content .tab-pane.active') ||
+             document.querySelector('.panel-tabset .tab-content .tab-pane') ||
+             document.querySelector('.panel-tabset');
+    }
+    function update(){
+      const term=input.value.trim().toLowerCase();
+      const pane=activePane();
+      if(!pane) return;
+      let total=0,shown=0;
+      for(const card of document.querySelectorAll('.wtl-card')){
+        const text=card.textContent.toLowerCase();
+        const visible=(level==='All'||card.dataset.level===level)&&(!term||text.includes(term));
+        card.hidden=!visible;
+      }
+      for(const card of pane.querySelectorAll('.wtl-card')){
+        total++;if(!card.hidden)shown++;
+      }
+      count.textContent=shown+' articles shown in this topic';
+      const noResults=pane.querySelector('.wtl-no-results');
+      if(noResults)noResults.hidden=shown!==0;
+      buttons.forEach(b=>{const current=b.dataset.wtlFilter===level;b.classList.toggle('active',current);b.setAttribute('aria-pressed',String(current));});
+    }
+    input.addEventListener('input',update);
+    buttons.forEach(b=>b.addEventListener('click',()=>{level=b.dataset.wtlFilter;update();}));
+    document.addEventListener('shown.bs.tab',update);
+    document.querySelectorAll('.panel-tabset button, .panel-tabset a[role="tab"]').forEach(t=>t.addEventListener('click',()=>requestAnimationFrame(update)));
+    update();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initializeLibrary);
+  else initializeLibrary();
+})();
+</script>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
