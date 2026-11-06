@@ -91,5 +91,80 @@
   },
   "blog/technical_blog_quarto_fixed/blog/index.qmd": {
     "index.html": "4bea992d"
+  },
+  "projects/01-housing-price-delinquency/index.ipynb": {
+    "index.html": "b7bcde8c"
+  },
+  "projects/11-did-homebuyer/index.ipynb": {
+    "index.html": "868adef6"
+  },
+  "projects/09-ab-checkout/index.ipynb": {
+    "index.html": "cf226904"
+  },
+  "projects/02-search-learning-to-rank/index.ipynb": {
+    "index.html": "ba9dd0bc"
+  },
+  "projects/12-psm-vs-double-ml/index.ipynb": {
+    "index.html": "b86e6944"
+  },
+  "projects/03-neural-delinquency/index.ipynb": {
+    "index.html": "fb99b0e3"
+  },
+  "projects/05-transformer-query-correction/index.ipynb": {
+    "index.html": "5468fbe5"
+  },
+  "projects/08-mortgage-rag/index.ipynb": {
+    "index.html": "7c93b286"
+  },
+  "projects/06-content-news-recommendation/index.ipynb": {
+    "index.html": "28a5ad30"
+  },
+  "projects/04-two-tower-retrieval/index.ipynb": {
+    "index.html": "ca3a8a96"
+  },
+  "projects/VALIDATION_REPORT.md": {
+    "VALIDATION_REPORT.html": "dd51067a"
+  },
+  "projects/07-tiny-gpt-products/index.ipynb": {
+    "index.html": "1a75d5e0"
+  },
+  "projects/10-advanced-ranking-experiment/index.ipynb": {
+    "index.html": "3f13e01a"
+  },
+  "projects/01-housing-price-delinquency/project.qmd": {
+    "project.html": "2f089a7e"
+  },
+  "projects/11-did-homebuyer/project.qmd": {
+    "project.html": "9e32fdf7"
+  },
+  "projects/09-ab-checkout/project.qmd": {
+    "project.html": "8f094f20"
+  },
+  "projects/02-search-learning-to-rank/project.qmd": {
+    "project.html": "48273abc"
+  },
+  "projects/12-psm-vs-double-ml/project.qmd": {
+    "project.html": "6625bbf3"
+  },
+  "projects/03-neural-delinquency/project.qmd": {
+    "project.html": "562d6e94"
+  },
+  "projects/05-transformer-query-correction/project.qmd": {
+    "project.html": "f642cc0f"
+  },
+  "projects/08-mortgage-rag/project.qmd": {
+    "project.html": "3be90b99"
+  },
+  "projects/06-content-news-recommendation/project.qmd": {
+    "project.html": "43a3f9fe"
+  },
+  "projects/04-two-tower-retrieval/project.qmd": {
+    "project.html": "c7b4aa61"
+  },
+  "projects/07-tiny-gpt-products/project.qmd": {
+    "project.html": "66e20166"
+  },
+  "projects/10-advanced-ranking-experiment/project.qmd": {
+    "project.html": "5fea9504"
   }
 }

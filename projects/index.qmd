@@ -1,31 +1,148 @@
 ---
-title: "Projects"
-toc: false
+title: ""
+format:
+  html:
+    page-layout: custom
+    toc: false
 ---
 
-# Machine Learning Projects
+```{=html}
+<style>
 
-A collection of practical Data Science
-and Machine Learning projects.
+/* Scoped styles for both /projects/ and its 12 independent project subpages. */
+#wtp{box-sizing:border-box;width:100%;max-width:1280px;min-width:0;margin:0 auto;padding:27px 28px 56px;--accent:#147f73;--primary:var(--bs-body-color,#273747);--muted:var(--bs-secondary-color,#6e7e88);--border:var(--bs-border-color,#dce6e9);--surface:var(--bs-body-bg,#fff);color:var(--primary);font-family:inherit;font-size:16px;line-height:1.65}
+#wtp *{box-sizing:border-box}
+#wtp [hidden]{display:none!important}
+#wtp .hero{padding:6px 2px 23px;border-bottom:1px solid var(--border)}
+#wtp .eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.12em}
+#wtp .hero h1{font-size:clamp(30px,2.8vw,36px);letter-spacing:-.034em;line-height:1.18;margin:7px 0 11px}
+#wtp .lead{color:var(--muted);font-size:16px;line-height:1.7;max-width:860px;margin:0}
+#wtp .stats{display:flex;flex-wrap:wrap;gap:19px;margin-top:15px;color:var(--muted);font-size:14px}
+#wtp .stats strong{color:var(--primary)}
+#wtp .layout{display:grid;grid-template-columns:228px minmax(0,1fr);gap:27px;width:100%;min-width:0;margin-top:24px;align-items:start}
+#wtp .layout > *,#wtp .mainpane{min-width:0;max-width:100%}
+#wtp .sidebar{grid-column:1;position:sticky;top:78px;border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:13px 12px 15px;z-index:2}
+#wtp .side-label{color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.11em;padding:7px 10px 10px}
+#wtp .side-list{display:flex;flex-direction:column;gap:3px}
+#wtp .side-cat{color:var(--primary);border:0;border-radius:8px;text-decoration:none!important;font-size:15px;padding:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:500;cursor:pointer;line-height:1.4}
+#wtp .side-cat:hover{background:rgba(20,127,115,.06);color:var(--accent)}
+#wtp .side-cat[aria-current="page"]{background:rgba(20,127,115,.12);color:var(--accent);font-weight:750}
+#wtp .side-count{font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:1px 7px;font-variant-numeric:tabular-nums}
+#wtp .sidebar-hint{color:var(--muted);font-size:13px;padding:10px 10px 0;margin:0;line-height:1.6}
+#wtp .mainpane{grid-column:2}
+#wtp .panel-header{display:flex;align-items:end;justify-content:space-between;gap:13px;margin:2px 0 19px}
+#wtp .panel-header h2{font-size:24px;letter-spacing:-.03em;margin:4px 0 6px;line-height:1.26}
+#wtp .panel-header p{color:var(--muted);font-size:15px;margin:0}
+#wtp .project-count{font-size:13px;white-space:nowrap;color:var(--muted);padding-bottom:5px}
+#wtp .project-list{display:flex;flex-direction:column;gap:13px}
+#wtp .project-card{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:19px 21px;min-width:0;transition:border-color .15s,box-shadow .15s}
+#wtp .project-card:hover{border-color:rgba(20,127,115,.6);box-shadow:0 4px 18px rgba(20,127,115,.07)}
+#wtp .number{color:var(--accent);font-weight:800;letter-spacing:.12em;font-size:12px}
+#wtp .card-link{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--primary);font-size:19px;font-weight:760;line-height:1.4;text-decoration:none!important;margin:6px 0}
+#wtp .card-link:hover{color:var(--accent)}
+#wtp .card-link .arrow{color:var(--accent);font-weight:600;font-size:17px}
+#wtp .card-desc{font-size:15px;color:var(--muted);margin:6px 0 5px}
+#wtp .tags{color:var(--accent);font-size:13px;font-weight:650}
+#wtp .note{margin-top:22px;border-left:3px solid var(--accent);background:rgba(20,127,115,.05);border-radius:5px;font-size:14px;color:var(--muted);padding:12px 15px}
+#wtp .back-link{color:var(--accent);font-size:14px;font-weight:700;text-decoration:none!important;display:inline-flex;align-items:center;gap:5px;margin-bottom:15px}
+#wtp .back-link:hover{text-decoration:underline!important}
+#wtp .project-title{font-size:clamp(28px,2.6vw,34px);margin:7px 0 8px;letter-spacing:-.03em;line-height:1.25}
+#wtp .project-subhead{color:var(--muted);font-size:15px;margin:0 0 12px}
+#wtp .detail-tools{display:flex;gap:10px 14px;align-items:center;flex-wrap:wrap;border:1px solid var(--border);border-radius:9px;padding:12px 15px;margin:16px 0 19px;font-size:14px}
+#wtp .detail-tools a{color:var(--accent);font-weight:700;text-decoration:none!important}
+#wtp .detail-tools a:hover{text-decoration:underline!important}
+#wtp .detail-tools .label{color:var(--muted);margin-right:auto}
+#wtp .code-action{border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--accent);padding:5px 9px;cursor:pointer;font-size:13px;font-weight:650}
+#wtp .nb-container{min-width:0;max-width:100%;overflow-wrap:anywhere}
+#wtp .nb-container .text_cell{margin:0}
+#wtp .nb-container .text_cell_render{font-size:16px;line-height:1.72}
+#wtp .nb-container .text_cell_render h1{font-size:28px;letter-spacing:-.025em;line-height:1.25;margin:10px 0 12px}
+#wtp .nb-container .text_cell_render h2{font-size:24px;margin:25px 0 9px;border-bottom:1px solid var(--border);padding-bottom:6px}
+#wtp .nb-container .text_cell_render h3{font-size:20px;margin:17px 0 8px}
+#wtp .nb-container .text_cell_render p{margin:9px 0}
+#wtp .nb-container .text_cell_render blockquote{border-left:3px solid var(--accent);padding:8px 13px;margin:12px 0;background:rgba(20,127,115,.05)}
+#wtp .nb-container .code_cell{margin:15px 0 20px}
+#wtp .code-block{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:3px 0 10px}
+#wtp .code-block summary{color:var(--accent);font-size:14px;font-weight:750;cursor:pointer;padding:9px 13px;background:rgba(20,127,115,.045)}
+#wtp .code-block .input{margin:0}
+#wtp .nb-container .input_area pre{font-size:13px;line-height:1.6;padding:13px;overflow-x:auto;white-space:pre;margin:0;background:var(--bs-tertiary-bg,#f6f8fa);border:0}
+#wtp .nb-container pre{font-size:13px;line-height:1.6;overflow-x:auto;white-space:pre-wrap;word-break:break-word;max-width:100%}
+#wtp .nb-container .output_wrapper{margin:7px 0 16px;max-width:100%}
+#wtp .nb-container .output_subarea{max-width:100%;overflow-x:auto}
+#wtp .nb-container .output_stream pre{background:var(--bs-tertiary-bg,#f6f8fa);border:1px solid var(--border);border-radius:6px;padding:12px}
+#wtp .nb-container img{max-width:100%;height:auto;display:block;margin:10px auto}
+#wtp .nb-container table{display:block;max-width:100%;overflow-x:auto;border-collapse:collapse;font-size:14px}
+#wtp .nb-container th,#wtp .nb-container td{border:1px solid var(--border);padding:6px 9px;text-align:left}
+#wtp .nb-container th{background:rgba(20,127,115,.05)}
+#wtp .highlight .k,#wtp .highlight .kn{color:#0c6eac;font-weight:600}
+#wtp .highlight .s,#wtp .highlight .s1,#wtp .highlight .s2{color:#a06b1a}
+#wtp .highlight .c1{color:#768a97;font-style:italic}
+#wtp .highlight .nf,#wtp .highlight .nb{color:#8054b6}
+@media(max-width:850px){#wtp{padding:20px 18px 40px}#wtp .layout{grid-template-columns:184px minmax(0,1fr);gap:16px}#wtp .sidebar{padding:10px}#wtp .project-card{padding:15px}}
+@media(max-width:650px){#wtp{padding:17px 12px 30px}#wtp .layout{grid-template-columns:1fr;gap:16px}#wtp .sidebar,#wtp .mainpane{grid-column:1}#wtp .sidebar{position:sticky;top:50px;padding:8px 9px;max-height:175px;overflow-y:auto}#wtp .side-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}#wtp .side-cat{font-size:11px;padding:7px}#wtp .sidebar-hint,#wtp .side-label{display:none}#wtp .panel-header h2{font-size:24px}#wtp .detail-tools .label{width:100%}}
 
-## Project 1: Learning to Rank
-
-**Status:** Planned
-
-**Tools:** Python, LightGBM, scikit-learn
-
-**Topics:**
-- Feature engineering
-- Ranking algorithms
-- NDCG evaluation
-
-## Project 2: Transformer from Scratch
-
-**Status:** Planned
-
-**Tools:** Python, PyTorch
-
-**Topics:**
-- Self-attention
-- Transformer architecture
-- Language modeling
+</style>
+<div id="wtp">
+      <header class="hero"><div class="eyebrow">WEITOLEARNING / LEARN BY BUILDING</div><h1>Machine Learning & AI Projects</h1>
+      <p class="lead">Twelve fully worked Jupyter notebooks. Select a learning track on the left, then open a dedicated project page for complete explanations, executable Python and saved charts.</p>
+      <div class="stats"><span><strong>12</strong> projects</span><span><strong>6</strong> learning tracks</span><span><strong>Python · Jupyter · Quarto</strong></span></div></header>
+      <div class="layout"><div class="sidebar"><div class="side-label">BROWSE BY CATEGORY</div><nav aria-label="Project categories" class="side-list"><a class="side-cat" data-category="ml" href="./?category=ml" aria-current="page"><span>Machine Learning</span><span class="side-count">2</span></a><a class="side-cat" data-category="dl" href="./?category=dl"><span>Deep Learning</span><span class="side-count">2</span></a><a class="side-cat" data-category="transformers" href="./?category=transformers"><span>Transformers</span><span class="side-count">2</span></a><a class="side-cat" data-category="llm" href="./?category=llm"><span>LLM &amp; AI Systems</span><span class="side-count">2</span></a><a class="side-cat" data-category="experiments" href="./?category=experiments"><span>Experimentation</span><span class="side-count">2</span></a><a class="side-cat" data-category="causal" href="./?category=causal"><span>Causal Inference</span><span class="side-count">2</span></a></nav><p class="sidebar-hint">Choose a category to see its two projects. All notebooks open on separate pages.</p></div><div class="mainpane"><section class="category-panel" data-panel="ml" >
+           <header class="panel-header"><div><span class="eyebrow">LEARNING TRACK</span><h2>Machine Learning</h2><p>Regression, feature engineering, search and ranking.</p></div><span class="project-count">2 projects</span></header>
+           <div class="project-list"><article class="project-card"><div class="number">PROJECT 01</div>
+              <a class="card-link" href="./01-housing-price-delinquency/project.html"><span>Housing Prices &amp; Mortgage Delinquency</span><span class="arrow">↗</span></a>
+              <p class="card-desc">Build linear/logistic models and compare against stronger tabular baselines.</p><div class="tags">Regression · Classification · Cross-validation</div></article><article class="project-card"><div class="number">PROJECT 02</div>
+              <a class="card-link" href="./02-search-learning-to-rank/project.html"><span>E-commerce Search &amp; Learning to Rank</span><span class="arrow">↗</span></a>
+              <p class="card-desc">Simulate queries and products, then improve relevance from lexical retrieval to learned ranking.</p><div class="tags">BM25 · Pairwise Ranking · NDCG@10</div></article></div></section><section class="category-panel" data-panel="dl" hidden>
+           <header class="panel-header"><div><span class="eyebrow">LEARNING TRACK</span><h2>Deep Learning</h2><p>Manual backpropagation and neural retrieval.</p></div><span class="project-count">2 projects</span></header>
+           <div class="project-list"><article class="project-card"><div class="number">PROJECT 03</div>
+              <a class="card-link" href="./03-neural-delinquency/project.html"><span>Neural Network for Mortgage Delinquency</span><span class="arrow">↗</span></a>
+              <p class="card-desc">Derive gradients manually and benchmark against logistic regression.</p><div class="tags">NumPy MLP · Backpropagation · PR-AUC</div></article><article class="project-card"><div class="number">PROJECT 04</div>
+              <a class="card-link" href="./04-two-tower-retrieval/project.html"><span>Two-Tower Neural Retrieval</span><span class="arrow">↗</span></a>
+              <p class="card-desc">Train separate query and document towers for fast candidate retrieval.</p><div class="tags">Embeddings · Contrastive Loss · Recall@K</div></article></div></section><section class="category-panel" data-panel="transformers" hidden>
+           <header class="panel-header"><div><span class="eyebrow">LEARNING TRACK</span><h2>Transformers</h2><p>Search query correction and content-based recommendation.</p></div><span class="project-count">2 projects</span></header>
+           <div class="project-list"><article class="project-card"><div class="number">PROJECT 05</div>
+              <a class="card-link" href="./05-transformer-query-correction/project.html"><span>Transformer Search Query Correction</span><span class="arrow">↗</span></a>
+              <p class="card-desc">Build a tiny encoder–decoder for typo correction on synthetic search terms.</p><div class="tags">Encoder–Decoder · Attention · Exact Match</div></article><article class="project-card"><div class="number">PROJECT 06</div>
+              <a class="card-link" href="./06-content-news-recommendation/project.html"><span>Content-Based News Recommendation</span><span class="arrow">↗</span></a>
+              <p class="card-desc">Compare a lexical baseline and a small neural text encoder.</p><div class="tags">TF-IDF · Transformer Encoder · Top-K</div></article></div></section><section class="category-panel" data-panel="llm" hidden>
+           <header class="panel-header"><div><span class="eyebrow">LEARNING TRACK</span><h2>LLM &amp; AI Systems</h2><p>Autoregressive generation and evidence-grounded retrieval.</p></div><span class="project-count">2 projects</span></header>
+           <div class="project-list"><article class="project-card"><div class="number">PROJECT 07</div>
+              <a class="card-link" href="./07-tiny-gpt-products/project.html"><span>Tiny GPT: Product Description Generation</span><span class="arrow">↗</span></a>
+              <p class="card-desc">Train an autoregressive Transformer on synthetic product descriptions.</p><div class="tags">Decoder-only GPT · Causal Attention · Perplexity</div></article><article class="project-card"><div class="number">PROJECT 08</div>
+              <a class="card-link" href="./08-mortgage-rag/project.html"><span>Mortgage Knowledge Retrieval &amp; Grounded Answers</span><span class="arrow">↗</span></a>
+              <p class="card-desc">Evaluate retrieval and extractive answers; generative LLM integration is an extension.</p><div class="tags">BM25 · Hybrid Retrieval · Citations</div></article></div></section><section class="category-panel" data-panel="experiments" hidden>
+           <header class="panel-header"><div><span class="eyebrow">LEARNING TRACK</span><h2>Experimentation</h2><p>A/B analysis, metrics, logging failures and decisions.</p></div><span class="project-count">2 projects</span></header>
+           <div class="project-list"><article class="project-card"><div class="number">PROJECT 09</div>
+              <a class="card-link" href="./09-ab-checkout/project.html"><span>A/B Testing: Checkout Conversion</span><span class="arrow">↗</span></a>
+              <p class="card-desc">Analyze simulated online experiments and make an evidence-based product decision.</p><div class="tags">Randomization · Confidence Intervals · CUPED</div></article><article class="project-card"><div class="number">PROJECT 10</div>
+              <a class="card-link" href="./10-advanced-ranking-experiment/project.html"><span>Advanced A/B: Search Ranking Metrics</span><span class="arrow">↗</span></a>
+              <p class="card-desc">Diagnose conflicting CTR and revenue metrics plus logging failures.</p><div class="tags">SRM · Ratio Metrics · Bootstrap</div></article></div></section><section class="category-panel" data-panel="causal" hidden>
+           <header class="panel-header"><div><span class="eyebrow">LEARNING TRACK</span><h2>Causal Inference</h2><p>Policy evaluation, matching and Double Machine Learning.</p></div><span class="project-count">2 projects</span></header>
+           <div class="project-list"><article class="project-card"><div class="number">PROJECT 11</div>
+              <a class="card-link" href="./11-did-homebuyer/project.html"><span>DiD: First-Time Homebuyer Assistance</span><span class="arrow">↗</span></a>
+              <p class="card-desc">Estimate the impact of a simulated housing policy under identification assumptions.</p><div class="tags">Panel Data · TWFE · Event Study</div></article><article class="project-card"><div class="number">PROJECT 12</div>
+              <a class="card-link" href="./12-psm-vs-double-ml/project.html"><span>PSM vs Double ML: Mortgage Counseling</span><span class="arrow">↗</span></a>
+              <p class="card-desc">Compare propensity-score matching with cross-fitted Double ML on the same target.</p><div class="tags">Matching · DML-IRM · ATT</div></article></div></section>
+      <div class="note">All datasets are synthetic and educational. Open a project to see code and precomputed results. The source notebooks live in the same GitHub repository.</div></div></div>
+    </div>
+<script>
+(function(){
+  const root=document.getElementById('wtp'); if(!root)return;
+  const names=new Set(['ml','dl','transformers','llm','experiments','causal']);
+  function selected(){const param=new URLSearchParams(window.location.search).get('category');return names.has(param)?param:'ml';}
+  function display(key,update){
+    root.querySelectorAll('[data-category]').forEach(link=>{
+      const active=link.dataset.category===key;
+      if(active){link.setAttribute('aria-current','page');}else{link.removeAttribute('aria-current');}
+    });
+    root.querySelectorAll('.category-panel').forEach(p=>{p.hidden=p.dataset.panel!==key;});
+    if(update){const url=new URL(window.location.href);url.searchParams.set('category',key);history.pushState({category:key},'',url);}
+  }
+  root.querySelectorAll('[data-category]').forEach(link=>link.addEventListener('click',e=>{
+     e.preventDefault();display(link.dataset.category,true);
+  }));
+  window.addEventListener('popstate',()=>display(selected(),false));
+  display(selected(),false);
+})();
+</script>
+```

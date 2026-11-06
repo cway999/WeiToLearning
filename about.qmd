@@ -1,6 +1,10 @@
 ---
 title: "About Wei"
 toc: false
+format:
+  html:
+    page-layout: custom
+    body-classes: wtl-about
 ---
 
 

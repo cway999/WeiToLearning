@@ -1,0 +1,140 @@
+/*
+ * WeiToLearning: shared typography for Home, About, Technical Blog,
+ * Projects index, and all 12 generated project subpages.
+ *
+ * Add AFTER styles.css in _quarto.yml:
+ *   css:
+ *     - styles.css
+ *     - typography.css
+ *
+ * This file deliberately has higher-specificity selectors than the scoped
+ * <style> sections in blog/index.qmd and projects/*.qmd, so regenerating
+ * those pages will not reset the typography.
+ */
+
+:root {
+  --wtl-font-family: var(--bs-body-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif);
+  --wtl-body-size: 17px;
+  --wtl-body-line: 1.65;
+  --wtl-heading-1: 34px;
+  --wtl-heading-2: 25px;
+  --wtl-heading-3: 20px;
+  --wtl-card-title: 18px;
+  --wtl-card-copy: 16px;
+  --wtl-small-copy: 14px;
+  --wtl-label-copy: 12px;
+  --wtl-code-copy: 13px;
+}
+
+/* One base font family/size for pages built with the Quarto theme. */
+html { font-size: 16px; }
+body {
+  font-family: var(--wtl-font-family);
+  font-size: var(--wtl-body-size);
+  line-height: var(--wtl-body-line);
+}
+body #quarto-content,
+body #quarto-document-content,
+body main.content {
+  font-family: var(--wtl-font-family);
+}
+body .navbar, body .navbar .navbar-brand,
+body .navbar .nav-link {
+  font-family: var(--wtl-font-family);
+  font-size: 16px;
+}
+
+/* Standard Quarto titles/headings: Home, About and ordinary study pages. */
+body #title-block-header h1.title,
+body .quarto-title-block h1.title,
+body main.content > h1,
+body #quarto-document-content > h1 {
+  font-size: var(--wtl-heading-1);
+  line-height: 1.22;
+  font-weight: 700;
+}
+body .quarto-title-block .subtitle,
+body #title-block-header .subtitle {
+  font-size: 18px;
+  line-height: 1.55;
+}
+body #quarto-document-content > h2 { font-size: var(--wtl-heading-2); line-height: 1.3; }
+body #quarto-document-content > h3 { font-size: var(--wtl-heading-3); line-height: 1.35; }
+body #quarto-document-content > p,
+body #quarto-document-content > ul,
+body #quarto-document-content > ol {
+  font-size: var(--wtl-body-size);
+  line-height: var(--wtl-body-line);
+}
+
+/* Home's three-column subject cards. */
+body .qb-category-card h3 { font-size: var(--wtl-card-title); line-height: 1.4; }
+body .qb-category-card p { font-size: var(--wtl-card-copy); line-height: 1.55; }
+
+/* Technical Blog.  These selectors outweigh local .wtl-... rules
+   embedded in blog/index.qmd even though those are loaded later. */
+body .wtl-blog-header h1 {
+  font-size: var(--wtl-heading-1);
+  line-height: 1.22;
+}
+body .wtl-blog-header p {
+  font-size: var(--wtl-body-size);
+  line-height: var(--wtl-body-line);
+}
+body .wtl-blog-header .wtl-eyebrow { font-size: var(--wtl-label-copy); }
+body .wtl-guide, body .wtl-tab-intro {
+  font-size: var(--wtl-card-copy);
+  line-height: 1.65;
+}
+body .wtl-card h3 { font-size: var(--wtl-card-title); line-height: 1.38; }
+body .wtl-card .wtl-why { font-size: 15px; line-height: 1.55; }
+body .wtl-card .wtl-source,
+body .wtl-card .wtl-meta { font-size: 13px; line-height: 1.5; }
+body .wtl-card .wtl-pill { font-size: 12px; }
+body .wtl-filters button,
+body .wtl-controls input { font-family: var(--wtl-font-family); font-size: 14px; }
+body .wtl-result-count, body .wtl-note { font-size: var(--wtl-small-copy); }
+
+/* All 13 Projects Quarto pages contain #wtp: one shared scale.
+   Using "body #wtp" beats in-document "#wtp" selectors. */
+body #wtp {
+  font-family: var(--wtl-font-family);
+  font-size: var(--wtl-body-size);
+  line-height: var(--wtl-body-line);
+}
+body #wtp .hero h1 { font-size: var(--wtl-heading-1); line-height: 1.22; }
+body #wtp .lead { font-size: var(--wtl-body-size); line-height: var(--wtl-body-line); }
+body #wtp .eyebrow, body #wtp .side-label,
+body #wtp .number { font-size: var(--wtl-label-copy); }
+body #wtp .stats { font-size: var(--wtl-small-copy); }
+body #wtp .side-cat { font-family: var(--wtl-font-family); font-size: 16px; line-height: 1.45; }
+body #wtp .side-count { font-size: 12px; }
+body #wtp .sidebar-hint { font-size: var(--wtl-small-copy); }
+body #wtp .panel-header h2 { font-size: var(--wtl-heading-2); }
+body #wtp .panel-header p { font-size: var(--wtl-card-copy); }
+body #wtp .project-count { font-size: var(--wtl-small-copy); }
+body #wtp .card-link { font-size: var(--wtl-card-title); line-height: 1.4; }
+body #wtp .card-desc { font-size: var(--wtl-card-copy); line-height: 1.55; }
+body #wtp .tags { font-size: var(--wtl-small-copy); }
+body #wtp .note { font-size: var(--wtl-small-copy); line-height: 1.6; }
+body #wtp .project-title { font-size: 30px; line-height: 1.25; }
+body #wtp .project-subhead { font-size: var(--wtl-card-copy); }
+body #wtp .back-link, body #wtp .detail-tools,
+body #wtp .code-action { font-size: var(--wtl-small-copy); }
+body #wtp .nb-container .text_cell_render { font-size: var(--wtl-card-copy); line-height: 1.7; }
+body #wtp .nb-container .text_cell_render h1 { font-size: 28px; }
+body #wtp .nb-container .text_cell_render h2 { font-size: 24px; }
+body #wtp .nb-container .text_cell_render h3 { font-size: 20px; }
+body #wtp .code-block summary { font-size: var(--wtl-small-copy); }
+body #wtp .nb-container .input_area pre,
+body #wtp .nb-container pre,
+body #wtp .nb-container code { font-size: var(--wtl-code-copy); }
+body #wtp .nb-container table { font-size: var(--wtl-small-copy); }
+
+/* On smaller screens, preserve readability and existing responsive layout. */
+@media (max-width: 650px) {
+  :root { --wtl-heading-1: 29px; --wtl-heading-2: 23px; }
+  body #wtp .side-cat { font-size: 14px; }
+  body .wtl-card h3 { font-size: 17px; }
+}
+

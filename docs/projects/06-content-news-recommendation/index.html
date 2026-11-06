@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Project 06 · Content-Based News Recommendation with Transformers – Wei to Learning</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-445b8638c3d06994fee0907d791121c4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Wei to Learning</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Technical Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects/index.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#simulate-topic-structured-news-articles" id="toc-simulate-topic-structured-news-articles" class="nav-link active" data-scroll-target="#simulate-topic-structured-news-articles">1. Simulate topic-structured news articles</a></li>
+  <li><a href="#split-articles-and-build-a-lexical-baseline" id="toc-split-articles-and-build-a-lexical-baseline" class="nav-link" data-scroll-target="#split-articles-and-build-a-lexical-baseline">2. Split articles and build a lexical baseline</a></li>
+  <li><a href="#train-a-transformer-text-encoder-from-random-initialization" id="toc-train-a-transformer-text-encoder-from-random-initialization" class="nav-link" data-scroll-target="#train-a-transformer-text-encoder-from-random-initialization">3. Train a transformer text encoder from random initialization</a></li>
+  <li><a href="#final-cold-start-recommendation-evaluation" id="toc-final-cold-start-recommendation-evaluation" class="nav-link" data-scroll-target="#final-cold-start-recommendation-evaluation">4. Final cold-start recommendation evaluation</a></li>
+  <li><a href="#what-the-results-mean-interview-discussion" id="toc-what-the-results-mean-interview-discussion" class="nav-link" data-scroll-target="#what-the-results-mean-interview-discussion">What the results mean / interview discussion</a></li>
+  <li><a href="#what-this-project-demonstrates-and-what-it-does-not" id="toc-what-this-project-demonstrates-and-what-it-does-not" class="nav-link" data-scroll-target="#what-this-project-demonstrates-and-what-it-does-not">What this project demonstrates, and what it does not</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Project 06 · Content-Based News Recommendation with Transformers</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Track:</strong> Transformers / Recommendation<br>
+<strong>Research / product question:</strong> Can article content support new-article recommendations without session-sequence modeling?</p>
+<p><strong>Learning outcome:</strong> TF-IDF similarity, learned transformer-encoder embeddings, hold-out articles, Recall@K and cold start.</p>
+<p><strong>Workflow:</strong> Data-generating process → raw-data audit → leakage-safe features → from-scratch baseline → model selection / hyperparameter tuning → held-out evaluation → failure analysis.</p>
+<blockquote class="blockquote">
+<p><strong>Synthetic-data disclosure:</strong> All records and outcomes are created in this notebook; they do not describe real customers or credit decisions. Ground truth is constructed for teaching. Numerical results are illustrative of this simulator, not estimates of real-world business impact.</p>
+</blockquote>
+<p><strong>Reproducibility:</strong> Random seeds are fixed. Run cells top-to-bottom. Install packages from the project-level <code>requirements.txt</code>. CPU execution is supported; deep-learning examples deliberately use small models.</p>
+<blockquote class="blockquote">
+<p><strong>Portfolio standard:</strong> fully reproducible, synthetic educational data · explicit evaluation protocol · plots and failure analysis · no claims of production accuracy.</p>
+</blockquote>
+<p>Represent each news article using text only; do <strong>not</strong> use a session Transformer. The small encoder learns from training-article topic labels, then a content similarity search recommends from the training catalog.</p>
+<div id="96b9e3e3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-28T02:36:23.406073Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-28T02:36:23.405662Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-28T02:36:25.180235Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-28T02:36:25.179527Z&quot;}}" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>SEED <span class="op">=</span> <span class="dv">42</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(SEED)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({<span class="st">'figure.figsize'</span>: (<span class="dv">8</span>, <span class="dv">4</span>), <span class="st">'axes.grid'</span>: <span class="va">True</span>, <span class="st">'grid.alpha'</span>: <span class="fl">0.2</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="simulate-topic-structured-news-articles" class="level2">
+<h2 class="anchored" data-anchor-id="simulate-topic-structured-news-articles">1. Simulate topic-structured news articles</h2>
+<p>A small MIND-style news catalog contains paraphrases across six topics. We <strong>do not</strong> use MIND user histories or pretend the simulated titles are real news. Relevance is defined by known topic labels.</p>
+<div id="9054b4cc" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-28T02:36:25.183100Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-28T02:36:25.182779Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-28T02:36:27.098609Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-28T02:36:27.096795Z&quot;}}" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The simulated topic vocabulary is simple; perfect metrics are not production evidence.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch,re</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> nn</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics.pairwise <span class="im">import</span> cosine_similarity</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)<span class="op">;</span>torch.set_num_threads(<span class="dv">2</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>topics<span class="op">=</span>{</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a> <span class="st">'technology'</span>:[<span class="st">'chip manufacturing'</span>,<span class="st">'AI models'</span>,<span class="st">'cloud software'</span>,<span class="st">'robotics'</span>,<span class="st">'data center'</span>],</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a> <span class="st">'finance'</span>:[<span class="st">'stock market'</span>,<span class="st">'bond yields'</span>,<span class="st">'central bank'</span>,<span class="st">'corporate earnings'</span>,<span class="st">'bank lending'</span>],</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a> <span class="st">'sports'</span>:[<span class="st">'football match'</span>,<span class="st">'basketball team'</span>,<span class="st">'tennis tournament'</span>,<span class="st">'championship game'</span>,<span class="st">'athlete training'</span>],</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a> <span class="st">'science'</span>:[<span class="st">'space mission'</span>,<span class="st">'medical research'</span>,<span class="st">'physics experiment'</span>,<span class="st">'ocean discovery'</span>,<span class="st">'climate science'</span>],</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a> <span class="st">'travel'</span>:[<span class="st">'airline routes'</span>,<span class="st">'mountain hiking'</span>,<span class="st">'hotel stays'</span>,<span class="st">'city tourism'</span>,<span class="st">'rail journeys'</span>],</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a> <span class="st">'culture'</span>:[<span class="st">'film festival'</span>,<span class="st">'new novel'</span>,<span class="st">'modern art'</span>,<span class="st">'theater performance'</span>,<span class="st">'music exhibition'</span>]}</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>phrases<span class="op">=</span>[<span class="st">'a detailed overview'</span>,<span class="st">'new developments'</span>,<span class="st">'explained for readers'</span>,<span class="st">'weekly analysis'</span>,<span class="st">'research outlook'</span>]</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>news<span class="op">=</span>[]</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> cat,terms <span class="kw">in</span> topics.items():</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">80</span>):</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    term<span class="op">=</span>rng.choice(terms)<span class="op">;</span>phrase<span class="op">=</span>rng.choice(phrases)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    news.append((cat,<span class="ss">f'</span><span class="sc">{</span>term<span class="sc">.</span>title()<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>phrase<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>i<span class="op">%</span><span class="dv">9</span><span class="sc">}</span><span class="ss">'</span>,<span class="ss">f'Report about </span><span class="sc">{</span>term<span class="sc">}</span><span class="ss"> with </span><span class="sc">{</span>rng<span class="sc">.</span>choice([<span class="st">"expert insights"</span>,<span class="st">"recent events"</span>,<span class="st">"industry trends"</span>])<span class="sc">}</span><span class="ss"> and </span><span class="sc">{</span>phrase<span class="sc">}</span><span class="ss">.'</span>))</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>news<span class="op">=</span>pd.DataFrame(news,columns<span class="op">=</span>[<span class="st">'topic'</span>,<span class="st">'title'</span>,<span class="st">'summary'</span>])<span class="op">;</span>news[<span class="st">'text'</span>]<span class="op">=</span>news.title<span class="op">+</span><span class="st">' '</span><span class="op">+</span>news.summary</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(news.sample(<span class="dv">4</span>,random_state<span class="op">=</span><span class="dv">42</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     topic                                     title                                                                       summary                                                                                                                    text
+technology        Data Center: a detailed overview 1          Report about data center with recent events and a detailed overview.                 Data Center: a detailed overview 1 Report about data center with recent events and a detailed overview.
+   culture Music Exhibition: explained for readers 5 Report about music exhibition with industry trends and explained for readers. Music Exhibition: explained for readers 5 Report about music exhibition with industry trends and explained for readers.
+    travel     City Tourism: explained for readers 2       Report about city tourism with recent events and explained for readers.           City Tourism: explained for readers 2 Report about city tourism with recent events and explained for readers.
+   science Medical Research: explained for readers 1 Report about medical research with expert insights and explained for readers. Medical Research: explained for readers 1 Report about medical research with expert insights and explained for readers.</code></pre>
+</div>
+</div>
+</section>
+<section id="split-articles-and-build-a-lexical-baseline" class="level2">
+<h2 class="anchored" data-anchor-id="split-articles-and-build-a-lexical-baseline">2. Split articles and build a lexical baseline</h2>
+<p>With content-based recommenders, candidates can be unseen articles. Splitting items (not just interactions) tests whether the model handles cold-start news; TF-IDF fitting uses training text only.</p>
+<div id="8f24174f" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-28T02:36:27.101968Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-28T02:36:27.101633Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-28T02:36:27.137934Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-28T02:36:27.136621Z&quot;}}" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split news articles, not individual tokens, to evaluate unseen documents.</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tr,te<span class="op">=</span>train_test_split(np.arange(<span class="bu">len</span>(news)),test_size<span class="op">=</span><span class="fl">.25</span>,stratify<span class="op">=</span>news.topic,random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>tr,va<span class="op">=</span>train_test_split(tr,test_size<span class="op">=</span><span class="fl">.20</span>,stratify<span class="op">=</span>news.topic.iloc[tr],random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieval catalog = training articles, and validation/test articles are only seeds.</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>vec<span class="op">=</span>TfidfVectorizer(ngram_range<span class="op">=</span>(<span class="dv">1</span>,<span class="dv">2</span>),min_df<span class="op">=</span><span class="dv">1</span>).fit(news.text.iloc[tr])</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>training_vectors<span class="op">=</span>vec.transform(news.text.iloc[tr])</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> content_recall_at_5(sim,seedids,corpusids):</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a> wanted<span class="op">=</span>news.topic.iloc[seedids].to_numpy()<span class="op">;</span>candidate_topics<span class="op">=</span>news.topic.iloc[corpusids].to_numpy()</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a> top<span class="op">=</span>np.argsort(<span class="op">-</span>sim,axis<span class="op">=</span><span class="dv">1</span>)[:,:<span class="dv">5</span>]</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a> <span class="cf">return</span> np.mean([t <span class="kw">in</span> candidate_topics[x] <span class="cf">for</span> t,x <span class="kw">in</span> <span class="bu">zip</span>(wanted,top)])</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>lex_val<span class="op">=</span>cosine_similarity(vec.transform(news.text.iloc[va]),training_vectors)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'TF-IDF validation Recall@5:'</span>,<span class="bu">round</span>(content_recall_at_5(lex_val,va,tr),<span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>TF-IDF validation Recall@5: 1.0</code></pre>
+</div>
+</div>
+</section>
+<section id="train-a-transformer-text-encoder-from-random-initialization" class="level2">
+<h2 class="anchored" data-anchor-id="train-a-transformer-text-encoder-from-random-initialization">3. Train a transformer text encoder from random initialization</h2>
+<p>The Transformer Encoder uses <strong>self-attention</strong> to create article representations. Topic classification is the supervised proxy task; at recommendation time we compare document embeddings via cosine similarity. This is an educational supervised representation baseline.</p>
+<div id="e9192d98" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-28T02:36:27.140050Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-28T02:36:27.139863Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-28T02:36:30.242236Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-28T02:36:30.240917Z&quot;}}" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformer encoder represents documents; use cosine similarity for neighbors.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tokenize(s):<span class="cf">return</span> re.findall(<span class="vs">r'</span><span class="pp">[a-z]</span><span class="op">+</span><span class="vs">'</span>,s.lower())</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>count<span class="op">=</span>Counter(w <span class="cf">for</span> s <span class="kw">in</span> news.text.iloc[tr] <span class="cf">for</span> w <span class="kw">in</span> tokenize(s))<span class="op">;</span>vocab<span class="op">=</span>{<span class="st">'&lt;PAD&gt;'</span>:<span class="dv">0</span>,<span class="st">'&lt;UNK&gt;'</span>:<span class="dv">1</span>}<span class="op">;</span>vocab.update({w:i<span class="op">+</span><span class="dv">2</span> <span class="cf">for</span> i,(w,_) <span class="kw">in</span> <span class="bu">enumerate</span>(count.most_common())})<span class="op">;</span>maxlen<span class="op">=</span><span class="dv">19</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>ids<span class="op">=</span>np.zeros((<span class="bu">len</span>(news),maxlen),dtype<span class="op">=</span><span class="st">'int64'</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i,s <span class="kw">in</span> <span class="bu">enumerate</span>(news.text):</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a> tok<span class="op">=</span>[vocab.get(w,<span class="dv">1</span>) <span class="cf">for</span> w <span class="kw">in</span> tokenize(s)[:maxlen]]<span class="op">;</span>ids[i,:<span class="bu">len</span>(tok)]<span class="op">=</span>tok</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>X<span class="op">=</span>torch.tensor(ids)<span class="op">;</span>topic_id<span class="op">=</span>{c:i <span class="cf">for</span> i,c <span class="kw">in</span> <span class="bu">enumerate</span>(topics)}<span class="op">;</span>labels<span class="op">=</span>torch.tensor(news.topic.<span class="bu">map</span>(topic_id).to_numpy())</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> NewsEncoder(nn.Module):</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a> <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>,dim<span class="op">=</span><span class="dv">32</span>,drop<span class="op">=</span><span class="fl">.1</span>):</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>().<span class="fu">__init__</span>()<span class="op">;</span><span class="va">self</span>.emb<span class="op">=</span>nn.Embedding(<span class="bu">len</span>(vocab),dim,padding_idx<span class="op">=</span><span class="dv">0</span>)<span class="op">;</span><span class="va">self</span>.pos<span class="op">=</span>nn.Embedding(maxlen,dim)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    layer<span class="op">=</span>nn.TransformerEncoderLayer(dim,<span class="dv">4</span>,dim_feedforward<span class="op">=</span><span class="dv">2</span><span class="op">*</span>dim,dropout<span class="op">=</span>drop,batch_first<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.transformer<span class="op">=</span>nn.TransformerEncoder(layer,<span class="dv">1</span>,enable_nested_tensor<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.head<span class="op">=</span>nn.Linear(dim,<span class="bu">len</span>(topics))</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a> <span class="kw">def</span> encode(<span class="va">self</span>,x):</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    e<span class="op">=</span><span class="va">self</span>.emb(x)<span class="op">+</span><span class="va">self</span>.pos(torch.arange(x.shape[<span class="dv">1</span>])[<span class="va">None</span>,:])<span class="op">;</span>mask<span class="op">=</span>x<span class="op">==</span><span class="dv">0</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    h<span class="op">=</span><span class="va">self</span>.transformer(e,src_key_padding_mask<span class="op">=</span>mask)<span class="op">;</span>pooled<span class="op">=</span>(h<span class="op">*</span>(<span class="op">~</span>mask).unsqueeze(<span class="op">-</span><span class="dv">1</span>)).<span class="bu">sum</span>(<span class="dv">1</span>)<span class="op">/</span>(<span class="op">~</span>mask).<span class="bu">sum</span>(<span class="dv">1</span>,keepdim<span class="op">=</span><span class="va">True</span>).clamp(<span class="bu">min</span><span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> nn.functional.normalize(pooled,dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a> <span class="kw">def</span> forward(<span class="va">self</span>,x):<span class="cf">return</span> <span class="va">self</span>.head(<span class="va">self</span>.encode(x))</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_news(dim<span class="op">=</span><span class="dv">32</span>,drop<span class="op">=</span><span class="fl">.1</span>):</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a> torch.manual_seed(<span class="dv">42</span>)<span class="op">;</span>m<span class="op">=</span>NewsEncoder(dim,drop)<span class="op">;</span>opt<span class="op">=</span>torch.optim.AdamW(m.parameters(),lr<span class="op">=</span><span class="fl">.004</span>)<span class="op">;</span>hist<span class="op">=</span>[]</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a> <span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    m.train()<span class="op">;</span>losses<span class="op">=</span>[]</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ix <span class="kw">in</span> np.array_split(np.random.default_rng(ep).permutation(tr),<span class="dv">8</span>):</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>      loss<span class="op">=</span>nn.functional.cross_entropy(m(X[ix]),labels[ix])<span class="op">;</span>opt.zero_grad()<span class="op">;</span>loss.backward()<span class="op">;</span>opt.step()<span class="op">;</span>losses.append(loss.item())</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    hist.append(<span class="bu">float</span>(np.mean(losses)))</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a> <span class="cf">return</span> m,hist</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> similarity(m,seeds,catalog):</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a> m.<span class="bu">eval</span>()</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a> <span class="cf">with</span> torch.no_grad():<span class="cf">return</span> (m.encode(X[seeds])<span class="op">@</span>m.encode(X[catalog]).T).numpy()</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>config<span class="op">=</span>{}</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> dim <span class="kw">in</span> [<span class="dv">24</span>,<span class="dv">48</span>]:</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a> m,curve<span class="op">=</span>fit_news(dim)<span class="op">;</span>score<span class="op">=</span>content_recall_at_5(similarity(m,va,tr),va,tr)<span class="op">;</span>config[dim]<span class="op">=</span>(m,curve,score)</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Validation Recall@5 by embedding dimension:'</span>,{d:<span class="bu">round</span>(x[<span class="dv">2</span>],<span class="dv">3</span>) <span class="cf">for</span> d,x <span class="kw">in</span> config.items()})</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>bestdim<span class="op">=</span><span class="bu">max</span>(config,key<span class="op">=</span><span class="kw">lambda</span> d:config[d][<span class="dv">2</span>])<span class="op">;</span>best,loss_curve,_<span class="op">=</span>config[bestdim]</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>plt.plot(loss_curve)<span class="op">;</span>plt.xlabel(<span class="st">'Epoch'</span>)<span class="op">;</span>plt.ylabel(<span class="st">'Topic classification loss'</span>)<span class="op">;</span>plt.title(<span class="st">'Transformer encoder representation training'</span>)<span class="op">;</span>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Validation Recall@5 by embedding dimension: {24: np.float64(1.0), 48: np.float64(1.0)}</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-5-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="final-cold-start-recommendation-evaluation" class="level2">
+<h2 class="anchored" data-anchor-id="final-cold-start-recommendation-evaluation">4. Final cold-start recommendation evaluation</h2>
+<p>We evaluate <strong>unseen seed articles</strong> against the known catalog. Recall@5 here means at least one recommended article is in the same synthetic topic; this proxy is not a real user-satisfaction metric.</p>
+<div id="3db49b6f" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-28T02:36:30.244852Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-28T02:36:30.244234Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-28T02:36:30.396923Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-28T02:36:30.395984Z&quot;}}" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect held-out recommendations and report retrieval quality.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>lex_test<span class="op">=</span>cosine_similarity(vec.transform(news.text.iloc[te]),training_vectors)<span class="op">;</span>sim_test<span class="op">=</span>similarity(best,te,tr)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>metrics<span class="op">=</span>{<span class="st">'TF-IDF'</span>:content_recall_at_5(lex_test,te,tr),<span class="st">'Transformer encoder'</span>:content_recall_at_5(sim_test,te,tr)}</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Unseen-news Recall@5:'</span>,metrics)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>fig,ax<span class="op">=</span>plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>,<span class="fl">3.5</span>))<span class="op">;</span>ax.bar(<span class="bu">list</span>(metrics),<span class="bu">list</span>(metrics.values()))<span class="op">;</span>ax.<span class="bu">set</span>(ylim<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">1</span>),ylabel<span class="op">=</span><span class="st">'Recall@5'</span>,title<span class="op">=</span><span class="st">'Content-based news retrieval'</span>)<span class="op">;</span>plt.show()</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>example<span class="op">=</span><span class="dv">0</span><span class="op">;</span>index<span class="op">=</span>te[example]<span class="op">;</span>rank<span class="op">=</span>np.argsort(<span class="op">-</span>sim_test[example])[:<span class="dv">5</span>]</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Seed article:'</span>,news.title.iloc[index])<span class="op">;</span><span class="bu">print</span>(<span class="st">'Recommended:</span><span class="ch">\n</span><span class="st">'</span>,news.iloc[tr[rank]][[<span class="st">'title'</span>,<span class="st">'topic'</span>]].to_string(index<span class="op">=</span><span class="va">False</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Unseen-news Recall@5: {'TF-IDF': np.float64(1.0), 'Transformer encoder': np.float64(1.0)}</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-6-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Seed article: Stock Market: explained for readers 0
+Recommended:
+                                 title   topic
+Stock Market: explained for readers 2 finance
+Stock Market: explained for readers 6 finance
+Stock Market: explained for readers 8 finance
+      Stock Market: weekly analysis 7 finance
+      Stock Market: weekly analysis 5 finance</code></pre>
+</div>
+</div>
+</section>
+<section id="what-the-results-mean-interview-discussion" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-results-mean-interview-discussion">What the results mean / interview discussion</h2>
+<p>Content-only recommendation avoids sequence models and can serve new articles. The simulated topics are intentionally separable, so TF-IDF may match or outperform a small scratch-trained Transformer. The next credible validation is Microsoft MIND-small with impression-level relevance and proper temporal splits; use those data rather than asserting production quality from toy recall.</p>
+<p><strong>Try explaining these without looking at the code:</strong></p>
+<ol type="1">
+<li>Why is article cold start easier for content-based than collaborative filtering?</li>
+<li>How would you score users with multiple liked articles?</li>
+<li>How can relevance, diversity and popularity bias conflict?</li>
+</ol>
+<p><strong>Limitations and next step:</strong> Evaluate on a suitably licensed real-world dataset or stronger simulation with domain shift, logging bias and realistic selection. Never treat synthetic performance as production evidence.</p>
+</section>
+<section id="what-this-project-demonstrates-and-what-it-does-not" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-project-demonstrates-and-what-it-does-not">What this project demonstrates, and what it does not</h2>
+<p><strong>Important:</strong> Topic-based Recall@5 is a deliberately <em>coarse synthetic proxy</em>, not user satisfaction. The generator uses separable topic vocabularies; scores can saturate at 1.0. <strong>Next:</strong> test on MIND-small with real impressions and compare click-aware NDCG, diversity and coverage.</p>
+<p><strong>Reproduce:</strong> <code>Run All</code> in Jupyter; no private or uploaded data required. For real data, use leakage-safe train/validation/test partitions and respect each dataset license.</p>
+<div id="c94db606" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-28T02:36:30.398962Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-28T02:36:30.398785Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-28T02:36:30.519228Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-28T02:36:30.517812Z&quot;}}" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A saturated toy benchmark should be reported honestly, including a random baseline.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>random_sim <span class="op">=</span> np.random.default_rng(<span class="dv">8</span>).random(lex_test.shape)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>random_rec <span class="op">=</span> content_recall_at_5(random_sim, te, tr)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>comparison <span class="op">=</span> {<span class="st">"Random"</span>: random_rec, <span class="st">"TF-IDF"</span>: metrics[<span class="st">"TF-IDF"</span>],</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Transformer"</span>: metrics[<span class="st">"Transformer encoder"</span>]}</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">3</span>))</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>ax.bar(<span class="bu">list</span>(comparison), <span class="bu">list</span>(comparison.values()))</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(ylim<span class="op">=</span>(<span class="dv">0</span>, <span class="fl">1.05</span>), ylabel<span class="op">=</span><span class="st">"Topic Recall@5"</span>, title<span class="op">=</span><span class="st">"A deliberately easy synthetic benchmark"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>({k: <span class="bu">round</span>(v, <span class="dv">3</span>) <span class="cf">for</span> k, v <span class="kw">in</span> comparison.items()})</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'Random': np.float64(0.55), 'TF-IDF': np.float64(1.0), 'Transformer': np.float64(1.0)}</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-7-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Why the scores saturate:</strong> Category-specific vocabulary makes topic retrieval nearly trivial, even for a lexical baseline. That is useful for verifying code, but a next project iteration must use overlapping vocabularies, implicit feedback and real news impressions (MIND-small).</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

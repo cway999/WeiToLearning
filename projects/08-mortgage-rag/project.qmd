@@ -1,0 +1,448 @@
+---
+title: "Mortgage Knowledge Retrieval & Grounded Answers | WeiToLearning"
+format:
+  html:
+    page-layout: custom
+    toc: false
+resources:
+  - "index.ipynb"
+---
+
+```{=html}
+<style>
+
+/* Scoped styles for both /projects/ and its 12 independent project subpages. */
+#wtp{box-sizing:border-box;width:100%;max-width:1280px;min-width:0;margin:0 auto;padding:27px 28px 56px;--accent:#147f73;--primary:var(--bs-body-color,#273747);--muted:var(--bs-secondary-color,#6e7e88);--border:var(--bs-border-color,#dce6e9);--surface:var(--bs-body-bg,#fff);color:var(--primary);font-family:inherit;font-size:16px;line-height:1.65}
+#wtp *{box-sizing:border-box}
+#wtp [hidden]{display:none!important}
+#wtp .hero{padding:6px 2px 23px;border-bottom:1px solid var(--border)}
+#wtp .eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.12em}
+#wtp .hero h1{font-size:clamp(30px,2.8vw,36px);letter-spacing:-.034em;line-height:1.18;margin:7px 0 11px}
+#wtp .lead{color:var(--muted);font-size:16px;line-height:1.7;max-width:860px;margin:0}
+#wtp .stats{display:flex;flex-wrap:wrap;gap:19px;margin-top:15px;color:var(--muted);font-size:14px}
+#wtp .stats strong{color:var(--primary)}
+#wtp .layout{display:grid;grid-template-columns:228px minmax(0,1fr);gap:27px;width:100%;min-width:0;margin-top:24px;align-items:start}
+#wtp .layout > *,#wtp .mainpane{min-width:0;max-width:100%}
+#wtp .sidebar{grid-column:1;position:sticky;top:78px;border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:13px 12px 15px;z-index:2}
+#wtp .side-label{color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.11em;padding:7px 10px 10px}
+#wtp .side-list{display:flex;flex-direction:column;gap:3px}
+#wtp .side-cat{color:var(--primary);border:0;border-radius:8px;text-decoration:none!important;font-size:15px;padding:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:500;cursor:pointer;line-height:1.4}
+#wtp .side-cat:hover{background:rgba(20,127,115,.06);color:var(--accent)}
+#wtp .side-cat[aria-current="page"]{background:rgba(20,127,115,.12);color:var(--accent);font-weight:750}
+#wtp .side-count{font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:1px 7px;font-variant-numeric:tabular-nums}
+#wtp .sidebar-hint{color:var(--muted);font-size:13px;padding:10px 10px 0;margin:0;line-height:1.6}
+#wtp .mainpane{grid-column:2}
+#wtp .panel-header{display:flex;align-items:end;justify-content:space-between;gap:13px;margin:2px 0 19px}
+#wtp .panel-header h2{font-size:24px;letter-spacing:-.03em;margin:4px 0 6px;line-height:1.26}
+#wtp .panel-header p{color:var(--muted);font-size:15px;margin:0}
+#wtp .project-count{font-size:13px;white-space:nowrap;color:var(--muted);padding-bottom:5px}
+#wtp .project-list{display:flex;flex-direction:column;gap:13px}
+#wtp .project-card{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:19px 21px;min-width:0;transition:border-color .15s,box-shadow .15s}
+#wtp .project-card:hover{border-color:rgba(20,127,115,.6);box-shadow:0 4px 18px rgba(20,127,115,.07)}
+#wtp .number{color:var(--accent);font-weight:800;letter-spacing:.12em;font-size:12px}
+#wtp .card-link{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--primary);font-size:19px;font-weight:760;line-height:1.4;text-decoration:none!important;margin:6px 0}
+#wtp .card-link:hover{color:var(--accent)}
+#wtp .card-link .arrow{color:var(--accent);font-weight:600;font-size:17px}
+#wtp .card-desc{font-size:15px;color:var(--muted);margin:6px 0 5px}
+#wtp .tags{color:var(--accent);font-size:13px;font-weight:650}
+#wtp .note{margin-top:22px;border-left:3px solid var(--accent);background:rgba(20,127,115,.05);border-radius:5px;font-size:14px;color:var(--muted);padding:12px 15px}
+#wtp .back-link{color:var(--accent);font-size:14px;font-weight:700;text-decoration:none!important;display:inline-flex;align-items:center;gap:5px;margin-bottom:15px}
+#wtp .back-link:hover{text-decoration:underline!important}
+#wtp .project-title{font-size:clamp(28px,2.6vw,34px);margin:7px 0 8px;letter-spacing:-.03em;line-height:1.25}
+#wtp .project-subhead{color:var(--muted);font-size:15px;margin:0 0 12px}
+#wtp .detail-tools{display:flex;gap:10px 14px;align-items:center;flex-wrap:wrap;border:1px solid var(--border);border-radius:9px;padding:12px 15px;margin:16px 0 19px;font-size:14px}
+#wtp .detail-tools a{color:var(--accent);font-weight:700;text-decoration:none!important}
+#wtp .detail-tools a:hover{text-decoration:underline!important}
+#wtp .detail-tools .label{color:var(--muted);margin-right:auto}
+#wtp .code-action{border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--accent);padding:5px 9px;cursor:pointer;font-size:13px;font-weight:650}
+#wtp .nb-container{min-width:0;max-width:100%;overflow-wrap:anywhere}
+#wtp .nb-container .text_cell{margin:0}
+#wtp .nb-container .text_cell_render{font-size:16px;line-height:1.72}
+#wtp .nb-container .text_cell_render h1{font-size:28px;letter-spacing:-.025em;line-height:1.25;margin:10px 0 12px}
+#wtp .nb-container .text_cell_render h2{font-size:24px;margin:25px 0 9px;border-bottom:1px solid var(--border);padding-bottom:6px}
+#wtp .nb-container .text_cell_render h3{font-size:20px;margin:17px 0 8px}
+#wtp .nb-container .text_cell_render p{margin:9px 0}
+#wtp .nb-container .text_cell_render blockquote{border-left:3px solid var(--accent);padding:8px 13px;margin:12px 0;background:rgba(20,127,115,.05)}
+#wtp .nb-container .code_cell{margin:15px 0 20px}
+#wtp .code-block{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:3px 0 10px}
+#wtp .code-block summary{color:var(--accent);font-size:14px;font-weight:750;cursor:pointer;padding:9px 13px;background:rgba(20,127,115,.045)}
+#wtp .code-block .input{margin:0}
+#wtp .nb-container .input_area pre{font-size:13px;line-height:1.6;padding:13px;overflow-x:auto;white-space:pre;margin:0;background:var(--bs-tertiary-bg,#f6f8fa);border:0}
+#wtp .nb-container pre{font-size:13px;line-height:1.6;overflow-x:auto;white-space:pre-wrap;word-break:break-word;max-width:100%}
+#wtp .nb-container .output_wrapper{margin:7px 0 16px;max-width:100%}
+#wtp .nb-container .output_subarea{max-width:100%;overflow-x:auto}
+#wtp .nb-container .output_stream pre{background:var(--bs-tertiary-bg,#f6f8fa);border:1px solid var(--border);border-radius:6px;padding:12px}
+#wtp .nb-container img{max-width:100%;height:auto;display:block;margin:10px auto}
+#wtp .nb-container table{display:block;max-width:100%;overflow-x:auto;border-collapse:collapse;font-size:14px}
+#wtp .nb-container th,#wtp .nb-container td{border:1px solid var(--border);padding:6px 9px;text-align:left}
+#wtp .nb-container th{background:rgba(20,127,115,.05)}
+#wtp .highlight .k,#wtp .highlight .kn{color:#0c6eac;font-weight:600}
+#wtp .highlight .s,#wtp .highlight .s1,#wtp .highlight .s2{color:#a06b1a}
+#wtp .highlight .c1{color:#768a97;font-style:italic}
+#wtp .highlight .nf,#wtp .highlight .nb{color:#8054b6}
+@media(max-width:850px){#wtp{padding:20px 18px 40px}#wtp .layout{grid-template-columns:184px minmax(0,1fr);gap:16px}#wtp .sidebar{padding:10px}#wtp .project-card{padding:15px}}
+@media(max-width:650px){#wtp{padding:17px 12px 30px}#wtp .layout{grid-template-columns:1fr;gap:16px}#wtp .sidebar,#wtp .mainpane{grid-column:1}#wtp .sidebar{position:sticky;top:50px;padding:8px 9px;max-height:175px;overflow-y:auto}#wtp .side-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}#wtp .side-cat{font-size:11px;padding:7px}#wtp .sidebar-hint,#wtp .side-label{display:none}#wtp .panel-header h2{font-size:24px}#wtp .detail-tools .label{width:100%}}
+
+</style>
+<div id="wtp" data-project="08">
+         <header class="hero"><div class="eyebrow">WEITOLEARNING / LEARN BY BUILDING</div><h1>Machine Learning &amp; AI Projects</h1>
+         <p class="lead">Twelve hands-on notebooks covering foundational ML, deep learning, transformers, experiments and causal inference.</p></header>
+         <div class="layout"><div class="sidebar"><div class="side-label">BROWSE BY CATEGORY</div><nav aria-label="Project categories" class="side-list"><a class="side-cat" data-category="ml" href="../?category=ml"><span>Machine Learning</span><span class="side-count">2</span></a><a class="side-cat" data-category="dl" href="../?category=dl"><span>Deep Learning</span><span class="side-count">2</span></a><a class="side-cat" data-category="transformers" href="../?category=transformers"><span>Transformers</span><span class="side-count">2</span></a><a class="side-cat" data-category="llm" href="../?category=llm" aria-current="page"><span>LLM &amp; AI Systems</span><span class="side-count">2</span></a><a class="side-cat" data-category="experiments" href="../?category=experiments"><span>Experimentation</span><span class="side-count">2</span></a><a class="side-cat" data-category="causal" href="../?category=causal"><span>Causal Inference</span><span class="side-count">2</span></a></nav><p class="sidebar-hint">Choose a category to see its two projects. All notebooks open on separate pages.</p></div><main class="mainpane" id="wtp-notebook-main">
+         <a class="back-link" href="../?category=llm">← Back to LLM &amp; AI Systems projects</a>
+         <div class="number">PROJECT 08 / 12</div>
+         <h2 class="project-title">Mortgage Knowledge Retrieval &amp; Grounded Answers</h2>
+         <p class="project-subhead">BM25 · Hybrid Retrieval · Citations</p>
+         <div class="detail-tools"><span class="label">Executed notebook · Read-only website version</span>
+         <a href="https://github.com/cway999/WeiToLearning/blob/main/projects/08-mortgage-rag/index.ipynb" target="_blank" rel="noopener noreferrer">View on GitHub ↗</a>
+         <a href="index.ipynb" download>Download Notebook ↓</a>
+         <button class="code-action" id="wtp-toggle-code" type="button">Expand code</button></div>
+         <div class="nb-container"><div class="cell border-box-sizing text_cell rendered" id="cell-id=89798e8e"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Track:</strong> LLM / RAG<br/>
+<strong>Research / product question:</strong> Can an assistant retrieve the right policy and justify every answer with current evidence?</p>
+<p><strong>Learning outcome:</strong> Implement BM25 and hybrid retrieval, tune retrieval parameters, evaluate citation coverage and define a pluggable generation interface.</p>
+<p><strong>Workflow:</strong> Data-generating process → raw-data audit → leakage-safe features → from-scratch baseline → model selection / hyperparameter tuning → held-out evaluation → failure analysis.</p>
+<blockquote>
+<p><strong>Synthetic-data disclosure:</strong> All records and outcomes are created in this notebook; they do not describe real customers or credit decisions. Ground truth is constructed for teaching. Numerical results are illustrative of this simulator, not estimates of real-world business impact.</p>
+</blockquote>
+<p><strong>Reproducibility:</strong> Random seeds are fixed. Run cells top-to-bottom. Install packages from the project-level <code>requirements.txt</code>. CPU execution is supported; deep-learning examples deliberately use small models.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=c777e5c6"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote>
+<p><strong>Portfolio standard:</strong> fully reproducible, synthetic educational data · explicit evaluation protocol · plots and failure analysis · no claims of production accuracy.</p>
+</blockquote>
+<p>A fully runnable <em>offline</em> retrieval pipeline compares BM25, SVD-based low-rank semantic retrieval and reciprocal-rank fusion. The answerer quotes a supporting policy and returns its policy ID.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=e164d173">
+<details class="code-block" open=""><summary>Python source · Cell 1</summary><div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'figure.figsize'</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s1">'axes.grid'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">'grid.alpha'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div></details>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=2b369b4a"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1.-Simulate-a-versioned-mortgage-servicing-knowledge-base">1. Simulate a versioned mortgage servicing knowledge base</h2><p>A synthetic handbook provides explicit effective dates, policy rules and references. These rules are fictional—<strong>not legal, financial or servicing advice</strong>. Several near-duplicate policies make retrieval more realistic.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=0382aea3">
+<details class="code-block" open=""><summary>Python source · Cell 2</summary><div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Fictional mortgage-servicing policies must not be treated as regulatory guidance.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_extraction.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">TruncatedSVD</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics.pairwise</span><span class="w"> </span><span class="kn">import</span> <span class="n">cosine_similarity</span>
+<span class="n">policies</span><span class="o">=</span><span class="p">[</span>
+<span class="p">(</span><span class="s1">'P01'</span><span class="p">,</span><span class="s1">'Payment grace period'</span><span class="p">,</span><span class="s1">'A regular monthly payment is considered late for fee purposes after a fictional 14 day grace period.'</span><span class="p">,</span><span class="s1">'grace'</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">'P02'</span><span class="p">,</span><span class="s1">'Late fees'</span><span class="p">,</span><span class="s1">'A fictional late fee can be 3 percent of overdue principal and interest after the grace period, subject to account restrictions.'</span><span class="p">,</span><span class="s1">'fee'</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">'P03'</span><span class="p">,</span><span class="s1">'Escrow shortage'</span><span class="p">,</span><span class="s1">'A borrower with an escrow shortage can request a repayment plan under the fictional servicing policy.'</span><span class="p">,</span><span class="s1">'escrow'</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">'P04'</span><span class="p">,</span><span class="s1">'Extra principal'</span><span class="p">,</span><span class="s1">'A borrower may designate an extra payment for principal reduction subject to loan terms.'</span><span class="p">,</span><span class="s1">'prepay'</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">'P05'</span><span class="p">,</span><span class="s1">'Refinance application'</span><span class="p">,</span><span class="s1">'Refinancing replaces a loan and involves a new underwriting decision and closing costs.'</span><span class="p">,</span><span class="s1">'refinance'</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">'P06'</span><span class="p">,</span><span class="s1">'Assistance review'</span><span class="p">,</span><span class="s1">'Borrowers with documented hardship may request assistance review; approval is not guaranteed.'</span><span class="p">,</span><span class="s1">'assistance'</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">'P07'</span><span class="p">,</span><span class="s1">'Loan modification'</span><span class="p">,</span><span class="s1">'A modification request may change monthly payments only if the borrower qualifies after review.'</span><span class="p">,</span><span class="s1">'modification'</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">'P08'</span><span class="p">,</span><span class="s1">'Insurance renewal'</span><span class="p">,</span><span class="s1">'Insurance renewal documents may affect escrow estimates when premiums change.'</span><span class="p">,</span><span class="s1">'insurance'</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">'P09'</span><span class="p">,</span><span class="s1">'Credit reporting'</span><span class="p">,</span><span class="s1">'Servicers may report payment history according to applicable program and reporting rules.'</span><span class="p">,</span><span class="s1">'credit'</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">'P10'</span><span class="p">,</span><span class="s1">'Home equity'</span><span class="p">,</span><span class="s1">'Home equity is the difference between a property value and secured loan balances.'</span><span class="p">,</span><span class="s1">'equity'</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">'P11'</span><span class="p">,</span><span class="s1">'Payment due date'</span><span class="p">,</span><span class="s1">'Monthly payments are ordinarily scheduled for the date specified in the loan contract.'</span><span class="p">,</span><span class="s1">'due'</span><span class="p">),</span>
+<span class="p">(</span><span class="s1">'P12'</span><span class="p">,</span><span class="s1">'Customer complaints'</span><span class="p">,</span><span class="s1">'The fictional servicer logs complaints with a case number and escalation contact.'</span><span class="p">,</span><span class="s1">'complaint'</span><span class="p">)]</span>
+<span class="n">docs</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">policies</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'id'</span><span class="p">,</span><span class="s1">'title'</span><span class="p">,</span><span class="s1">'body'</span><span class="p">,</span><span class="s1">'intent'</span><span class="p">]);</span><span class="n">docs</span><span class="p">[</span><span class="s1">'text'</span><span class="p">]</span><span class="o">=</span><span class="n">docs</span><span class="o">.</span><span class="n">title</span><span class="o">+</span><span class="s1">'. '</span><span class="o">+</span><span class="n">docs</span><span class="o">.</span><span class="n">body</span>
+<span class="n">questions</span><span class="o">=</span><span class="p">{</span>
+<span class="s1">'grace'</span><span class="p">:[</span><span class="s1">'How many days is the grace period?'</span><span class="p">,</span><span class="s1">'When is a payment late for fees?'</span><span class="p">],</span>
+<span class="s1">'fee'</span><span class="p">:[</span><span class="s1">'How are overdue late fees determined?'</span><span class="p">,</span><span class="s1">'What is the missed payment fee?'</span><span class="p">],</span>
+<span class="s1">'escrow'</span><span class="p">:[</span><span class="s1">'Can I spread out an escrow shortage?'</span><span class="p">,</span><span class="s1">'How do I handle escrow deficit?'</span><span class="p">],</span>
+<span class="s1">'prepay'</span><span class="p">:[</span><span class="s1">'Can I make extra principal payments?'</span><span class="p">,</span><span class="s1">'Does paying extra reduce principal?'</span><span class="p">],</span>
+<span class="s1">'refinance'</span><span class="p">:[</span><span class="s1">'Do I have to apply for a refinance?'</span><span class="p">,</span><span class="s1">'Does refinancing incur closing costs?'</span><span class="p">],</span>
+<span class="s1">'assistance'</span><span class="p">:[</span><span class="s1">'Can I ask for hardship assistance?'</span><span class="p">,</span><span class="s1">'Is hardship help automatically approved?'</span><span class="p">],</span>
+<span class="s1">'modification'</span><span class="p">:[</span><span class="s1">'How do loan modifications work?'</span><span class="p">,</span><span class="s1">'Can payments change under a modification?'</span><span class="p">],</span>
+<span class="s1">'insurance'</span><span class="p">:[</span><span class="s1">'Why does my insurance increase escrow?'</span><span class="p">,</span><span class="s1">'What affects insurance renewal escrow?'</span><span class="p">],</span>
+<span class="s1">'credit'</span><span class="p">:[</span><span class="s1">'Will late payments appear on my credit record?'</span><span class="p">,</span><span class="s1">'How is repayment reported to credit bureaus?'</span><span class="p">],</span>
+<span class="s1">'equity'</span><span class="p">:[</span><span class="s1">'What does home equity mean?'</span><span class="p">,</span><span class="s1">'Is my property value minus debt my equity?'</span><span class="p">],</span>
+<span class="s1">'due'</span><span class="p">:[</span><span class="s1">'Where can I find my payment due date?'</span><span class="p">,</span><span class="s1">'When is my monthly mortgage bill due?'</span><span class="p">],</span>
+<span class="s1">'complaint'</span><span class="p">:[</span><span class="s1">'How to submit a complaint?'</span><span class="p">,</span><span class="s1">'Where can I escalate a servicing issue?'</span><span class="p">]}</span>
+<span class="n">qdf</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([(</span><span class="n">q</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span><span class="p">,</span><span class="n">qs</span> <span class="ow">in</span> <span class="n">questions</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">qs</span><span class="p">],</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'query'</span><span class="p">,</span><span class="s1">'intent'</span><span class="p">]);</span><span class="n">qid</span><span class="o">=</span><span class="p">{</span><span class="n">t</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">docs</span><span class="o">.</span><span class="n">intent</span><span class="p">)};</span><span class="n">qdf</span><span class="p">[</span><span class="s1">'target_id'</span><span class="p">]</span><span class="o">=</span><span class="n">qdf</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">qid</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Documents:'</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">docs</span><span class="p">),</span><span class="s1">'Evaluation questions:'</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">qdf</span><span class="p">));</span><span class="nb">print</span><span class="p">(</span><span class="n">docs</span><span class="p">[[</span><span class="s1">'id'</span><span class="p">,</span><span class="s1">'title'</span><span class="p">,</span><span class="s1">'body'</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div></details>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Documents: 12 Evaluation questions: 24
+ id                 title                                                                                                                             body
+P01  Payment grace period                             A regular monthly payment is considered late for fee purposes after a fictional 14 day grace period.
+P02             Late fees A fictional late fee can be 3 percent of overdue principal and interest after the grace period, subject to account restrictions.
+P03       Escrow shortage                            A borrower with an escrow shortage can request a repayment plan under the fictional servicing policy.
+P04       Extra principal                                         A borrower may designate an extra payment for principal reduction subject to loan terms.
+P05 Refinance application                                          Refinancing replaces a loan and involves a new underwriting decision and closing costs.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=5759e0a0"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2.-Implement-BM25,-dense-SVD-and-hybrid-retrieval">2. Implement BM25, dense SVD and hybrid retrieval</h2><p>The dense branch is TF-IDF projected with SVD, <strong>not a pretrained semantic embedding model</strong>. This makes every operation transparent offline; stronger models can be plugged in later. RRF combines lexical and dense ranks.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=b975d57f">
+<details class="code-block"><summary>Python source · Cell 3</summary><div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Implement lexical BM25 and low-rank SVD retrieval without hosted APIs.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">tok</span><span class="p">(</span><span class="n">s</span><span class="p">):</span><span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">'[a-z]+'</span><span class="p">,</span><span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+<span class="n">corpus</span><span class="o">=</span><span class="p">[</span><span class="n">tok</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">docs</span><span class="o">.</span><span class="n">text</span><span class="p">];</span><span class="n">dfreq</span><span class="o">=</span><span class="n">Counter</span><span class="p">(</span><span class="n">w</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">corpus</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">d</span><span class="p">));</span><span class="n">tf</span><span class="o">=</span><span class="p">[</span><span class="n">Counter</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">corpus</span><span class="p">];</span><span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">corpus</span><span class="p">);</span><span class="n">avg</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">corpus</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bm25</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="n">k1</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mf">.75</span><span class="p">):</span>
+ <span class="n">result</span><span class="o">=</span><span class="p">[]</span>
+ <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">corpus</span><span class="p">):</span>
+  <span class="n">val</span><span class="o">=</span><span class="mf">0.</span>
+  <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">tok</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+   <span class="n">n</span><span class="o">=</span><span class="n">dfreq</span><span class="p">[</span><span class="n">w</span><span class="p">];</span><span class="n">idf</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="n">n</span><span class="o">+</span><span class="mf">.5</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mf">.5</span><span class="p">));</span><span class="n">f</span><span class="o">=</span><span class="n">tf</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">w</span><span class="p">]</span>
+   <span class="n">val</span><span class="o">+=</span><span class="n">idf</span><span class="o">*</span><span class="n">f</span><span class="o">*</span><span class="p">(</span><span class="n">k1</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">f</span><span class="o">+</span><span class="n">k1</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">/</span><span class="n">avg</span><span class="p">))</span>
+  <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+ <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="n">vectorizer</span><span class="o">=</span><span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">docs</span><span class="o">.</span><span class="n">text</span><span class="p">);</span><span class="n">dt</span><span class="o">=</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">docs</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="n">svd</span><span class="o">=</span><span class="n">TruncatedSVD</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="n">dt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+<span class="n">dense_docs</span><span class="o">=</span><span class="n">svd</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dense</span><span class="p">(</span><span class="n">query</span><span class="p">):</span><span class="k">return</span> <span class="n">cosine_similarity</span><span class="p">(</span><span class="n">svd</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">query</span><span class="p">])),</span><span class="n">dense_docs</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rrf</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">k1</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span><span class="n">rrf_k</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+ <span class="n">a</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">bm25</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">k1</span><span class="p">));</span><span class="n">b</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">dense</span><span class="p">(</span><span class="n">q</span><span class="p">));</span><span class="n">ranks_a</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">a</span><span class="p">);</span><span class="n">ranks_b</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+ <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">rrf_k</span><span class="o">+</span><span class="n">ranks_a</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">rrf_k</span><span class="o">+</span><span class="n">ranks_b</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Retrieval candidate:'</span><span class="p">,</span><span class="n">docs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">rrf</span><span class="p">(</span><span class="s1">'Can I prepay extra principal?'</span><span class="p">))]</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div></details>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Retrieval candidate: Extra principal
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=7d6ed7aa"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="3.-Tune-on-validation-questions,-then-test-once">3. Tune on validation questions, then test once</h2><p>Split questions by paraphrase index (one phrasing for validation, one for test). Optimizing against all questions would overstate retrieval performance. We tune BM25 k1 and RRF constant.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=f00f7193">
+<details class="code-block"><summary>Python source · Cell 4</summary><div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Tune only on validation paraphrases; evaluate on untouched questions.</span>
+<span class="n">val</span><span class="o">=</span><span class="n">qdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span><span class="n">test</span><span class="o">=</span><span class="n">qdf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">recall_at_k</span><span class="p">(</span><span class="n">query_df</span><span class="p">,</span><span class="n">scorer</span><span class="p">,</span><span class="n">k</span><span class="p">):</span>
+ <span class="n">correct</span><span class="o">=</span><span class="p">[]</span>
+ <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query_df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span><span class="n">correct</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_id</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">scorer</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">query</span><span class="p">))[:</span><span class="n">k</span><span class="p">])</span>
+ <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">correct</span><span class="p">)</span>
+<span class="n">configs</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">k1</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">.5</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">2.3</span><span class="p">]:</span>
+ <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">60</span><span class="p">]:</span><span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">k1</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">recall_at_k</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="k">lambda</span> <span class="n">q</span><span class="p">:</span><span class="n">rrf</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">k1</span><span class="p">,</span><span class="n">k</span><span class="p">),</span><span class="mi">2</span><span class="p">)))</span>
+<span class="n">bk1</span><span class="p">,</span><span class="n">brrf</span><span class="p">,</span><span class="n">_</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">configs</span><span class="p">,</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span><span class="nb">print</span><span class="p">(</span><span class="s1">'Validation search:'</span><span class="p">,</span><span class="n">configs</span><span class="p">,</span><span class="s1">'selected:'</span><span class="p">,(</span><span class="n">bk1</span><span class="p">,</span><span class="n">brrf</span><span class="p">))</span>
+<span class="n">metrics</span><span class="o">=</span><span class="p">{</span><span class="s1">'BM25'</span><span class="p">:</span><span class="n">recall_at_k</span><span class="p">(</span><span class="n">test</span><span class="p">,</span><span class="n">bm25</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="s1">'SVD dense'</span><span class="p">:</span><span class="n">recall_at_k</span><span class="p">(</span><span class="n">test</span><span class="p">,</span><span class="n">dense</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="s1">'Hybrid RRF'</span><span class="p">:</span><span class="n">recall_at_k</span><span class="p">(</span><span class="n">test</span><span class="p">,</span><span class="k">lambda</span> <span class="n">q</span><span class="p">:</span><span class="n">rrf</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">bk1</span><span class="p">,</span><span class="n">brrf</span><span class="p">),</span><span class="mi">2</span><span class="p">)}</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Unseen paraphrase Recall@2:'</span><span class="p">,</span><span class="n">metrics</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">));</span><span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">metrics</span><span class="p">),</span><span class="nb">list</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">values</span><span class="p">()));</span><span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">'Recall@2'</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s1">'Retrieval held-out performance'</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div></details>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Validation search: [(0.5, 5, np.float64(0.75)), (0.5, 20, np.float64(0.75)), (0.5, 60, np.float64(0.75)), (1.5, 5, np.float64(0.75)), (1.5, 20, np.float64(0.75)), (1.5, 60, np.float64(0.75)), (2.3, 5, np.float64(0.75)), (2.3, 20, np.float64(0.75)), (2.3, 60, np.float64(0.75))] selected: (0.5, 5)
+Unseen paraphrase Recall@2: {'BM25': np.float64(0.8333333333333334), 'SVD dense': np.float64(1.0), 'Hybrid RRF': np.float64(0.9166666666666666)}
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_png output_subarea">
+<img alt="No description has been provided for this image" src="data:image/png;base64,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hUKtXSaT6byT6kNwglgjofzh/rmTIfNRXzw+2jGHNWP+Ng7MX80Mnb+6jm/UC/1NTU3h6empcpF+3UX7Pj4+WpdbvHgx5s+fj4yMDPTp0+dBhEpERERkUEY/fRkdHY3Q0FD06dMHXl5eSExMRFlZGcLDwwEAISEhcHJyQkJCAgBg0aJFiI2NxZo1a+Dq6or8/HwAgJWVFaysrIy2HURERET3w+hF2dixY1FUVITY2Fjk5+fDw8MDGRkZyov/z58/DxOT/03offLJJ6isrMSoUaNUxomLi8M777zzIEMnIiIiajBGL8oAICoqClFRURqfy8rKUnl89uxZwwdERERE9IAZ/eaxRERERMSijIiIiEgSWJQRERERSQCLMiIiIiIJYFFGREREJAEsyoiIiIgkgEUZERERkQSwKCMiIiKSABZlRERERBLAooyIiIhIAliUEREREUkAizIiIiIiCWBRRkRERCQBLMqIiIiIJIBFGREREZEEsCgjIiIikgAWZUREREQSwKKMiIiISAJYlBERERFJAIsyIiIiIglgUUZEREQkASzKiIiIiCSARRkRERGRBLAoIyIiIpIAFmVEREREEsCijIiIiEgCWJQRERERSQCLMiIiIiIJYFFGREREJAEsyoiIiIgkgEUZERERkQSwKCMiIiKSABZlRERERBLAooyIiIhIAliUEREREUmAJIqypKQkuLq6wszMDN7e3ti/f/9d+69fvx5dunSBmZkZevTogW3btj2gSImIiIgMw+hF2bp16xAdHY24uDgcPHgQ7u7uCAwMRGFhocb+2dnZGDduHCIiInDo0CEEBwcjODgYR48efcCRExERETUcoxdlS5cuRWRkJMLDw9GtWzckJyfDwsICqampGvsvX74cgwcPxowZM9C1a1fMnz8fvXv3xkcfffSAIyciIiJqOE2MufLKykocOHAAMTExyjYTExMEBAQgJydH4zI5OTmIjo5WaQsMDMTmzZs19q+oqEBFRYXycUlJifJfIcR9boF2oqLMYGM3XgLVckBUAAIyYwcjOXW5KQXMX22Yw9owfxsD5q82hs7f0tJSALhn3WHUouzKlSuorq6Gvb29Sru9vT3y8vI0LpOfn6+xf35+vsb+CQkJiI+PV2tv165dPaOm+3HO2AFIWPNEY0dAumAOa8b8bRyYv5o9qPy9fv06bGxstD5v1KLsQYiJiVGZWaupqcHVq1fRqlUryGR8p/AglZaWwtnZGRcuXIC1tbWxwyHSG3OYGjPmr/EIIXD9+nW0adPmrv2MWpTZ2tpCLpejoKBApb2goAAODg4al3FwcNCrv0KhgEKhUGlr3rx5/YOm+2Ztbc0XBGrUmMPUmDF/jeNuM2R1jHqhv6mpKTw9PZGZmalsq6mpQWZmJnx8fDQu4+Pjo9IfAHbs2KG1PxEREVFjYPTTl9HR0QgNDUWfPn3g5eWFxMRElJWVITw8HAAQEhICJycnJCQkAACmTJmCAQMG4IMPPsCwYcOwdu1a/Pbbb/j000+NuRlERERE98XoRdnYsWNRVFSE2NhY5Ofnw8PDAxkZGcqL+c+fPw8Tk/9N6Pn6+mLNmjWYM2cOZs+ejU6dOmHz5s3o3r27sTaBdKRQKBAXF6d2OpmosWAOU2PG/JU+mTDkfSGIiIiISCdGv3ksEREREbEoIyIiIpIEFmVEREREEsCijIhIT+np6bzfIT0QZ8+ehUwmQ25urt7LvvPOO/Dw8Lhrn7CwMAQHB9crNmp4LMpIJ2FhYZDJZMqfVq1aYfDgwTh8+LCyT91ze/fuVVm2oqJC+Q0KWVlZAGpfaCIiIuDm5gZzc3N06NABcXFxqKysVC5X92J058+d49PDq6ioCK+//jratWsHhUIBBwcHBAYG4pdffkFlZSVsbW2xcOFCjcvOnz8f9vb2uHXrFtLT05X5I5fL0aJFC3h7e2PevHmS+s5GenhoK3aysrIgk8lQXFxs8BimT5+udl9PfdXFW/fTunVrDB06FEeOHFHpd/vfiKZNm8LNzQ0zZ85EeXm5Sj9Nr+n9+vW7rxgfJizKSGeDBw/G5cuXcfnyZWRmZqJJkyYICgpS6ePs7Iy0tDSVtk2bNsHKykqlLS8vDzU1NUhJScEff/yBZcuWITk5GbNnz1Zb748//qhc7+XLl+Hp6dnwG0eS9Pzzz+PQoUNYtWoV/vzzT2zZsgV+fn74559/YGpqipdeekkt34DarzRJT09HSEgImjZtCqD2LuaXL1/G33//jezsbLzyyiv4/PPP4eHhgUuXLj3oTSMyGCEEqqqqYGVlhVatWjXImCdOnMDly5exfft2VFRUYNiwYSpvooH//Y04ffo0li1bhpSUFMTFxamNlZaWpvKavmXLlgaJ8WHAoox0VjdT4eDgAA8PD8yaNQsXLlxAUVGRsk9oaCjWrl2Lf//9V9mWmpqK0NBQlbEGDx6MtLQ0PPPMM2jfvj1GjBiB6dOnY+PGjWrrbdWqlXK9Dg4Oyj+y9HArLi7G7t27sWjRIvj7+8PFxQVeXl6IiYnBiBEjAAARERH4888/sWfPHpVlf/75Z5w+fRoRERHKNplMBgcHBzg6OqJr166IiIhAdnY2bty4gZkzZ941lvT0dLRr1w4WFhYYOXIk/vnnH7U+33zzDXr37g0zMzO0b98e8fHxqKqqUln/ypUrMXLkSFhYWKBTp04qf4yuXbuG8ePHo3Xr1jA3N0enTp1UCs4LFy5gzJgxaN68OVq2bIlnn30WZ8+e1WufkrSUlZXB2toaGzZsUGnfvHkzLC0tcf36dWVbXl4efH19YWZmhu7du+Pnn39WPlc3m/X999/D09MTCoUCe/bsUTt9WV1djejoaDRv3hytWrXCzJkzoetdsezs7ODg4IDevXtj6tSpuHDhAvLy8lT61P2NcHZ2RnBwMAICArBjxw61sZo3b67ymt6yZUudYngUsCijerlx4wa++OILdOzYUeWdmKenJ1xdXfH1118DqL35765du/Dyyy/fc8ySkhKNv5wjRoyAnZ0d+vXrx3dUjxArKytYWVlh8+bNqKio0NinR48eeOKJJ5CamqrSnpaWBl9fX3Tp0uWu67Czs8P48eOxZcsWVFdXa+yzb98+REREICoqCrm5ufD398e7776r0mf37t0ICQnBlClTcOzYMaSkpCA9PR3vvfeeSr/4+HiMGTMGhw8fxtChQzF+/HhcvXoVADB37lwcO3YM33//PY4fP45PPvkEtra2AIBbt24hMDAQzZo1w+7du/HLL7/AysoKgwcPVputoMbD0tISL7zwgtpsb1paGkaNGoVmzZop22bMmIE333wThw4dgo+PD4YPH6725mDWrFlYuHAhjh8/jp49e6qt74MPPkB6ejpSU1OxZ88eXL16FZs2bdIr5pKSEqxduxZA7VclanP06FFkZ2fftQ9pIIh0EBoaKuRyubC0tBSWlpYCgHB0dBQHDhxQ9gEgNm3aJBITE4W/v78QQoj4+HgxcuRIce3aNQFA7Ny5U+P4J0+eFNbW1uLTTz9VthUVFYkPPvhA7N27V+zfv1+89dZbQiaTiW+++cag20rSsWHDBtGiRQthZmYmfH19RUxMjPj9999V+iQnJwsrKytx/fp1IYQQpaWlwsLCQqxcuVLZJy0tTdjY2GhcxyeffCIAiIKCAo3Pjxs3TgwdOlSlbezYsSrjDRw4UCxYsEClz+rVq4Wjo6PyMQAxZ84c5eMbN24IAOL7778XQggxfPhwER4erjGG1atXi86dO4uamhplW0VFhTA3Nxfbt2/XuAwZ152vmXU/ZmZmAoC4du2aEEKIffv2CblcLi5duiSEEKKgoEA0adJEZGVlCSGEOHPmjAAgFi5cqBz71q1bom3btmLRokVCCCF27twpAIjNmzerxBAXFyfc3d2Vjx0dHcXixYvVxnn22We1bkfd2Le/9gMQI0aM0Lq9CoVCABAmJiZiw4YNKv0ACDMzM5V9smnTJp326aOAM2WkM39/f+Tm5iI3Nxf79+9HYGAghgwZgnPnzqn0e+mll5CTk4PTp08jPT0dEyZMuOu4Fy9exODBgzF69GhERkYq221tbREdHQ1vb2888cQTWLhwIV566SW8//77Btk+kp7nn38ely5dwpYtWzB48GBkZWWhd+/eSE9PV/YZN24cqqur8dVXXwEA1q1bBxMTE4wdO1andYj/f/pGJpNpfP748ePw9vZWafPx8VF5/Pvvv2PevHnK2T0rKytERkbi8uXLuHnzprLf7bMXlpaWsLa2RmFhIQDg9ddfx9q1a+Hh4YGZM2ciOztbZfxTp06hWbNmyvFbtmyJ8vJy/PXXXzptJz14t79m1v2sXLlSpY+Xlxcef/xxrFq1CgDwxRdfwMXFBf3791fpd3vONWnSBH369MHx48dV+vTp00drLCUlJbh8+bJKLteNo4vdu3fjwIEDSE9Px2OPPYbk5GSt27tv3z6EhoYiPDwczz//vFq/ZcuWqeyTQYMG6RTDo8Do331JjYelpSU6duyofLxy5UrY2NhgxYoVKqdzWrVqhaCgIERERKC8vBxDhgxRuTbidpcuXYK/vz98fX11+lJ5b29vjdco0MPLzMwMgwYNwqBBgzB37lxMnDgRcXFxCAsLA1B7Af+oUaOQlpaGCRMmIC0tDWPGjFH7cIk2x48fh7W19X1dEH3jxg3Ex8fjueee0xh/nTuvh5TJZKipqQEA5Rucbdu2YceOHRg4cCAmTZqEJUuW4MaNG/D09MSXX36pNn7r1q3rHTcZ1p2vmQDw999/q/WbOHEikpKSMGvWLKSlpSE8PFzrm4R7rc9Q3Nzc0Lx5c3Tu3BmFhYUYO3Ysdu3apbb+uu1NTU2Fu7s7PvvsM5VrOwHAwcFBbb9QLc6UUb3JZDKYmJioXNRfZ8KECcjKykJISAjkcrnG5S9evAg/Pz94enoiLS1N5YvntcnNzYWjo+N9x06NV7du3VBWVqbSFhERgT179mDr1q3Izs5W+yOgTWFhIdasWYPg4GCt+de1a1fs27dPpe3O27L07t0bJ06cQMeOHdV+dMnrOq1bt0ZoaCi++OILJCYmKt+o9O7dGydPnoSdnZ3a+DY2NjqPT9L00ksv4dy5c/jvf/+LY8eOqX0wClDNuaqqKhw4cABdu3bVeR02NjZwdHRUyeW6cfQ1adIkHD169K7Xo5mYmGD27NmYM2eOxr8RpBlnykhnFRUVyM/PB1D7SbGPPvoIN27cwPDhw9X6Dh48GEVFRbC2ttY4Vl1B5uLigiVLlqh8gtPBwQEAsGrVKpiamqJXr14AgI0bNyI1NVVt+p8eTv/88w9Gjx6NCRMmoGfPnmjWrBl+++03LF68GM8++6xK3/79+6Njx44ICQlBly5d4OvrqzaeEAL5+fkQQqC4uBg5OTlYsGABbGxstN7rDAAmT56Mvn37YsmSJXj22Wexfft2ZGRkqPSJjY1FUFAQ2rVrh1GjRsHExAS///47jh49qvahAG1iY2Ph6emJxx9/HBUVFdi6davyj+748ePx/vvv49lnn8W8efPQtm1bnDt3Dhs3bsTMmTPRtm1bndZB0tSiRQs899xzmDFjBp555hmNxzMpKQmdOnVC165dsWzZMly7du2el4bcacqUKVi4cCE6deqELl26YOnSpfW6X5qFhQUiIyMRFxeH4OBgrbN6o0ePxowZM5CUlITp06frvZ5HEWfKSGcZGRlwdHSEo6MjvL298euvv2L9+vXw8/NT6yuTyWBra6v1kzc7duzAqVOnkJmZibZt2yrHvXMWbP78+fD09IS3tze++eYbrFu3DuHh4YbYPJIYKysreHt7Y9myZejfvz+6d++OuXPnIjIyEh999JFKX5lMhgkTJtz1D1VpaSkcHR3h5OQEHx8fpKSkIDQ0FIcOHbrr7OuTTz6JFStWYPny5XB3d8cPP/yAOXPmqPQJDAzE1q1b8cMPP+CJJ57Ak08+iWXLlsHFxUXn7TU1NUVMTAx69uyJ/v37Qy6XKz/lZmFhgV27dqFdu3Z47rnnlLf0KC8v1/rGhxqXiIgIVFZWas3fhQsXYuHChXB3d8eePXuwZcsW5adzdfXmm2/i5ZdfRmhoKHx8fNCsWTOMHDmyXvFGRUXh+PHjWL9+vdY+TZo0QVRUFBYvXqw2u02ayYTQ8SYlREREZBCrV6/GtGnTcOnSJd5G4hHG05dERERGcvPmTVy+fBkLFy7Eq6++yoLsEcfTl0REREayePFidOnSBQ4ODoiJiTF2OGRkPH1JREREJAGcKSMiIiKSABZlRERERBLAooyIiIhIAliUEREREUkAizIiIiIiCWBRRkRERCQBLMqIiIiIJIBFGREREZEEsCgjIiIikoD/B0tboZDDtaFcAAAAAElFTkSuQmCC"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=6a1b133e"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="4.-Grounded-answering-and-citations">4. Grounded answering and citations</h2><p>A real LLM can be swapped in via the generator interface below. <strong>The default offline answerer is extractive, NOT an LLM.</strong> That distinction matters: retrieval evaluation is reproducible locally, while generative factuality requires a separate model and evaluation.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=53773cd9">
+<details class="code-block"><summary>Python source · Cell 5</summary><div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Return policy-ID evidence and flag limitations of extractive answering.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+ <span class="n">scores</span><span class="o">=</span><span class="n">rrf</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="n">bk1</span><span class="p">,</span><span class="n">brrf</span><span class="p">);</span><span class="k">return</span> <span class="n">docs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">scores</span><span class="p">)[:</span><span class="n">k</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grounded_extract</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+ <span class="n">matched</span><span class="o">=</span><span class="n">retrieve</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+ <span class="k">if</span> <span class="n">matched</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span><span class="k">return</span> <span class="p">{</span><span class="s1">'answer'</span><span class="p">:</span><span class="s1">'I cannot locate supporting policy.'</span><span class="p">,</span><span class="s1">'citations'</span><span class="p">:[]}</span>
+ <span class="n">top</span><span class="o">=</span><span class="n">matched</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+ <span class="k">return</span> <span class="p">{</span><span class="s1">'answer'</span><span class="p">:</span><span class="n">top</span><span class="o">.</span><span class="n">body</span><span class="p">,</span><span class="s1">'citations'</span><span class="p">:[</span><span class="n">top</span><span class="o">.</span><span class="n">id</span><span class="p">],</span><span class="s1">'policy_title'</span><span class="p">:</span><span class="n">top</span><span class="o">.</span><span class="n">title</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">question</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'Can I make extra principal payments?'</span><span class="p">,</span><span class="s1">'How do loan modifications work?'</span><span class="p">]:</span>
+ <span class="n">response</span><span class="o">=</span><span class="n">grounded_extract</span><span class="p">(</span><span class="n">question</span><span class="p">);</span><span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">Q:'</span><span class="p">,</span><span class="n">question</span><span class="p">,</span><span class="s1">'</span><span class="se">\n</span><span class="s1">A:'</span><span class="p">,</span><span class="n">response</span><span class="p">)</span>
+<span class="n">coverage</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">docs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_id</span><span class="p">)]</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">grounded_extract</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">query</span><span class="p">)[</span><span class="s1">'citations'</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">test</span><span class="o">.</span><span class="n">itertuples</span><span class="p">()])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">Held-out top-one grounded evidence match:'</span><span class="p">,</span><span class="nb">round</span><span class="p">(</span><span class="n">coverage</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div></details>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+Q: Can I make extra principal payments? 
+A: {'answer': 'A borrower may designate an extra payment for principal reduction subject to loan terms.', 'citations': ['P04'], 'policy_title': 'Extra principal'}
+
+Q: How do loan modifications work? 
+A: {'answer': 'Home equity is the difference between a property value and secured loan balances.', 'citations': ['P10'], 'policy_title': 'Home equity'}
+
+Held-out top-one grounded evidence match: 0.833
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=fa89d0fd"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="5.-Optional-local-LLM-generation-adapter-(not-executed-by-default)">5. Optional local LLM generation adapter (not executed by default)</h2><p>To turn retrieval into a <strong>generative</strong> RAG system, replace the extractive step with a locally available Hugging Face instruction model. This deliberately avoids downloading model weights during tests and will only work when <code>transformers</code> and an appropriate checkpoint are installed locally. Output must still be checked for support.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=31394ee1">
+<details class="code-block"><summary>Python source · Cell 6</summary><div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Return policy-ID evidence and flag limitations of extractive answering.</span>
+<span class="c1"># Optional, NOT used in offline benchmark above. Real model availability varies by machine.</span>
+<span class="c1"># from transformers import AutoTokenizer, AutoModelForCausalLM</span>
+<span class="c1"># model_path = "/path/to/your/local-instruct-model"  # supply an existing local model directory</span>
+<span class="c1"># tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)</span>
+<span class="c1"># llm = AutoModelForCausalLM.from_pretrained(model_path, local_files_only=True)</span>
+<span class="c1"># evidence = retrieve("Can I change a mortgage payment?", k=2)</span>
+<span class="c1"># prompt = ("Answer ONLY using the fictional policy excerpts below; cite IDs.\n"</span>
+<span class="c1">#           + "\n".join(</span>
+<span class="c1">#     f"[{r.id}] {r.body}" for r in evidence.itertuples())</span>
+<span class="c1"># ... tokenize prompt, call llm.generate(...), decode and check citations.</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Offline deliverable: fully working retrieval + extractive grounded answers. LLM generation is an explicit extension.'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div></details>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Offline deliverable: fully working retrieval + extractive grounded answers. LLM generation is an explicit extension.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=d9a88a4d"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="What-the-results-mean-/-interview-discussion">What the results mean / interview discussion</h2><p>This notebook demonstrates an auditable retrieval + grounding stack and separates offline <strong>document match quality</strong> from language generation quality. The text uses fictional rules and can never be used to answer real servicing-policy questions. The generation adapter is intentionally optional, so the benchmark runs without credentials, internet access or a GPU.</p>
+<p><strong>Try explaining these without looking at the code:</strong></p>
+<ol>
+<li>How do Recall@K, answer correctness and citation correctness differ?</li>
+<li>What are retrieval leakage and document versioning failures?</li>
+<li>How would you replace SVD with a trained dense bi-encoder and a cross-encoder reranker?</li>
+</ol>
+<p><strong>Limitations and next step:</strong> Evaluate on a suitably licensed real-world dataset or stronger simulation with domain shift, logging bias and realistic selection. Never treat synthetic performance as production evidence.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=d6cf0b52"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="What-this-project-demonstrates,-and-what-it-does-not">What this project demonstrates, and what it does not</h2><p><strong>Scope:</strong> The executable path is a <strong>retrieval + extractive evidence assistant</strong>, not a benchmark of a deployed generative LLM. The notebook provides an optional local-model integration hook but no model weights. <strong>Next:</strong> add an actual instruction LLM, citations verification, abstention thresholds, policy versioning, and adversarial outdated documents.</p>
+<p><strong>Reproduce:</strong> <code>Run All</code> in Jupyter; no private or uploaded data required. For real data, use leakage-safe train/validation/test partitions and respect each dataset license.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=23158f8b">
+<details class="code-block"><summary>Python source · Cell 7</summary><div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Honest failure analysis: list held-out questions answered from the wrong policy.</span>
+<span class="n">failures</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">test</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+    <span class="n">answer</span><span class="o">=</span><span class="n">grounded_extract</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">expected_id</span><span class="o">=</span><span class="n">docs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_id</span><span class="p">)]</span><span class="o">.</span><span class="n">id</span>
+    <span class="k">if</span> <span class="n">expected_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">answer</span><span class="p">[</span><span class="s2">"citations"</span><span class="p">]:</span>
+        <span class="n">failures</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"question"</span><span class="p">:</span> <span class="n">row</span><span class="o">.</span><span class="n">query</span><span class="p">,</span>
+                         <span class="s2">"expected_policy"</span><span class="p">:</span> <span class="n">expected_id</span><span class="p">,</span>
+                         <span class="s2">"retrieved_policy"</span><span class="p">:</span> <span class="n">answer</span><span class="p">[</span><span class="s2">"citations"</span><span class="p">][</span><span class="mi">0</span><span class="p">]})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Unreliable evidence matches:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">failures</span><span class="p">),</span> <span class="s2">"of"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">failures</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">if</span> <span class="n">failures</span> <span class="k">else</span> <span class="s2">"None"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div></details>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Unreliable evidence matches: 2 of 12
+                               question expected_policy retrieved_policy
+        What is the missed payment fee?             P02              P01
+Where can I escalate a servicing issue?             P12              P03
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=5f851cb1"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Safety of demonstrations:</strong> When retrieval finds a wrong policy, the extractive answer also becomes wrong. Do not treat a citation as evidence of correctness unless the citation is independently verified. Production assistants need abstention, current-policy checks and an evaluated generation layer.</p>
+</div>
+</div>
+</div>
+</div>
+         <div class="note">Results shown here come from the saved notebook. To modify and rerun models, open the .ipynb in Jupyter or VS Code. This is a static website, not a live Python kernel.</div>
+         <a class="back-link" href="../?category=llm" style="margin-top:22px">← All LLM &amp; AI Systems projects</a>
+         </main></div></div>
+<script>
+(function(){
+  const root=document.getElementById('wtp');if(!root)return;
+  const button=root.querySelector('#wtp-toggle-code');
+  if(button){button.addEventListener('click',()=>{
+    const blocks=Array.from(root.querySelectorAll('details.code-block'));
+    const shouldOpen=blocks.some(el=>!el.open);
+    blocks.forEach(el=>{el.open=shouldOpen;});
+    button.textContent=shouldOpen?'Collapse code':'Expand code';
+  });}
+})();
+</script>
+```

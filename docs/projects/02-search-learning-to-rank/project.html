@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>E-commerce Search &amp; Learning to Rank | WeiToLearning – Wei to Learn</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-445b8638c3d06994fee0907d791121c4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../typography.css">
+<link rel="stylesheet" href="../../site-layout.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Wei to Learn</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Technical Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects/index.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-layout-custom page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+<!-- main -->
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">E-commerce Search &amp; Learning to Rank | WeiToLearning</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<style>
+
+/* Scoped styles for both /projects/ and its 12 independent project subpages. */
+#wtp{box-sizing:border-box;width:100%;max-width:1280px;min-width:0;margin:0 auto;padding:27px 28px 56px;--accent:#147f73;--primary:var(--bs-body-color,#273747);--muted:var(--bs-secondary-color,#6e7e88);--border:var(--bs-border-color,#dce6e9);--surface:var(--bs-body-bg,#fff);color:var(--primary);font-family:inherit;font-size:16px;line-height:1.65}
+#wtp *{box-sizing:border-box}
+#wtp [hidden]{display:none!important}
+#wtp .hero{padding:6px 2px 23px;border-bottom:1px solid var(--border)}
+#wtp .eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.12em}
+#wtp .hero h1{font-size:clamp(30px,2.8vw,36px);letter-spacing:-.034em;line-height:1.18;margin:7px 0 11px}
+#wtp .lead{color:var(--muted);font-size:16px;line-height:1.7;max-width:860px;margin:0}
+#wtp .stats{display:flex;flex-wrap:wrap;gap:19px;margin-top:15px;color:var(--muted);font-size:14px}
+#wtp .stats strong{color:var(--primary)}
+#wtp .layout{display:grid;grid-template-columns:228px minmax(0,1fr);gap:27px;width:100%;min-width:0;margin-top:24px;align-items:start}
+#wtp .layout > *,#wtp .mainpane{min-width:0;max-width:100%}
+#wtp .sidebar{grid-column:1;position:sticky;top:78px;border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:13px 12px 15px;z-index:2}
+#wtp .side-label{color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.11em;padding:7px 10px 10px}
+#wtp .side-list{display:flex;flex-direction:column;gap:3px}
+#wtp .side-cat{color:var(--primary);border:0;border-radius:8px;text-decoration:none!important;font-size:15px;padding:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:500;cursor:pointer;line-height:1.4}
+#wtp .side-cat:hover{background:rgba(20,127,115,.06);color:var(--accent)}
+#wtp .side-cat[aria-current="page"]{background:rgba(20,127,115,.12);color:var(--accent);font-weight:750}
+#wtp .side-count{font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:1px 7px;font-variant-numeric:tabular-nums}
+#wtp .sidebar-hint{color:var(--muted);font-size:13px;padding:10px 10px 0;margin:0;line-height:1.6}
+#wtp .mainpane{grid-column:2}
+#wtp .panel-header{display:flex;align-items:end;justify-content:space-between;gap:13px;margin:2px 0 19px}
+#wtp .panel-header h2{font-size:24px;letter-spacing:-.03em;margin:4px 0 6px;line-height:1.26}
+#wtp .panel-header p{color:var(--muted);font-size:15px;margin:0}
+#wtp .project-count{font-size:13px;white-space:nowrap;color:var(--muted);padding-bottom:5px}
+#wtp .project-list{display:flex;flex-direction:column;gap:13px}
+#wtp .project-card{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:19px 21px;min-width:0;transition:border-color .15s,box-shadow .15s}
+#wtp .project-card:hover{border-color:rgba(20,127,115,.6);box-shadow:0 4px 18px rgba(20,127,115,.07)}
+#wtp .number{color:var(--accent);font-weight:800;letter-spacing:.12em;font-size:12px}
+#wtp .card-link{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--primary);font-size:19px;font-weight:760;line-height:1.4;text-decoration:none!important;margin:6px 0}
+#wtp .card-link:hover{color:var(--accent)}
+#wtp .card-link .arrow{color:var(--accent);font-weight:600;font-size:17px}
+#wtp .card-desc{font-size:15px;color:var(--muted);margin:6px 0 5px}
+#wtp .tags{color:var(--accent);font-size:13px;font-weight:650}
+#wtp .note{margin-top:22px;border-left:3px solid var(--accent);background:rgba(20,127,115,.05);border-radius:5px;font-size:14px;color:var(--muted);padding:12px 15px}
+#wtp .back-link{color:var(--accent);font-size:14px;font-weight:700;text-decoration:none!important;display:inline-flex;align-items:center;gap:5px;margin-bottom:15px}
+#wtp .back-link:hover{text-decoration:underline!important}
+#wtp .project-title{font-size:clamp(28px,2.6vw,34px);margin:7px 0 8px;letter-spacing:-.03em;line-height:1.25}
+#wtp .project-subhead{color:var(--muted);font-size:15px;margin:0 0 12px}
+#wtp .detail-tools{display:flex;gap:10px 14px;align-items:center;flex-wrap:wrap;border:1px solid var(--border);border-radius:9px;padding:12px 15px;margin:16px 0 19px;font-size:14px}
+#wtp .detail-tools a{color:var(--accent);font-weight:700;text-decoration:none!important}
+#wtp .detail-tools a:hover{text-decoration:underline!important}
+#wtp .detail-tools .label{color:var(--muted);margin-right:auto}
+#wtp .code-action{border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--accent);padding:5px 9px;cursor:pointer;font-size:13px;font-weight:650}
+#wtp .nb-container{min-width:0;max-width:100%;overflow-wrap:anywhere}
+#wtp .nb-container .text_cell{margin:0}
+#wtp .nb-container .text_cell_render{font-size:16px;line-height:1.72}
+#wtp .nb-container .text_cell_render h1{font-size:28px;letter-spacing:-.025em;line-height:1.25;margin:10px 0 12px}
+#wtp .nb-container .text_cell_render h2{font-size:24px;margin:25px 0 9px;border-bottom:1px solid var(--border);padding-bottom:6px}
+#wtp .nb-container .text_cell_render h3{font-size:20px;margin:17px 0 8px}
+#wtp .nb-container .text_cell_render p{margin:9px 0}
+#wtp .nb-container .text_cell_render blockquote{border-left:3px solid var(--accent);padding:8px 13px;margin:12px 0;background:rgba(20,127,115,.05)}
+#wtp .nb-container .code_cell{margin:15px 0 20px}
+#wtp .code-block{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:3px 0 10px}
+#wtp .code-block summary{color:var(--accent);font-size:14px;font-weight:750;cursor:pointer;padding:9px 13px;background:rgba(20,127,115,.045)}
+#wtp .code-block .input{margin:0}
+#wtp .nb-container .input_area pre{font-size:13px;line-height:1.6;padding:13px;overflow-x:auto;white-space:pre;margin:0;background:var(--bs-tertiary-bg,#f6f8fa);border:0}
+#wtp .nb-container pre{font-size:13px;line-height:1.6;overflow-x:auto;white-space:pre-wrap;word-break:break-word;max-width:100%}
+#wtp .nb-container .output_wrapper{margin:7px 0 16px;max-width:100%}
+#wtp .nb-container .output_subarea{max-width:100%;overflow-x:auto}
+#wtp .nb-container .output_stream pre{background:var(--bs-tertiary-bg,#f6f8fa);border:1px solid var(--border);border-radius:6px;padding:12px}
+#wtp .nb-container img{max-width:100%;height:auto;display:block;margin:10px auto}
+#wtp .nb-container table{display:block;max-width:100%;overflow-x:auto;border-collapse:collapse;font-size:14px}
+#wtp .nb-container th,#wtp .nb-container td{border:1px solid var(--border);padding:6px 9px;text-align:left}
+#wtp .nb-container th{background:rgba(20,127,115,.05)}
+#wtp .highlight .k,#wtp .highlight .kn{color:#0c6eac;font-weight:600}
+#wtp .highlight .s,#wtp .highlight .s1,#wtp .highlight .s2{color:#a06b1a}
+#wtp .highlight .c1{color:#768a97;font-style:italic}
+#wtp .highlight .nf,#wtp .highlight .nb{color:#8054b6}
+@media(max-width:850px){#wtp{padding:20px 18px 40px}#wtp .layout{grid-template-columns:184px minmax(0,1fr);gap:16px}#wtp .sidebar{padding:10px}#wtp .project-card{padding:15px}}
+@media(max-width:650px){#wtp{padding:17px 12px 30px}#wtp .layout{grid-template-columns:1fr;gap:16px}#wtp .sidebar,#wtp .mainpane{grid-column:1}#wtp .sidebar{position:sticky;top:50px;padding:8px 9px;max-height:175px;overflow-y:auto}#wtp .side-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}#wtp .side-cat{font-size:11px;padding:7px}#wtp .sidebar-hint,#wtp .side-label{display:none}#wtp .panel-header h2{font-size:24px}#wtp .detail-tools .label{width:100%}}
+
+</style>
+<div id="wtp" data-project="02">
+         <header class="hero"><div class="eyebrow">WEITOLEARNING / LEARN BY BUILDING</div><h1>Machine Learning &amp; AI Projects</h1>
+         <p class="lead">Twelve hands-on notebooks covering foundational ML, deep learning, transformers, experiments and causal inference.</p></header>
+         <div class="layout"><div class="sidebar"><div class="side-label">BROWSE BY CATEGORY</div><nav aria-label="Project categories" class="side-list"><a class="side-cat" data-category="ml" href="../?category=ml" aria-current="page"><span>Machine Learning</span><span class="side-count">2</span></a><a class="side-cat" data-category="dl" href="../?category=dl"><span>Deep Learning</span><span class="side-count">2</span></a><a class="side-cat" data-category="transformers" href="../?category=transformers"><span>Transformers</span><span class="side-count">2</span></a><a class="side-cat" data-category="llm" href="../?category=llm"><span>LLM &amp; AI Systems</span><span class="side-count">2</span></a><a class="side-cat" data-category="experiments" href="../?category=experiments"><span>Experimentation</span><span class="side-count">2</span></a><a class="side-cat" data-category="causal" href="../?category=causal"><span>Causal Inference</span><span class="side-count">2</span></a></nav><p class="sidebar-hint">Choose a category to see its two projects. All notebooks open on separate pages.</p></div><main class="mainpane" id="wtp-notebook-main">
+         <a class="back-link" href="../?category=ml">← Back to Machine Learning projects</a>
+         <div class="number">PROJECT 02 / 12</div>
+         <h2 class="project-title anchored">E-commerce Search &amp; Learning to Rank</h2>
+         <p class="project-subhead">BM25 · Pairwise Ranking · NDCG@10</p>
+         <div class="detail-tools"><span class="label">Executed notebook · Read-only website version</span>
+         <a href="https://github.com/cway999/WeiToLearning/blob/main/projects/02-search-learning-to-rank/index.ipynb" target="_blank" rel="noopener noreferrer">View on GitHub ↗</a>
+         <a href="index.ipynb" download="">Download Notebook ↓</a>
+         <button class="code-action" id="wtp-toggle-code" type="button">Expand code</button></div>
+         <div class="nb-container"><div class="cell border-box-sizing text_cell rendered" id="cell-id=135838f1"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Track:</strong> Machine Learning / Search<br>
+<strong>Research / product question:</strong> Can we rank relevant e-commerce products above distractors for unseen queries?</p>
+<p><strong>Learning outcome:</strong> Manual BM25, NDCG@K, query-group splits, pairwise RankNet-style learning and tuning.</p>
+<p><strong>Workflow:</strong> Data-generating process → raw-data audit → leakage-safe features → from-scratch baseline → model selection / hyperparameter tuning → held-out evaluation → failure analysis.</p>
+<blockquote class="blockquote">
+<p><strong>Synthetic-data disclosure:</strong> All records and outcomes are created in this notebook; they do not describe real customers or credit decisions. Ground truth is constructed for teaching. Numerical results are illustrative of this simulator, not estimates of real-world business impact.</p>
+</blockquote>
+<p><strong>Reproducibility:</strong> Random seeds are fixed. Run cells top-to-bottom. Install packages from the project-level <code>requirements.txt</code>. CPU execution is supported; deep-learning examples deliberately use small models.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=35172597"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote class="blockquote">
+<p><strong>Portfolio standard:</strong> fully reproducible, synthetic educational data · explicit evaluation protocol · plots and failure analysis · no claims of production accuracy.</p>
+</blockquote>
+<p>We split by <strong>query</strong>, not individual query–document pairs. Graded <strong>relevance labels</strong> are simulated ground truth; clicks are logged separately and are position-biased. A hand-built synonym dictionary is used as domain knowledge, not as a target label.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=f123dd0d">
+<details class="code-block" open=""><summary>Python source · Cell 1</summary><div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'figure.figsize'</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s1">'axes.grid'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">'grid.alpha'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div></details>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=9614bc59"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1.-Simulate-query%E2%80%93product-judgments" class="anchored">1. Simulate query–product judgments</h2><p>Product relevance is known in the simulator, while click labels are biased by position. <strong>We evaluate on explicit relevance</strong>, not biased click labels. Products are intentionally short and ambiguous.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=f5332180">
+<details class="code-block" open=""><summary>Python source · Cell 2</summary><div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Generated product relevance is the offline evaluation target; clicks contain position bias.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">ndcg_score</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="n">categories</span><span class="o">=</span><span class="p">{</span><span class="s1">'laptop'</span><span class="p">:[</span><span class="s1">'laptop'</span><span class="p">,</span><span class="s1">'notebook'</span><span class="p">,</span><span class="s1">'computer'</span><span class="p">],</span> <span class="s1">'headphones'</span><span class="p">:[</span><span class="s1">'headphones'</span><span class="p">,</span><span class="s1">'headset'</span><span class="p">,</span><span class="s1">'earbuds'</span><span class="p">],</span> <span class="s1">'camera'</span><span class="p">:[</span><span class="s1">'camera'</span><span class="p">,</span><span class="s1">'photography'</span><span class="p">,</span><span class="s1">'dslr'</span><span class="p">],</span> <span class="s1">'coffee'</span><span class="p">:[</span><span class="s1">'coffee'</span><span class="p">,</span><span class="s1">'espresso'</span><span class="p">,</span><span class="s1">'beans'</span><span class="p">],</span> <span class="s1">'shoes'</span><span class="p">:[</span><span class="s1">'shoes'</span><span class="p">,</span><span class="s1">'sneakers'</span><span class="p">,</span><span class="s1">'running'</span><span class="p">]}</span>
+<span class="n">products</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">cat</span><span class="p">,</span><span class="n">words</span> <span class="ow">in</span> <span class="n">categories</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+ <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
+    <span class="n">products</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">'product_id'</span><span class="p">:</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">cat</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span><span class="s1">'category'</span><span class="p">:</span><span class="n">cat</span><span class="p">,</span><span class="s1">'title'</span><span class="p">:</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">words</span><span class="p">)</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">"pro"</span><span class="p">,</span><span class="s2">"budget"</span><span class="p">,</span><span class="s2">"wireless"</span><span class="p">,</span><span class="s2">"premium"</span><span class="p">,</span><span class="s2">"lightweight"</span><span class="p">])</span><span class="si">}</span><span class="s1"> model </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span><span class="s1">'quality'</span><span class="p">:</span><span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">.05</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="s1">'price'</span><span class="p">:</span><span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">450</span><span class="p">)})</span>
+<span class="n">products</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">products</span><span class="p">)</span>
+<span class="n">queries</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">cat</span><span class="p">,</span><span class="n">words</span> <span class="ow">in</span> <span class="n">categories</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+ <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">42</span><span class="p">):</span>
+    <span class="n">q</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">words</span><span class="p">)</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">"best"</span><span class="p">,</span><span class="s2">"affordable"</span><span class="p">,</span><span class="s2">"premium"</span><span class="p">,</span><span class="s2">"lightweight"</span><span class="p">,</span><span class="s2">"wireless"</span><span class="p">])</span><span class="si">}</span><span class="s1">'</span>
+    <span class="n">queries</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">'query_id'</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">queries</span><span class="p">),</span><span class="s1">'query'</span><span class="p">:</span><span class="n">q</span><span class="p">,</span><span class="s1">'intent'</span><span class="p">:</span><span class="n">cat</span><span class="p">})</span>
+<span class="n">queries</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span>
+<span class="n">rows</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">queries</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+ <span class="n">subset</span><span class="o">=</span><span class="n">products</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">query_id</span><span class="o">+</span><span class="mi">100</span><span class="p">))</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+ <span class="c1"># Inject relevant items to avoid empty-positive ranking groups.</span>
+ <span class="n">subextra</span><span class="o">=</span><span class="n">products</span><span class="p">[</span><span class="n">products</span><span class="o">.</span><span class="n">category</span><span class="o">==</span><span class="n">q</span><span class="o">.</span><span class="n">intent</span><span class="p">]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">query_id</span><span class="o">+</span><span class="mi">10</span><span class="p">))</span>
+ <span class="n">subset</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">subset</span><span class="p">,</span><span class="n">subextra</span><span class="p">])</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="s1">'product_id'</span><span class="p">)</span>
+ <span class="k">for</span> <span class="n">pos</span><span class="p">,</span><span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">subset</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(),</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">rel</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">category</span><span class="o">==</span><span class="n">q</span><span class="o">.</span><span class="n">intent</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">quality</span><span class="o">&gt;</span><span class="mf">.7</span><span class="p">))</span>
+    <span class="c1"># Simulated biased impressions: position can overwhelm relevance in raw clicks.</span>
+    <span class="n">click_prob</span><span class="o">=</span><span class="p">(</span><span class="mf">.04</span><span class="o">+</span><span class="mf">.20</span><span class="o">*</span><span class="p">(</span><span class="n">rel</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">+</span><span class="mf">.22</span><span class="o">*</span><span class="p">(</span><span class="n">rel</span><span class="o">==</span><span class="mi">3</span><span class="p">))</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">.055</span><span class="o">*</span><span class="p">(</span><span class="n">pos</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">q</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span><span class="n">q</span><span class="o">.</span><span class="n">query</span><span class="p">,</span><span class="n">q</span><span class="o">.</span><span class="n">intent</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">product_id</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">title</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">quality</span><span class="p">,</span><span class="n">p</span><span class="o">.</span><span class="n">price</span><span class="p">,</span><span class="n">pos</span><span class="p">,</span><span class="n">rel</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">()</span><span class="o">&lt;</span><span class="n">click_prob</span><span class="p">)))</span>
+<span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'qid'</span><span class="p">,</span><span class="s1">'query'</span><span class="p">,</span><span class="s1">'intent'</span><span class="p">,</span><span class="s1">'product'</span><span class="p">,</span><span class="s1">'title'</span><span class="p">,</span><span class="s1">'quality'</span><span class="p">,</span><span class="s1">'price'</span><span class="p">,</span><span class="s1">'logged_position'</span><span class="p">,</span><span class="s1">'relevance'</span><span class="p">,</span><span class="s1">'click'</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">));</span><span class="nb">print</span><span class="p">(</span><span class="s1">'Rows'</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span><span class="s1">'groups'</span><span class="p">,</span><span class="n">df</span><span class="o">.</span><span class="n">qid</span><span class="o">.</span><span class="n">nunique</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div></details>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre> qid       query intent   product                         title  quality      price  logged_position  relevance  click
+   0 laptop best laptop   shoes_8          shoes budget model 8 0.987300 328.636901                1          0      0
+   0 laptop best laptop laptop_11      computer budget model 11 0.496078 101.472684                2          2      0
+   0 laptop best laptop coffee_28    espresso wireless model 28 0.546500 348.487058                3          0      0
+   0 laptop best laptop laptop_15 notebook lightweight model 15 0.418104 143.981085                4          2      1
+   0 laptop best laptop   shoes_3   running lightweight model 3 0.774406 136.330025                5          0      0
+Rows 6466 groups 210
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=1705b382"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2.-Implement-BM25-manually" class="anchored">2. Implement BM25 manually</h2><p>BM25 uses term frequency, inverse document frequency and length normalization. The index is built only from the available product catalog; relevance judgments are never used to form lexical features.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=b1e62bfc">
+<details class="code-block"><summary>Python source · Cell 3</summary><div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Implement BM25 from the token/document frequency statistics.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span><span class="o">,</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">toks</span><span class="p">(</span><span class="n">s</span><span class="p">):</span><span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">'[a-z0-9]+'</span><span class="p">,</span><span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+<span class="n">corpus</span><span class="o">=</span><span class="p">[</span><span class="n">toks</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">products</span><span class="o">.</span><span class="n">title</span><span class="p">]</span>
+<span class="n">D</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">corpus</span><span class="p">);</span><span class="n">docfreq</span><span class="o">=</span><span class="n">Counter</span><span class="p">(</span><span class="n">t</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">corpus</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">doc</span><span class="p">));</span><span class="n">avgdl</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">corpus</span><span class="p">]);</span><span class="n">tf</span><span class="o">=</span><span class="p">[</span><span class="n">Counter</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">corpus</span><span class="p">]</span>
+<span class="n">idx</span><span class="o">=</span><span class="p">{</span><span class="n">p</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">products</span><span class="o">.</span><span class="n">product_id</span><span class="p">)}</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bm25</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">product_id</span><span class="p">,</span><span class="n">k1</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mf">.75</span><span class="p">):</span>
+ <span class="n">j</span><span class="o">=</span><span class="n">idx</span><span class="p">[</span><span class="n">product_id</span><span class="p">];</span><span class="n">dl</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">corpus</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span><span class="n">score</span><span class="o">=</span><span class="mf">0.</span>
+ <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">toks</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
+    <span class="n">nterm</span><span class="o">=</span><span class="n">docfreq</span><span class="p">[</span><span class="n">term</span><span class="p">];</span><span class="n">idf</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="n">D</span><span class="o">-</span><span class="n">nterm</span><span class="o">+</span><span class="mf">.5</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">nterm</span><span class="o">+</span><span class="mf">.5</span><span class="p">))</span>
+    <span class="n">freq</span><span class="o">=</span><span class="n">tf</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">term</span><span class="p">];</span><span class="n">score</span><span class="o">+=</span><span class="n">idf</span><span class="o">*</span><span class="n">freq</span><span class="o">*</span><span class="p">(</span><span class="n">k1</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">freq</span><span class="o">+</span><span class="n">k1</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">dl</span><span class="o">/</span><span class="n">avgdl</span><span class="p">))</span>
+ <span class="k">return</span> <span class="n">score</span>
+<span class="c1"># Feature construction: no future clicks, logged rank, or relevance is included.</span>
+<span class="c1"># A domain glossary bridges synonymous e-commerce terms (e.g., computer/laptop).</span>
+<span class="c1"># This is allowed at inference and never reads relevance or click labels.</span>
+<span class="n">canonical</span><span class="o">=</span><span class="p">{</span><span class="n">word</span><span class="p">:</span><span class="n">cat</span> <span class="k">for</span> <span class="n">cat</span><span class="p">,</span><span class="n">words</span> <span class="ow">in</span> <span class="n">categories</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">}</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize_tokens</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+ <span class="k">return</span> <span class="p">[</span><span class="n">canonical</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">toks</span><span class="p">(</span><span class="n">text</span><span class="p">)]</span>
+<span class="n">normalized_docs</span><span class="o">=</span><span class="p">[</span><span class="n">normalize_tokens</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">products</span><span class="o">.</span><span class="n">title</span><span class="p">]</span>
+<span class="n">normalized_tf</span><span class="o">=</span><span class="p">[</span><span class="n">Counter</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">normalized_docs</span><span class="p">]</span>
+<span class="n">normalized_df</span><span class="o">=</span><span class="n">Counter</span><span class="p">(</span><span class="n">t</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">normalized_docs</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">doc</span><span class="p">))</span>
+<span class="n">normalized_avgdl</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">normalized_docs</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">normalized_bm25</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="n">product_id</span><span class="p">,</span><span class="n">k1</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mf">.75</span><span class="p">):</span>
+ <span class="n">j</span><span class="o">=</span><span class="n">idx</span><span class="p">[</span><span class="n">product_id</span><span class="p">]</span>
+ <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">normalized_docs</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span><span class="n">score</span><span class="o">=</span><span class="mf">0.</span>
+ <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">normalize_tokens</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+  <span class="n">term_freq</span><span class="o">=</span><span class="n">normalized_tf</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">term</span><span class="p">]</span>
+  <span class="n">freq</span><span class="o">=</span><span class="n">normalized_df</span><span class="p">[</span><span class="n">term</span><span class="p">]</span>
+  <span class="n">idf</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="n">D</span><span class="o">-</span><span class="n">freq</span><span class="o">+</span><span class="mf">.5</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">freq</span><span class="o">+</span><span class="mf">.5</span><span class="p">))</span>
+  <span class="n">score</span><span class="o">+=</span><span class="n">idf</span><span class="o">*</span><span class="n">term_freq</span><span class="o">*</span><span class="p">(</span><span class="n">k1</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">term_freq</span><span class="o">+</span><span class="n">k1</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">length</span><span class="o">/</span><span class="n">normalized_avgdl</span><span class="p">))</span>
+ <span class="k">return</span> <span class="n">score</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'bm25'</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="n">bm25</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span><span class="p">,</span><span class="n">p</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'query'</span><span class="p">],</span><span class="n">df</span><span class="p">[</span><span class="s1">'product'</span><span class="p">])]</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'normalized_bm25'</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="n">normalized_bm25</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span><span class="p">,</span><span class="n">p</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'query'</span><span class="p">],</span><span class="n">df</span><span class="p">[</span><span class="s1">'product'</span><span class="p">])]</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'word_overlap'</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">toks</span><span class="p">(</span><span class="n">q</span><span class="p">))</span><span class="o">&amp;</span><span class="nb">set</span><span class="p">(</span><span class="n">toks</span><span class="p">(</span><span class="n">t</span><span class="p">)))</span> <span class="k">for</span> <span class="n">q</span><span class="p">,</span><span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'query'</span><span class="p">],</span><span class="n">df</span><span class="p">[</span><span class="s1">'title'</span><span class="p">])]</span>
+<span class="n">features</span><span class="o">=</span><span class="p">[</span><span class="s1">'bm25'</span><span class="p">,</span><span class="s1">'normalized_bm25'</span><span class="p">,</span><span class="s1">'word_overlap'</span><span class="p">,</span><span class="s1">'quality'</span><span class="p">,</span><span class="s1">'price'</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">features</span><span class="o">+</span><span class="p">[</span><span class="s1">'relevance'</span><span class="p">,</span><span class="s1">'click'</span><span class="p">]]</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div></details>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>                 bm25  normalized_bm25  word_overlap  quality  price  relevance  click
+bm25             1.00             0.65          0.96    -0.03   0.01       0.41   0.09
+normalized_bm25  0.65             1.00          0.70    -0.03  -0.01       0.80   0.17
+word_overlap     0.96             0.70          1.00    -0.03   0.01       0.34   0.08
+quality         -0.03            -0.03         -0.03     1.00  -0.01       0.11   0.03
+price            0.01            -0.01          0.01    -0.01   1.00      -0.03  -0.03
+relevance        0.41             0.80          0.34     0.11  -0.03       1.00   0.22
+click            0.09             0.17          0.08     0.03  -0.03       0.22   1.00
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=1cf1ff0b"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="3.-Query-safe-train,-validation-and-test-split" class="anchored">3. Query-safe train, validation and test split</h2><p>Never split individual rows of the same query across train and test: that inflates offline ranking metrics. All query groups are held out as units.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=34f33fec">
+<details class="code-block"><summary>Python source · Cell 4</summary><div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Split by query so test queries never appear in model fitting.</span>
+<span class="n">qids</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">qid</span><span class="o">.</span><span class="n">unique</span><span class="p">()));</span><span class="n">trq</span><span class="p">,</span><span class="n">rest</span><span class="o">=</span><span class="n">train_test_split</span><span class="p">(</span><span class="n">qids</span><span class="p">,</span><span class="n">test_size</span><span class="o">=</span><span class="mf">.35</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">);</span><span class="n">vaq</span><span class="p">,</span><span class="n">teq</span><span class="o">=</span><span class="n">train_test_split</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span><span class="n">test_size</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">sets</span><span class="o">=</span><span class="p">{</span><span class="s1">'train'</span><span class="p">:</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">qid</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">trq</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span><span class="s1">'valid'</span><span class="p">:</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">qid</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">vaq</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span><span class="s1">'test'</span><span class="p">:</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">qid</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">teq</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()}</span>
+<span class="nb">print</span><span class="p">({</span><span class="n">x</span><span class="p">:(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">),</span><span class="n">v</span><span class="o">.</span><span class="n">qid</span><span class="o">.</span><span class="n">nunique</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">sets</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mean_ndcg</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span><span class="n">score_col</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+ <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">ndcg_score</span><span class="p">([</span><span class="n">g</span><span class="o">.</span><span class="n">relevance</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()],[</span><span class="n">g</span><span class="p">[</span><span class="n">score_col</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()],</span><span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">g</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'qid'</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Validation BM25 NDCG@10:'</span><span class="p">,</span><span class="nb">round</span><span class="p">(</span><span class="n">mean_ndcg</span><span class="p">(</span><span class="n">sets</span><span class="p">[</span><span class="s1">'valid'</span><span class="p">],</span><span class="s1">'bm25'</span><span class="p">),</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div></details>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{'train': (4191, 136), 'valid': (1137, 37), 'test': (1138, 37)}
+Validation BM25 NDCG@10: 0.616
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=6323ce28"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="4.-Implement-pairwise-ranking-learning" class="anchored">4. Implement pairwise ranking learning</h2><p>For each query, take pairs with different relevance labels. The difference in document features is classified as a preference using Logistic Regression (RankNet-style pairwise logistic surrogate). We sample balanced forward/reverse pairs.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=243bb5bc">
+<details class="code-block"><summary>Python source · Cell 5</summary><div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Form within-query relevant-versus-irrelevant pairs and fit a ranking loss.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_pairs</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span><span class="n">cap</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
+ <span class="n">r</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">);</span><span class="n">xx</span><span class="o">=</span><span class="p">[];</span><span class="n">yy</span><span class="o">=</span><span class="p">[]</span>
+ <span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">g</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'qid'</span><span class="p">):</span>
+    <span class="n">good</span><span class="o">=</span><span class="n">g</span><span class="p">[</span><span class="n">g</span><span class="o">.</span><span class="n">relevance</span><span class="o">&gt;=</span><span class="mi">2</span><span class="p">];</span><span class="n">bad</span><span class="o">=</span><span class="n">g</span><span class="p">[</span><span class="n">g</span><span class="o">.</span><span class="n">relevance</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">cap</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">good</span><span class="p">)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">bad</span><span class="p">))):</span>
+      <span class="n">a</span><span class="o">=</span><span class="n">good</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">good</span><span class="p">)))][</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+      <span class="n">b</span><span class="o">=</span><span class="n">bad</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bad</span><span class="p">)))][</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+      <span class="n">xx</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">,</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">]);</span><span class="n">yy</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+ <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xx</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">yy</span><span class="p">)</span>
+<span class="n">scaler</span><span class="o">=</span><span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">sets</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="n">features</span><span class="p">]);</span>
+<span class="n">xpair</span><span class="p">,</span><span class="n">ypair</span><span class="o">=</span><span class="n">make_pairs</span><span class="p">(</span><span class="n">sets</span><span class="p">[</span><span class="s1">'train'</span><span class="p">]);</span><span class="n">scale</span><span class="o">=</span><span class="n">scaler</span><span class="o">.</span><span class="n">scale_</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span><span class="n">scale</span><span class="p">[</span><span class="n">scale</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
+<span class="c1"># Scaling differences is equivalent to standardizing each document before subtraction.</span>
+<span class="n">xpair</span><span class="o">=</span><span class="n">xpair</span><span class="o">/</span><span class="n">scale</span>
+<span class="n">scores</span><span class="o">=</span><span class="p">[];</span><span class="n">rankers</span><span class="o">=</span><span class="p">{}</span>
+<span class="k">for</span> <span class="n">C</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">.03</span><span class="p">,</span><span class="mf">.3</span><span class="p">,</span><span class="mf">3.0</span><span class="p">]:</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span><span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">xpair</span><span class="p">,</span><span class="n">ypair</span><span class="p">)</span>
+    <span class="n">val</span><span class="o">=</span><span class="n">sets</span><span class="p">[</span><span class="s1">'valid'</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span><span class="n">val</span><span class="p">[</span><span class="s1">'rank_score'</span><span class="p">]</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">features</span><span class="p">]))</span>
+    <span class="n">metric</span><span class="o">=</span><span class="n">mean_ndcg</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="s1">'rank_score'</span><span class="p">);</span><span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">C</span><span class="p">,</span><span class="n">metric</span><span class="p">));</span><span class="n">rankers</span><span class="p">[</span><span class="n">C</span><span class="p">]</span><span class="o">=</span><span class="n">model</span>
+<span class="n">bestC</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Validation grid:'</span><span class="p">,[(</span><span class="n">c</span><span class="p">,</span><span class="nb">round</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span><span class="n">s</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">],</span><span class="s1">'best C'</span><span class="p">,</span><span class="n">bestC</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div></details>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Validation grid: [(0.03, np.float64(0.941)), (0.3, np.float64(0.924)), (3.0, np.float64(0.892))] best C 0.03
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=c494a228"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="5.-Final-ranking-evaluation-and-error-analysis" class="anchored">5. Final ranking evaluation and error analysis</h2><p>We compare random, lexical retrieval, and a reranker using the <strong>untouched test query groups</strong>. A strong reranker can incorporate product quality even when BM25 keyword overlap is imperfect.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=6599a942">
+<details class="code-block"><summary>Python source · Cell 6</summary><div class="input">
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Compare selected ranker to random and lexical retrieval on untouched queries.</span>
+<span class="n">test</span><span class="o">=</span><span class="n">sets</span><span class="p">[</span><span class="s1">'test'</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span><span class="n">test</span><span class="p">[</span><span class="s1">'random_score'</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">101</span><span class="p">)</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">));</span><span class="n">test</span><span class="p">[</span><span class="s1">'rank_score'</span><span class="p">]</span><span class="o">=</span><span class="n">rankers</span><span class="p">[</span><span class="n">bestC</span><span class="p">]</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="n">features</span><span class="p">]))</span>
+<span class="n">metrics</span><span class="o">=</span><span class="p">{</span><span class="n">n</span><span class="p">:</span><span class="n">mean_ndcg</span><span class="p">(</span><span class="n">test</span><span class="p">,</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="p">[(</span><span class="s1">'Random'</span><span class="p">,</span><span class="s1">'random_score'</span><span class="p">),(</span><span class="s1">'Raw BM25'</span><span class="p">,</span><span class="s1">'bm25'</span><span class="p">),(</span><span class="s1">'Synonym BM25'</span><span class="p">,</span><span class="s1">'normalized_bm25'</span><span class="p">),(</span><span class="s1">'Pairwise ranker'</span><span class="p">,</span><span class="s1">'rank_score'</span><span class="p">)]}</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Test NDCG@10:'</span><span class="p">,{</span><span class="n">k</span><span class="p">:</span><span class="nb">round</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mf">3.5</span><span class="p">));</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">metrics</span><span class="p">),</span><span class="nb">list</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">values</span><span class="p">()));</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">'NDCG@10'</span><span class="p">,</span><span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">title</span><span class="o">=</span><span class="s1">'Unseen-query ranking quality'</span><span class="p">);</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span><span class="n">_</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">],[</span><span class="n">s</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">s</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">]);</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">'C'</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">'Validation NDCG@10'</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s1">'Hyperparameter tuning'</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">example</span><span class="o">=</span><span class="n">test</span><span class="p">[</span><span class="n">test</span><span class="o">.</span><span class="n">qid</span><span class="o">==</span><span class="n">test</span><span class="o">.</span><span class="n">qid</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'rank_score'</span><span class="p">,</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[[</span><span class="s1">'query'</span><span class="p">,</span><span class="s1">'title'</span><span class="p">,</span><span class="s1">'relevance'</span><span class="p">,</span><span class="s1">'bm25'</span><span class="p">,</span><span class="s1">'rank_score'</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Top-ranked products (one held-out query):</span><span class="se">\n</span><span class="s1">'</span><span class="p">,</span><span class="n">example</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'A domain glossary is a manually provided synonym feature, not a label lookup.'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div></details>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Test NDCG@10: {'Random': np.float64(0.347), 'Raw BM25': np.float64(0.604), 'Synonym BM25': np.float64(0.811), 'Pairwise ranker': np.float64(0.934)}
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_png output_subarea">
+<img alt="No description has been provided for this image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABEEAAAFUCAYAAADLQiJbAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjEwLjgsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvwVt1zgAAAAlwSFlzAAAPYQAAD2EBqD+naQAAakdJREFUeJzt3Xd4FFXbx/HfJiEJhBRagkIg9N4RRKQIkYAIRn0EUSFEmkh7iChFJGALiFRFUKSKCqKIINKMdBCkSi8CokACCAQIPTnvH77ZhyWFBJJslv1+rotL98zMmXtmzu6c3HNmxmKMMQIAAAAAALjPudg7AAAAAAAAgOxAEgQAAAAAADgFkiAAAAAAAMApkAQBAAAAAABOgSQIAAAAAABwCiRBAAAAAACAUyAJAgAAAAAAnAJJEAAAAAAA4BRIggAAAAAAAKdAEgQAbjN9+nRZLBZt3rw5zfmGDh0qi8WSTVHlHCltd1BQkDp27GifgAAAgN3QB4CjIQkCh5f0B9mZM2dSnF65cmU1btw4e4MCnNyePXs0dOhQHT161N6hAIBDulNCvnHjxqpcuXI2R4WMssf5cP369Ro6dKjOnz+fbesEHAlJEAC4S4MHD9aVK1fsHUaOsH//fk2ePNn6ec+ePRo2bBhJEACAU7PH+XD9+vUaNmxYtiVBbu8DADkdSRAAWcoYkyWJgqyqNyPc3Nzk6elp1xhyCg8PD+XKlcveYQAAcoj4+PhsW1dO6BNkt+zcv3dCHwCOhiQInM7KlStlsVj0zTff6L333lPRokXl6emppk2b6tChQzbzHjx4UM8++6wKFy4sT09PFS1aVM8//7zi4uJs5ps1a5Zq1aql3LlzK3/+/Hr++ef1119/JVv3xo0b1bx5c/n6+ipPnjxq1KiR1q1bZzNP0u09hw4dUseOHeXn5ydfX1+Fh4fr8uXL6drG8+fPq2PHjvL19ZWfn5/CwsK0fft2WSwWTZ8+3Tpf48aNU7xVqGPHjgoKCrIpS0xM1NixY1WpUiV5enoqICBA3bp107lz52zmCwoK0pNPPqmlS5eqdu3ayp07tz799FM1atRI1apVSzHecuXKKSQkJM1tSq1eSZo2bZqaNGkif39/eXh4qGLFipo4cWKqdaxdu1Z16tSRp6enSpYsqZkzZ6a5bkk6d+6c6tSpo6JFi2r//v2SUn42hsViUc+ePTV//nxVrlxZHh4eqlSpkpYsWZKszpUrV6p27dry9PRUqVKl9Omnn2boOSOfffaZSpUqpdy5c6tOnTpas2ZNsmOaNJz69itQSd+DlStXWsvWrFmj5557TsWKFZOHh4cCAwPVt2/fdHUsb70fePr06XruueckSY899pgsFot1XWFhYSpYsKBu3LiRrI5mzZqpXLly6dp2AICt9J5njx49KovFog8//FBjxoxR8eLFlTt3bjVq1Ei7du1Ktuy+ffv0n//8R/nz55enp6dq166tBQsW2MyTdK5ZtWqVXn31Vfn7+6to0aKS/neu3Ldvn9q0aSMfHx8VKFBAffr00dWrV23qyej5PDP6BEnn4ty5c6tKlSrW8+K8efNUpUoVeXp6qlatWtq2bVuG901a58MkixcvVoMGDeTl5SVvb2+1bNlSu3fvtllPx44dlTdvXv3xxx964okn5O3trRdffDFZPEn7+/XXX5cklShRwrrOo0ePWo/9rX3BJBaLRUOHDrWpJ7390dufCZLUHtatW6eIiAgVKlRIXl5eevrpp3X69GmbZRMTEzV06FA9+OCDypMnjx577DHt2bOH54wgS7nZOwDAXoYPHy4XFxf169dPcXFx+uCDD/Tiiy9q48aNkqTr168rJCRE165dU69evVS4cGEdP35cP/74o86fPy9fX19J0nvvvae33npLbdq0UefOnXX69Gl99NFHatiwobZt2yY/Pz9J0i+//KIWLVqoVq1aioyMlIuLi/VEvWbNGtWpU8cmvjZt2qhEiRKKiorS1q1b9fnnn8vf318jRoxIc7uMMXrqqae0du1avfLKK6pQoYK+//57hYWF3dP+6tatm6ZPn67w8HD17t1bR44c0ccff6xt27Zp3bp1NlcA9u/fr3bt2qlbt27q0qWLypUrp7x586pLly7atWuXzT3Mv/32mw4cOKDBgwffMYaU6pWkiRMnqlKlSmrdurXc3Ny0cOFCvfrqq0pMTFSPHj1s6jh06JD+85//qFOnTgoLC9PUqVPVsWNH1apVS5UqVUpxvWfOnNHjjz+us2fPatWqVSpVqlSaca5du1bz5s3Tq6++Km9vb40fP17PPvusjh07pgIFCkiStm3bpubNm+uBBx7QsGHDlJCQoLfffluFChW6436QpClTpqhbt2565JFH9N///leHDx9W69atlT9/fgUGBqarjtvNnTtXly9fVvfu3VWgQAFt2rRJH330kf7++2/NnTs33fU0bNhQvXv31vjx4zVo0CBVqFBBklShQgW1b99eM2fO1NKlS/Xkk09al4mJidEvv/yiyMjIu4odAO5XcXFxKT737PZkcvv27TN0np05c6YuXryoHj166OrVqxo3bpyaNGminTt3KiAgQJK0e/du1a9fX0WKFNGAAQPk5eWlb775RqGhofruu+/09NNP29T56quvqlChQhoyZEiykQpt2rRRUFCQoqKi9Ouvv2r8+PE6d+6czYWIjJzPM6tP8MILL6hbt2566aWX9OGHH6pVq1aaNGmSBg0apFdffVWSFBUVpTZt2mj//v1ycXFJ975J63woSV988YXCwsIUEhKiESNG6PLly5o4caIeffRRbdu2zeaC1M2bNxUSEqJHH31UH374ofLkyZOsTUjSM888owMHDujrr7/WmDFjVLBgQUlSoUKFkiUg0uNu+6OS1KtXL+XLl0+RkZE6evSoxo4dq549e2rOnDnWeQYOHKgPPvhArVq1UkhIiHbs2KGQkJBkCTIgUxnAwUVGRhpJ5vTp0ylOr1SpkmnUqJH184oVK4wkU6FCBXPt2jVr+bhx44wks3PnTmOMMdu2bTOSzNy5c1Nd99GjR42rq6t57733bMp37txp3NzcrOWJiYmmTJkyJiQkxCQmJlrnu3z5silRooR5/PHHk23Pyy+/bFPn008/bQoUKHCHvWHM/PnzjSTzwQcfWMtu3rxpGjRoYCSZadOmWcsbNWpks2+ShIWFmeLFi1s/r1mzxkgyX375pc18S5YsSVZevHhxI8ksWbLEZt7z588bT09P079/f5vy3r17Gy8vL3Pp0qU0tyu1eo35dz/eLiQkxJQsWTLFOlavXm0tO3XqlPHw8DCvvfaatWzatGlGkvntt9/MyZMnTaVKlUzJkiXN0aNHbepLOla3kmTc3d3NoUOHrGU7duwwksxHH31kLWvVqpXJkyePOX78uLXs4MGDxs3NLVmdt7t+/brx9/c31atXt2nDn332mZFkc0yTtuXIkSM2dSR9D1asWGEtS2k/RkVFGYvFYv788880t7t48eImLCzM+nnu3LnJ6jfGmISEBFO0aFHTtm1bm/LRo0cbi8ViDh8+nOa2A4CzSPr9TutfpUqVrPOn9zx75MgRI8nkzp3b/P3339b5Nm7c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V65ckv49ds2bN9ezzz6r33//XXPmzNHatWuT/VbeKUbp39/diIgIbd68WdHR0XJxcdHTTz+txMREm2XffPNN9evXT9u3b1fZsmXVrl27FEdr/PXXX2rQoIEqV66sb7/9Vh4eHoqKitLMmTM1adIk7d69W3379tVLL72U7LapAQMGaPjw4dq7d6+qVq2a5rYAd+P69evasmWLgoODrWUuLi4KDg7Whg0bUlxmw4YNNvNLUkhISKrzX79+XZ999pl8fX1VrVq1zAseDu1u2t6tjDGKjo7W/v371bBhw6wMFfeRhIQEzZ49W/Hx8apXr16K82T0Nw53yd5ZGCQXFhZmXF1djZeXl/Hw8DCSjIuLi/n2229TXaZly5bmtddes35u1KiRefTRR23meeihh6xXPZcuXWrc3NzM8ePHrdMXL15sczX3s88+M/ny5bO5mrlo0SLj4uJivRIeFhZmihcvbhISEqzzlCtXzjRo0MD6+ebNm8bLy8t8/fXXd7E3cq67OU7GJD9WNWvWNCNHjjTGGBMaGmree+894+7ubi5evGj+/vtvI8kcOHAg1fqKFy9u3N3djZeXl/H09DSSTN26dc25c+es8yRd2T137pwJDQ01w4YNM8YY89hjj5lx48aZ77//Ps2RIHPmzDHu7u5m165d1rL169ebGTNmmG3btpmVK1eaJ5980vj4+Ji//vorze3PLN9++63Jly+f8fT0NI888ogZOHCg2bFjh808FStWNCNGjLB+btWqlenYsaP1852+J8uWLTOurq42oyV2795tM7IiMjLS5MmTxzrywxhjXn/9dVO3bl3r5+7du5sWLVpYP48aNcqULFnSJCYmplpHSEiICQoKSvbdSusKVWRkpHFxcTFeXl7Gy8vLWCwW4+PjYxYvXmwzX9Loofnz55tSpUqZxMREM2PGDOsoprRGgpw+fdoUK1bMDBo0yKb87bffNmvXrjVbt241w4cPNx4eHmbcuHGpxnqrW0eCJCYmmuXLlxsPDw/Tr1+/FOefO3euKVCggPVzSiNBcuXKZU6dOmWzXEa+a7fX6e3tbaZPn55iPJ06dTJdu3a1KVuzZo1xcXExV65cSXGZ1GK83enTp40ks3PnTmPM/0aC3HoFKalN7t271yb2ffv2mcDAQNO7d29rW7t69arJkyePzciRpG1o166dMeZ/vxfz589PMzbg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">
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Top-ranked products (one held-out query):
+         query                      title  relevance  bm25  rank_score
+computer best notebook wireless model 27          3   0.0    3.357017
+computer best    notebook budget model 5          2   0.0    3.356479
+computer best   laptop wireless model 22          2   0.0    3.339255
+computer best notebook wireless model 19          2   0.0    3.301578
+computer best  notebook premium model 18          3   0.0    3.280465
+computer best    laptop premium model 16          2   0.0    3.280176
+A domain glossary is a manually provided synonym feature, not a label lookup.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=2bcb4f77"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="What-the-results-mean-/-interview-discussion" class="anchored">What the results mean / interview discussion</h2><p>The split, loss, and metric operate at <strong>query level</strong>, not arbitrary rows. This pairwise scorer is a <em>reranker over a fixed candidate set</em>; large-scale retrieval would require an inverted index or vector index and a candidate recall evaluation. Click feedback contains position bias and must not be used as unconfounded relevance.</p>
+<p><strong>Try explaining these without looking at the code:</strong></p>
+<ol>
+<li>Why does GroupKFold matter for ranking?</li>
+<li>What is the difference between candidate recall and NDCG@10?</li>
+<li>How would you correct position bias in real click logs?</li>
+</ol>
+<p><strong>Limitations and next step:</strong> Evaluate on a suitably licensed real-world dataset or stronger simulation with domain shift, logging bias and realistic selection. Never treat synthetic performance as production evidence.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=bdf382b5"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="What-this-project-demonstrates,-and-what-it-does-not" class="anchored">What this project demonstrates, and what it does not</h2><p><strong>Next:</strong> compare LambdaMART, add explicit click propensity estimation, evaluate rare/unseen intents and measure retrieval latency. A ranking model can lose to a good lexical baseline—never assume complexity guarantees improvement.</p>
+<p><strong>Reproduce:</strong> <code>Run All</code> in Jupyter; no private or uploaded data required. For real data, use leakage-safe train/validation/test partitions and respect each dataset license.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=56d58306"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Search-failure-analysis" class="anchored">Search failure analysis</h3><p>Look at a held-out query where the raw BM25 score is zero for a semantically relevant document (e.g., <em>computer</em> versus <em>notebook</em>). Synonym-normalized retrieval can repair this lexical mismatch. A learned pairwise ranker <strong>may</strong> still underperform a strong lexical baseline on a small synthetic dataset; that is a result, not a test failure.</p>
+</div>
+</div>
+</div>
+</div>
+         <div class="note">Results shown here come from the saved notebook. To modify and rerun models, open the .ipynb in Jupyter or VS Code. This is a static website, not a live Python kernel.</div>
+         <a class="back-link" href="../?category=ml" style="margin-top:22px">← All Machine Learning projects</a>
+         </main></div></div>
+<script>
+(function(){
+  const root=document.getElementById('wtp');if(!root)return;
+  const button=root.querySelector('#wtp-toggle-code');
+  if(button){button.addEventListener('click',()=>{
+    const blocks=Array.from(root.querySelectorAll('details.code-block'));
+    const shouldOpen=blocks.some(el=>!el.open);
+    blocks.forEach(el=>{el.open=shouldOpen;});
+    button.textContent=shouldOpen?'Collapse code':'Expand code';
+  });}
+})();
+</script>
+
+
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,6 +1,10 @@
 ---
-title: "All You Can Learn about AI in One Place"
+title: "All You Can Learn about AI"
 toc: false
+format:
+  html:
+    page-layout: custom
+    body-classes: wtl-home
 ---
 
 Explore Data Science, Machine Learning, Deep Learning, and LLM concepts.

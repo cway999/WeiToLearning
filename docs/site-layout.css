@@ -1,0 +1,108 @@
+/* WeiToLearning — shared page geometry (October 2026)
+   Load after styles.css and typography.css in _quarto.yml.
+
+   Home, Blog and About must set:
+     format:
+       html:
+         page-layout: custom
+         body-classes: wtl-home  # or wtl-blog / wtl-about
+
+   Existing Projects pages already use page-layout: custom.
+   This stylesheet changes OUTER geometry only; it does not replace
+   Blog tabs / three-column cards or Projects left-navigation grid.
+*/
+
+:root {
+  --wtl-site-max-width: 1200px;
+  --wtl-site-side-gap: 24px;
+  --wtl-site-top-space: 36px;
+  --wtl-site-bottom-space: 64px;
+}
+
+/* All four top-level pages share the same centered outer canvas.
+   :has(#wtp) also covers all existing project notebook subpages,
+   without needing to change their generated YAML. */
+body.wtl-home .page-layout-custom,
+body.wtl-blog .page-layout-custom,
+body.wtl-about .page-layout-custom,
+body .page-layout-custom:has(#wtp) {
+  box-sizing: border-box;
+  width: calc(100% - 2 * var(--wtl-site-side-gap));
+  max-width: var(--wtl-site-max-width);
+  margin-inline: auto;
+  padding: var(--wtl-site-top-space) 0 var(--wtl-site-bottom-space);
+  min-width: 0;
+}
+
+/* Projects' original #wtp container had its own 1280px max-width,
+   horizontal padding and top spacing. The outer canvas now owns these.
+   Leave the existing 228px+flex sidebar/content grid untouched. */
+body .page-layout-custom #wtp {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;
+  padding: 0 0 28px;
+}
+
+/* Blog: the old full-layout-only 1510px selectors no longer apply,
+   and the actual tab/card container must remain inside the canvas. */
+body.wtl-blog .page-layout-custom .wtl-card-grid,
+body.wtl-blog .page-layout-custom .wtl-controls,
+body.wtl-blog .page-layout-custom .panel-tabset,
+body.wtl-blog .page-layout-custom .tab-content {
+  min-width: 0;
+  max-width: 100%;
+}
+body.wtl-blog .wtl-card {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Home: exactly three equal-width subject cards per desktop row. */
+body.wtl-home .qb-category-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 100%;
+}
+
+/* About: keep the same LEFT edge as every other page,
+   but keep long paragraphs at a more comfortable reading width. */
+body.wtl-about .page-layout-custom p,
+body.wtl-about .page-layout-custom ul,
+body.wtl-about .page-layout-custom ol,
+body.wtl-about .page-layout-custom h2,
+body.wtl-about .page-layout-custom h3 {
+  max-width: 960px;
+}
+
+/* Consistent title spacing. Keep actual font sizes in typography.css. */
+body.wtl-home #title-block-header,
+body.wtl-blog #title-block-header,
+body.wtl-about #title-block-header {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+body.wtl-home #title-block-header h1,
+body.wtl-blog #title-block-header h1,
+body.wtl-about #title-block-header h1,
+body .page-layout-custom #wtp .hero h1 {
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+body.wtl-home .page-layout-custom h2,
+body.wtl-about .page-layout-custom h2 {
+  margin-top: 34px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 900px) {
+  :root { --wtl-site-side-gap: 20px; --wtl-site-top-space: 26px; }
+  body.wtl-home .qb-category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  :root { --wtl-site-side-gap: 14px; --wtl-site-top-space: 22px; --wtl-site-bottom-space: 40px; }
+  body.wtl-home .qb-category-grid { grid-template-columns: 1fr; }
+}

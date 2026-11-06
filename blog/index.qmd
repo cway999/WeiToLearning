@@ -1,10 +1,12 @@
 ---
-title: "Technical Blog & Learning Library"
+title: "Technical Blog & Learning Tutorials"
 subtitle: "Open resources from fundamentals to interview mastery"
 toc: false
-page-layout: full
+
 format:
   html:
+    page-layout: custom
+    body-classes: wtl-blog
     code-copy: true
 ---
 
@@ -55,19 +57,8 @@ format:
 </div>
 
 
-```{=html}
-<div class="wtl-controls">
-  <input id="wtl-search" type="search" placeholder="Search: CUPED, Double ML, BM25, DPO…" aria-label="Search resources" />
-  <div class="wtl-filters" role="group" aria-label="Filter difficulty">
-    <button type="button" data-wtl-filter="All" class="active" aria-pressed="true">All</button>
-    <button type="button" data-wtl-filter="Beginner" aria-pressed="false">Beginner</button>
-    <button type="button" data-wtl-filter="Intermediate" aria-pressed="false">Intermediate</button>
-    <button type="button" data-wtl-filter="Advanced" aria-pressed="false">Advanced</button>
-  </div>
-</div>
-```
 
-<p id="wtl-result-count" class="wtl-result-count">20 articles in this topic</p>
+
 
 ::::: {.panel-tabset}
 
